@@ -1,0 +1,155 @@
+﻿
+@{
+    ViewBag.Title = "Cadastrar";
+}
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="miolo" class="card strpied-tabled-with-hover card-wizard">
+            <div class="card-header ">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item" style="width:100%">
+                        <a class="nav-link active" href="#tab1" data-toggle="tab" role="tab" aria-controls="tab1" aria-selected="true">CADASTRAR EMPRESA</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card-body ">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+                        <form method="get" action="/" class="form-horizontal">
+
+                            <fieldset>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-sm-2 control-label">RAZÃO SOCIAL</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="razaoSocial" name="razaoSocial" placeholder="Digite a razão social da empresa" class="form-control">
+                                            @*<small class="form-text text-muted">A block of help text that breaks onto a new line.</small>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+
+
+                            <fieldset>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-sm-2 control-label">CNPJ</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" id="cnpj" name="cnpj" class="form-control">
+                                        </div>
+                                        <label class="col-sm-2 control-label">CNAE</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" id="cnae" name="cnae" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+
+                            <fieldset>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-sm-2 control-label">NOME EMPRESA</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="nome" name="nome" placeholder="Digite o nome da empresa" class="form-control">
+                                            @*<small class="form-text text-muted">A block of help text that breaks onto a new line.</small>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+
+                            <fieldset class="pnEndereco">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-sm-2 control-label">CEP</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="cep" name="CEP" placeholder="00000-000" class="form-control">
+                                            @*<small class="form-text text-muted">A block of help text that breaks onto a new line.</small>*@
+                                        </div>
+                                        <label class="col-sm-3 control-label">ENDEREÇO</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" id="rua" name="Rua" placeholder="" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="pnEndereco">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-sm-2 control-label">NÚMERO </label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="numero" name="Numero" placeholder="EX 500" class="form-control">
+                                        </div>
+                                        <label class="col-sm-3 control-label">COMPLEMENTO</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" id="complemento" name="Complemento" placeholder="EX Apto 100" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="pnEndereco">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-sm-2 control-label">REFERÊNCIA </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="referencia" name="Numero" placeholder="Prox ao..." class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="pnEndereco">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-sm-2 control-label">BAIRRO</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="bairro" name="Bairro" placeholder="" class="form-control">
+                                        </div>
+                                        <label class="col-sm-2 control-label">CIDADE</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="cidade" name="CIdade" placeholder="São Paulo" disabled="disabled" class="form-control">
+                                        </div>
+                                        <label class="col-sm-2 control-label">UF</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="uf" name="UF" placeholder="SP" disabled="disabled" class="form-control">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </fieldset>
+
+
+                        </form>
+                        <div class="row">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <button id="cadastrar" class="pnValores btn btn-default btn-wd">Cadastrar</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<div id="modal"></div>
+
+
+@section Scripts
+{
+    <script src="~/Scripts/Pages/EmpresaCadastrar.js"></script>
+}
+
