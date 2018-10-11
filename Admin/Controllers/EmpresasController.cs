@@ -27,6 +27,7 @@ namespace Admin.Controllers
 
         public ActionResult Cadastrar()
         {
+            //var empresas = GetEmpresas();
             return View();
         }
 
@@ -74,6 +75,7 @@ namespace Admin.Controllers
                 {
                     empresa = new
                     {
+                        model.Id,
                         CNAE_S = model.Cnae,
                         model.RazaoSocial,
                         model.Cnpj,

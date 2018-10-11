@@ -148,6 +148,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AtendimentoController.cs" />
     <Compile Include="Controllers\Attributes\NoDirectAccessAttribute.cs" />
     <Compile Include="Controllers\EmpresasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Helppers\FaleConosco.cs" />
     <Compile Include="Helppers\Oportundiade.cs" />
     <Compile Include="Helppers\PixCore.cs" />
+    <Compile Include="Models\AtendimentoViewModel.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\ClienteViewModel.cs" />
     <Compile Include="Models\EmpresaViewModel.cs" />
@@ -528,6 +530,7 @@
     <Content Include="Views\Vaga\_vincularPorifissionais.cshtml" />
     <Content Include="Views\Vaga\_lsitarProfissionais.cshtml" />
     <Content Include="Views\Empresas\Cadastrar.cshtml" />
+    <Content Include="Views\Atendimento\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

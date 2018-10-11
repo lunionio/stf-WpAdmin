@@ -21,7 +21,7 @@ namespace Admin.Helppers
                 TipoID = 2,
                 Email = faleConosco.Email,
                 Descricao = faleConosco.Mensagem,
-                Origem = "Admin Contratante",
+                Origem = "Admin StaffPro",
                 TicketStatusID = 1 //Status Aberto
             };
 
