@@ -36,7 +36,7 @@ namespace Admin.Controllers
             {
                 var jss = new JavaScriptSerializer();
                 var url = ConfigurationManager.AppSettings["UrlAPI"];
-                var serverUrl = $"{ url }/Seguranca/Principal/buscarEstruturas/{ PixCoreValues.IDCliente }/{ PixCoreValues.UsuarioLogado.IdUsuario }";
+                var serverUrl = $"{ url }/Seguranca/Principal/buscarEstruturas/{ PixCoreValues.UsuarioLogado.idCliente }/{ PixCoreValues.UsuarioLogado.IdUsuario }";
                 client.Headers[HttpRequestHeader.ContentType] = "application/json";
 
                 object envio = new
@@ -58,9 +58,9 @@ namespace Admin.Controllers
 
                         if (r.IdPai == 0) //TODO: Melhorar para sub-estrutura com filhos...
                         {
-                            var estrutura = new Estrutura(r.ID, r.UrlManual, r.Imagem, r.Nome)
+                            var estrutura = new Estrutura(r.ID, r.UrlManual, r.ImagemMenu, r.Nome)
                             {
-                                SubEstruturas = r.SubMenus.Select(s => new Estrutura(s.ID, s.UrlManual, s.Imagem, s.Nome))
+                                SubEstruturas = r.SubMenus.Select(s => new Estrutura(s.ID, s.UrlManual, s.ImagemMenu, s.Nome))
                             };
 
                             model.Add(estrutura);

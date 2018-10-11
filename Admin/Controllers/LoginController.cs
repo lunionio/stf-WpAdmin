@@ -25,19 +25,20 @@ namespace Admin.Controllers
                 if (PixCoreValues.Login(collection))
                 {
                     // Response.Redirect(PixCoreValues.defaultSiteUrl);
-                    return Redirect("/home/index");
+
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
 
                     ViewData["TemporariaMensagem"] = "Usuario ou senha invalida";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Login");
                 }
             }
             catch
             {
                 ViewData["TemporariaMensagem"] = "Usuario ou senha invalida";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Login");
             }
 
             
