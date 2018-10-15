@@ -180,8 +180,11 @@
     <Compile Include="Models\Perfil.cs" />
     <Compile Include="Models\Permissao.cs" />
     <Compile Include="Models\PermissaoViewModel.cs" />
+    <Compile Include="Models\Profissional.cs" />
+    <Compile Include="Models\ProfissionalFormacao.cs" />
     <Compile Include="Models\ProfissionalViewModel.cs" />
     <Compile Include="Models\ResultadoViewModel.cs" />
+    <Compile Include="Models\Telefone.cs" />
     <Compile Include="Models\UsuarioViewModel.cs" />
     <Compile Include="Models\VagaViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
