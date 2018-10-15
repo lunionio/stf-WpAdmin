@@ -134,6 +134,17 @@ namespace Admin.Controllers
             return View();
         }
 
+        public ActionResult Editar(int id)
+        {
+            //preciso de um get por id aqui
+            return View();
+        }
+        public ActionResult Excluir(int id)
+        {
+            //preciso da funcionalidade de excluir aqui
+            return View();
+        }
+
 
         public ActionResult GetEmpresas()
         {
