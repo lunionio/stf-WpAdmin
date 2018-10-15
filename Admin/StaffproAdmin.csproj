@@ -475,6 +475,7 @@
     <Content Include="Scripts\Pages\EmpresaCadastrar.js" />
     <Content Include="Scripts\Pages\EmpresaListar.js" />
     <Content Include="Scripts\Pages\FaleConosco.js" />
+    <Content Include="Scripts\Pages\AtendimentoIndex.js" />
     <Content Include="Scripts\Pages\VagaCadastrar.js" />
     <Content Include="Scripts\Pages\VagaIndex.js" />
     <Content Include="Scripts\perfect-scrollbar.jquery.min.js" />

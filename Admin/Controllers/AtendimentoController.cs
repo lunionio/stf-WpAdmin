@@ -34,6 +34,19 @@ namespace Admin.Controllers
             return GetAtendimentos();
         }
 
+        public ActionResult Editar(int id)
+        {
+            //montar retorno de objeto para pupular formulario
+            return View();
+        }
+
+        public ActionResult Excluir(int id)
+        {
+            //colocar funcionalidade
+            return View();
+        }
+
+
         public ActionResult ResponderTicket(AtendimentoViewModel viewModel)
         {
             try
