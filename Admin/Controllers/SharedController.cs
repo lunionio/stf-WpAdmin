@@ -24,7 +24,7 @@ namespace Admin.Controllers
         {
             var tipoAcoes = GetTipoAcoes();
             var model = GetEstruturas(tipoAcoes);
-
+            
             return PartialView("PartialMenu", model);
         }
 
@@ -32,60 +32,77 @@ namespace Admin.Controllers
         private IEnumerable<Estrutura> GetEstruturas(IEnumerable<int> tipoAcoes)
         {
             var model = default(IList<Estrutura>);
-            using (var client = new WebClient())
+
+            try
             {
-                var jss = new JavaScriptSerializer();
-                var url = ConfigurationManager.AppSettings["UrlAPI"];
-                var serverUrl = $"{ url }/Seguranca/Principal/buscarEstruturas/{ PixCoreValues.UsuarioLogado.idCliente }/{ PixCoreValues.UsuarioLogado.IdUsuario }";
-                client.Headers[HttpRequestHeader.ContentType] = "application/json";
-
-                object envio = new
+                using (var client = new WebClient())
                 {
-                    PixCoreValues.UsuarioLogado.idCliente,
-                    idTipoAcoes = tipoAcoes,
-                };
+                    var jss = new JavaScriptSerializer();
+                    var url = ConfigurationManager.AppSettings["UrlAPI"];
+                    var serverUrl = $"{ url }/Seguranca/Principal/buscarEstruturas/{ PixCoreValues.UsuarioLogado.idCliente }/{ PixCoreValues.UsuarioLogado.IdUsuario }";
+                    client.Headers[HttpRequestHeader.ContentType] = "application/json";
 
-                var data = jss.Serialize(envio);
-                var response = client.UploadString(serverUrl, "POST", data);
-                var result = jss.Deserialize<List<EstruturaViewModel>>(response).OrderBy(r => r.Ordem).ToList();
-
-                if (result != null && result.Count() > 0)
-                {
-                    model = new List<Estrutura>();
-                    foreach (var r in result)
+                    object envio = new
                     {
-                        r.SubMenus = result.Where(e => e.IdPai.Equals(r.ID)).OrderBy(x => x.Ordem);
+                        PixCoreValues.UsuarioLogado.idCliente,
+                        idTipoAcoes = tipoAcoes,
+                    };
 
-                        if (r.IdPai == 0) //TODO: Melhorar para sub-estrutura com filhos...
+                    var data = jss.Serialize(envio);
+                    var response = client.UploadString(serverUrl, "POST", data);
+                    var result = jss.Deserialize<List<EstruturaViewModel>>(response).OrderBy(r => r.Ordem).ToList();
+
+                    if (result != null && result.Count() > 0)
+                    {
+                        model = new List<Estrutura>();
+                        foreach (var r in result)
                         {
-                            var estrutura = new Estrutura(r.ID, r.UrlManual, r.ImagemMenu, r.Nome)
-                            {
-                                SubEstruturas = r.SubMenus.Select(s => new Estrutura(s.ID, s.UrlManual, s.ImagemMenu, s.Nome))
-                            };
+                            r.SubMenus = result.Where(e => e.IdPai.Equals(r.ID)).OrderBy(x => x.Ordem);
 
-                            model.Add(estrutura);
+                            if (r.IdPai == 0) //TODO: Melhorar para sub-estrutura com filhos...
+                            {
+                                var estrutura = new Estrutura(r.ID, r.UrlManual, r.ImagemMenu, r.Nome)
+                                {
+                                    SubEstruturas = r.SubMenus.Select(s => new Estrutura(s.ID, s.UrlManual, s.ImagemMenu, s.Nome))
+                                };
+
+                                model.Add(estrutura);
+                            }
                         }
                     }
                 }
-            }
 
+            }
+            catch (Exception ex)
+            {
+
+                
+            }
+            
             return model;
         }
 
         private IEnumerable<int> GetTipoAcoes()
         {
-            using (var client = new WebClient())
+
+            try
             {
                 var url = ConfigurationManager.AppSettings["UrlAPI"];
                 var serverUrl = $"{ url }/Permissao/GetPermissoesPorUsuario/{ PixCoreValues.UsuarioLogado.IdUsuario }";
-                var result = client.DownloadString(serverUrl);
-
                 var jss = new JavaScriptSerializer();
-                var permissao = jss.Deserialize<Permissao>(result);
+                using (var client = new WebClient())
+                {
+                    var result = client.DownloadString(serverUrl);
+                    var permissao = jss.Deserialize<Permissao>(result);
+                    var tipoAcoes = permissao.idTipoAcao.Split(',');
 
-                var tipoAcoes = permissao.idTipoAcao.Split(',');
+                    return tipoAcoes.Select(id => Convert.ToInt32(id));
+                }
 
-                return tipoAcoes.Select(id => Convert.ToInt32(id));
+            }
+            catch (Exception e)
+            {
+                return null;
             }
         }
     }

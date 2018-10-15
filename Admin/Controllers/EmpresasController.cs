@@ -31,7 +31,6 @@ namespace Admin.Controllers
             return View();
         }
 
-
         public ActionResult Salvar(EmpresaViewModel viewModel)
         {
             try
@@ -129,6 +128,12 @@ namespace Admin.Controllers
                 throw new Exception("Não foi possível salvar o usuário.", e);
             }
         }
+
+        public ActionResult Listar()
+        {
+            return View();
+        }
+
 
         public ActionResult GetEmpresas()
         {

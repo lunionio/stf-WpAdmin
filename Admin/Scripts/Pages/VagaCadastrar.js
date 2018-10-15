@@ -16,7 +16,7 @@ $('#btnAgora').on('click', function () {
 });
 
 function PublicarAgora() {
-
+    
     LoadingInitBase('.body');
     var vaga = VagaViewModel();
     var settings = {

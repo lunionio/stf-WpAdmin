@@ -473,6 +473,7 @@
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\nouislider.min.js" />
     <Content Include="Scripts\Pages\EmpresaCadastrar.js" />
+    <Content Include="Scripts\Pages\EmpresaListar.js" />
     <Content Include="Scripts\Pages\FaleConosco.js" />
     <Content Include="Scripts\Pages\VagaCadastrar.js" />
     <Content Include="Scripts\Pages\VagaIndex.js" />
@@ -531,6 +532,7 @@
     <Content Include="Views\Vaga\_lsitarProfissionais.cshtml" />
     <Content Include="Views\Empresas\Cadastrar.cshtml" />
     <Content Include="Views\Atendimento\Index.cshtml" />
+    <Content Include="Views\Empresas\Listar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
