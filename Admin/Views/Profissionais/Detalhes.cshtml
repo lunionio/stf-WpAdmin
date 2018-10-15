@@ -1,0 +1,133 @@
+﻿@model Admin.Models.ProfissionalViewModel
+
+@{
+    ViewBag.Title = "Profissionais - Detalhes";
+}
+
+
+<div class="row">
+
+    <div class="col-md-12">
+        <div id="miolo" class="card strpied-tabled-with-hover card-wizard">
+            <div class="card-header ">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item" style="width:100%">
+                        <a class="nav-link active" href="#tab1" data-toggle="tab" role="tab" aria-controls="tab1"
+                           aria-selected="true">CONTROOLE DE DOCUMENTOS -@Model.Id</a>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <div class="photo">
+                            <img width="150px" height="auto" src="~/Img/avatar.png" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-10">
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-sm-2 control-label">NOME</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="nome" name="Nome" value="@Model.Nome" class="form-control">
+                                        @*<small class="form-text text-muted">A block of help text that breaks onto a new line.</small>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-sm-2 control-label">NASCIMENTO</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="nome" name="Nome" value="@Model.DataNascimento" class="form-control">
+                                    </div>
+                                    <label class="col-sm-2 control-label">Idade</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="nome" name="Nome" value="18" disabled="disabled" ="" class="form-control">
+                                    </div>
+                                    <label class="col-sm-2 control-label">Cadastrado em:</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="nome" name="Nome" value="" disabled="disabled" ="" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-sm-2 control-label">E-Mail</label>
+                                    <div class="col-sm-5">
+                                        <input type="text" id="nome" name="Nome" value="@Model.Email" class="form-control">
+                                    </div>
+                                    <label class="col-sm-2 control-label">Telefone</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="nome" name="Nome" value="@Model.Telefone" disabled="disabled" ="" class="form-control">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-sm-2 control-label">Endereço</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="nome" name="Nome" value="" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card stacked-form">
+            
+            <div class="card-body">
+                <div class="row">
+
+                    @foreach (var item in Model.Documentos)
+                    {
+
+                        <div class="col-md-3">
+                            <div class="card md-3 shadow-sm">
+                                <strong>RG</strong>
+                                <img width="100%" height="auto" src="https://upload.wikimedia.org/wikipedia/commons/b/be/Modelo_do_novo_RG_brasileiro.jpg" />
+                                <br />
+                                <div style="margin-left:15px">
+                                    <p class="card-text">
+                                        <strong>69 966 456 88 </strong>
+                                    </p>
+                                    <select id="atuacao" data-title="Selecione" name="currency"
+                                            class="selectpicker" data-style="btn-default btn-outline"
+                                            data-menu-style="dropdown-blue">
+                                        <option value="0">Selecione</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
