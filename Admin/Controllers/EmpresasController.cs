@@ -27,7 +27,6 @@ namespace Admin.Controllers
 
         public ActionResult Cadastrar()
         {
-            //var empresas = GetEmpresas();
             return View();
         }
 
@@ -87,7 +86,8 @@ namespace Admin.Controllers
                             model.Complemento,
                             PixCoreValues.UsuarioLogado.IdUsuario,
                             model.UsuarioCriacao,
-                            model.UsuarioEdicao
+                            model.UsuarioEdicao,
+                            model.IdCliente
                         },
                         model.Nome,
                         model.UsuarioCriacao,
@@ -136,15 +136,53 @@ namespace Admin.Controllers
 
         public ActionResult Editar(int id)
         {
-            //preciso de um get por id aqui
-            return View();
-        }
-        public ActionResult Excluir(int id)
-        {
-            //preciso da funcionalidade de excluir aqui
+            var empresaJson = GetEmpresa(id);
+
             return View();
         }
 
+        public ActionResult Excluir(int id, string cnpj) //Necessário passar o CNPJ
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var jss = new JavaScriptSerializer();
+
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/wpEmpresas/DeletarEmpresa/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+            object envio = new
+            {
+                empresa = new
+                {
+                    id,
+                    cnpj,
+                }
+            };
+            var data = jss.Serialize(envio);
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(data);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            var result = string.Empty;
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                result = streamReader.ReadToEnd();
+                if (string.IsNullOrEmpty(result)
+                    || "null".Equals(result.ToLower()))
+                {
+                    throw new Exception("Ouve um erro durante o processo.");
+                }
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
         public ActionResult GetEmpresas()
         {
@@ -168,6 +206,48 @@ namespace Admin.Controllers
             var jss = new JavaScriptSerializer();
             var empresas = jss.Deserialize<IEnumerable<object>>(result);
             return Json(empresas, JsonRequestBehavior.AllowGet);
+        }
+
+        private ActionResult GetEmpresa(int empresaId)
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var jss = new JavaScriptSerializer();
+
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/wpEmpresas/BuscarPorId/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+            object envio = new
+            {
+                usuario.idCliente,
+                id = empresaId,
+            };
+            var data = jss.Serialize(envio);
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(data);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            var result = string.Empty;
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                result = streamReader.ReadToEnd();
+                if (string.IsNullOrEmpty(result)
+                    || "null".Equals(result.ToLower()))
+                {
+                    throw new Exception("Ouve um erro durante o processo.");
+                }
+            }
+
+            //var empresa = jss.Deserialize<object>(result);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

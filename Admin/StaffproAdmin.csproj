@@ -165,6 +165,8 @@
     <Compile Include="Models\AtendimentoViewModel.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\ClienteViewModel.cs" />
+    <Compile Include="Models\Contato.cs" />
+    <Compile Include="Models\Empresa.cs" />
     <Compile Include="Models\EmpresaViewModel.cs" />
     <Compile Include="Models\Estrutura.cs" />
     <Compile Include="Models\EstruturaViewModel.cs" />
@@ -179,6 +181,7 @@
     <Compile Include="Models\Permissao.cs" />
     <Compile Include="Models\PermissaoViewModel.cs" />
     <Compile Include="Models\ResultadoViewModel.cs" />
+    <Compile Include="Models\Tipo.cs" />
     <Compile Include="Models\UsuarioViewModel.cs" />
     <Compile Include="Models\VagaViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

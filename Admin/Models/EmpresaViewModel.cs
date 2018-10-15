@@ -27,5 +27,10 @@ namespace Admin.Models
         public int UsuarioCriacao { get; set; }
         public int UsuarioEdicao { get; set; }
         public bool Ativo { get; set; }
+
+        public EmpresaViewModel()
+        {
+
+        }
     }
 }
