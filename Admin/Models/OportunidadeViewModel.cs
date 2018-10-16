@@ -21,8 +21,9 @@ namespace Admin.Models
 
     public class Endereco : Base
     {
-        public Endereco(string cEP, string estado, string cidade, string bairro, string local, int numeroLocal, string complemento, int idUsuario)
+        public Endereco(int id, string cEP, string estado, string cidade, string bairro, string local, int numeroLocal, string complemento, int idUsuario)
         {
+            ID = id;
             CEP = cEP;
             Estado = estado;
             Cidade = cidade;
@@ -47,6 +48,7 @@ namespace Admin.Models
         public string Complemento { get; set; }
         public int IdUsuario { get; set; }
         public int OportunidadeId { get; set; }
+        public int ProfissionalId { get; set; }
 
     }
 

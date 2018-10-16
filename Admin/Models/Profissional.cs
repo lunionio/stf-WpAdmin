@@ -11,5 +11,17 @@ namespace Admin.Models
         public Endereco Endereco { get; set; }
         public Telefone Telefone { get; set; }
         public IList<ProfissionalFormacao> Formacoes { get; set; }
+
+        public Profissional()
+        { }
+
+        public Profissional(int id, string nome, string telefone, string email, Endereco endereco)
+        {
+            ID = id;
+            Nome = nome;
+            Telefone = new Telefone() { ProfissionalId = id, Numero = telefone, Nome = nome };
+            Email = email;
+            Endereco = endereco;
+        }
     }
 }

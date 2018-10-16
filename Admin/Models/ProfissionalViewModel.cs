@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Admin.Models
 {
     public class ProfissionalViewModel
     {
-        public ProfissionalViewModel(int id, string nome, string especialidade, string telefone, string dataNascimento, string email, Endereco endereco)
+        public ProfissionalViewModel(int id, string nome, string especialidade, string telefone, int telefoneId, string dataNascimento, string email, Endereco endereco)
         {
             Id = id;
             Nome = nome;
             Especialidade = especialidade;
             Telefone = telefone;
+            TelefoneId = TelefoneId;
             DataNascimento = dataNascimento;
             Email = email;
             Endereco = endereco;
@@ -24,6 +26,8 @@ namespace Admin.Models
         public string Nome { get; set; }
         public string Especialidade { get; set; }
         public string Telefone { get; set; }
+        public int TelefoneId { get; set; }
+        public DateTime DataCriacao { get; set; }
         public string DataNascimento { get; set; }
         public string Email { get; set; }
         public Endereco Endereco { get; set; }
