@@ -8,6 +8,22 @@
         public int IdStatus { get; set; }
         public string Status { get; set; }
         public string Data  { get; set; }
-        public byte[] Arquivo { get; set; }
+        public string Arquivo { get; set; }
+
+        public DocumentoViewModel()
+        {
+
+        }
+
+        public DocumentoViewModel(int id, string tipoNome, int tipoId, int idStatus, string status, string data, string arquivo)
+        {
+            Id = id;
+            TipoNome = tipoNome;
+            TipoId = tipoId;
+            IdStatus = idStatus;
+            Status = status;
+            Data = data;
+            Arquivo = arquivo;
+        }
     }
 }

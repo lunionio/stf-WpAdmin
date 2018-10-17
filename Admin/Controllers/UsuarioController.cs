@@ -25,16 +25,18 @@ namespace Admin.Controllers
         public ActionResult Cadastro()
         {
             var result = GetPermissoes();
+            var empresas = GetEmpresas();
 
-            ViewBag.Perfis = new SelectList(result);
+            ViewBag.Empresas = new SelectList(empresas.Select(e => e.Nome));
+            ViewBag.Perfis = new SelectList(result.Select(p => p.Nome));
             return View();
         }
 
-        private static IEnumerable<string> GetPermissoes()
+        private static IEnumerable<PermissaoViewModel> GetPermissoes()
         {
             try
             {
-                IEnumerable<string> result;
+                IEnumerable<PermissaoViewModel> result;
                 using (var client = new WebClient())
                 {
                     var jss = new JavaScriptSerializer();
@@ -43,17 +45,40 @@ namespace Admin.Controllers
                     var serverUrl = $"{ url }/permissao/getallpermissao/{ 1 }";
                     client.Headers[HttpRequestHeader.ContentType] = "application/json";
                     var response = client.DownloadString(new Uri(serverUrl));
-                    var permissoes = jss.Deserialize<IEnumerable<PermissaoViewModel>>(response);
-
-                    result = permissoes.Select(p => p.Nome);
+                    result = jss.Deserialize<IEnumerable<PermissaoViewModel>>(response);
                 }
 
                 return result;
             }
             catch(Exception e)
             {
-                return new List<string>();
+                return new List<PermissaoViewModel>();
             }
+        }
+
+        public IEnumerable<EmpresaViewModel> GetEmpresas()
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+
+            var result = string.Empty;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            {
+                using (Stream stream = response.GetResponseStream())
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        result = reader.ReadToEnd();
+                    }
+                }
+            }
+
+            var jss = new JavaScriptSerializer();
+            var empresas = jss.Deserialize<IEnumerable<EmpresaViewModel>>(result);
+
+            return empresas;
         }
 
         public ActionResult Listagem()
@@ -68,10 +93,13 @@ namespace Admin.Controllers
             try
             {
                 var result = GetPermissoes();
-                ViewBag.Perfis = new SelectList(result);
+                var empresas = GetEmpresas();
+
+                ViewBag.Empresas = new SelectList(empresas.Select(e => e.Nome));
+                ViewBag.Perfis = new SelectList(result.Select(p => p.Nome));
 
                 if (! string.IsNullOrEmpty(viewModel.Nome) && !string.IsNullOrEmpty(viewModel.Login) 
-                    && !string.IsNullOrEmpty(viewModel.Senha) && !string.IsNullOrEmpty(viewModel.Perfil))
+                    && !string.IsNullOrEmpty(viewModel.Senha) && !string.IsNullOrEmpty(viewModel.Perfil) && !string.IsNullOrEmpty(viewModel.Empresa))
                 {
                     viewModel.idCliente = _idCliente;
 
@@ -80,10 +108,14 @@ namespace Admin.Controllers
 
                     viewModel.UsuarioEdicao = PixCoreValues.UsuarioLogado.IdUsuario;
                     viewModel.Ativo = true;
+                    viewModel.PerfilUsuario = result.Where(r => r.Nome.Equals(viewModel.Perfil)).FirstOrDefault().ID;
+                    viewModel.IdEmpresa = empresas.Where(r => r.Nome.Equals(viewModel.Empresa)).FirstOrDefault().Id;
+
                     if (SaveUsuario(viewModel))
                     {
                         ViewData["Resultado"] = new ResultadoViewModel("Usuário cadastrado com sucesso!", true);
                         ModelState.Clear();
+
                         return RedirectToAction("Listagem");
                     }
                 }
@@ -101,7 +133,10 @@ namespace Admin.Controllers
         public ActionResult Editar(int? id)
         {
             var result = GetPermissoes();
-            ViewBag.Perfis = new SelectList(result);
+            var empresas = GetEmpresas();
+
+            ViewBag.Empresas = new SelectList(empresas.Select(e => e.Nome));
+            ViewBag.Perfis = new SelectList(result.Select(p => p.Nome));
 
             if (id == null)
             {
@@ -151,6 +186,7 @@ namespace Admin.Controllers
                 var jss = new JavaScriptSerializer();
                 var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
                 var url = keyUrl + "/Seguranca/Principal/salvarUsuario/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+
                 object envio = new 
                 {
                     usuario = new
@@ -162,7 +198,8 @@ namespace Admin.Controllers
                         usuario.Senha,
                         usuario.UsuarioCriacao,
                         usuario.UsuarioEdicao,
-                        usuario.Ativo
+                        usuario.Ativo,
+                        usuario.IdEmpresa,
                     }
                 };
                 var data = jss.Serialize(envio);
@@ -201,6 +238,9 @@ namespace Admin.Controllers
         {
             try
             {
+                var perfis = GetPermissoes();
+                var empresas = GetEmpresas();
+
                 using (var client = new WebClient())
                 {
                     var jss = new JavaScriptSerializer();
@@ -209,6 +249,12 @@ namespace Admin.Controllers
                     client.Headers[HttpRequestHeader.ContentType] = "application/json";
                     var response = client.DownloadString(new Uri(serverUrl));
                     var result = jss.Deserialize<IEnumerable<UsuarioViewModel>>(response);
+
+                    foreach (var item in result)
+                    {
+                        item.Empresa = empresas.FirstOrDefault(e => e.Id.Equals(item.IdEmpresa))?.Nome;
+                        item.Perfil = perfis.FirstOrDefault(p => p.ID.Equals(item.PerfilUsuario))?.Nome;
+                    }
 
                     return result;
                 }

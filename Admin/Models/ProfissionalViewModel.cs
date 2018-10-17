@@ -31,6 +31,7 @@ namespace Admin.Models
         public string DataNascimento { get; set; }
         public string Email { get; set; }
         public Endereco Endereco { get; set; }
-        public List<DocumentoViewModel> Documentos { get; set; }
+        public IList<DocumentoViewModel> Documentos { get; set; }
+        public string Avatar { get; set; }
     }
 }
