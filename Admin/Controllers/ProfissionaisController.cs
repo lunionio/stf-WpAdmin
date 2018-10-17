@@ -92,8 +92,112 @@ namespace Admin.Controllers
 
             var response = jss.Deserialize<Profissional>(result);
 
-            var ret = new ProfissionalViewModel(response.ID, response.Nome, string.Empty, response.Telefone.Numero, null, response.Email, response.Endereco) { Documentos = new List<DocumentoViewModel>() };
+            var ret = new ProfissionalViewModel(response.ID, response.Nome, string.Empty, response.Telefone.Numero, response.Telefone.ID, 
+                null, response.Email, response.Endereco);
+
+            ret.Documentos = GetDocumentos(ret.Id);
+
+            var user = GetUsuario(response.IdUsuario);
+
+            ret.Avatar = user.Avatar;
+
+            ViewBag.Statuses = GetAllDocumentoStatus();
+
             return View(ret);
+        }
+
+        private IList<DocumentoViewModel> GetDocumentos(int profissionalId)
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var jss = new JavaScriptSerializer();
+
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/wpDocumento/BuscarPorCodigo/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+
+            object envio = new
+            {
+                codigoExterno = profissionalId,
+            };
+
+            var data = jss.Serialize(envio);
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(data);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            var result = string.Empty;
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                result = streamReader.ReadToEnd();
+                if (string.IsNullOrEmpty(result)
+                    || "null".Equals(result.ToLower()))
+                {
+                    throw new Exception("Ouve um erro durante o processo.");
+                }
+            }
+
+            var response = jss.Deserialize<IEnumerable<Documento>>(result);
+
+            IList<DocumentoViewModel> models = new List<DocumentoViewModel>();
+
+            foreach (var item in response)
+            {
+                models.Add(new DocumentoViewModel(item.ID, item.DocumentoTipo.Nome, item.Tipo, 
+                    item.DocumentoStatusID, item.DocumentoStatus.Nome, item.DataCriacao.ToString(), item.Arquivo));
+            }
+
+            return models;
+        }
+
+        private Usuario GetUsuario(int usuarioId)
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var jss = new JavaScriptSerializer();
+
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/Principal/BuscarUsuarioPorId/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+
+            object envio = new
+            {
+                idUsuario = usuarioId,
+            };
+
+            var data = jss.Serialize(envio);
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(data);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            var result = string.Empty;
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                result = streamReader.ReadToEnd();
+                if (string.IsNullOrEmpty(result)
+                    || "null".Equals(result.ToLower()))
+                {
+                    throw new Exception("Ouve um erro durante o processo.");
+                }
+            }
+
+            var response = jss.Deserialize<Usuario>(result);
+
+            return response;
         }
 
         [HttpPost]
@@ -163,6 +267,31 @@ namespace Admin.Controllers
             }
 
             return result;
+        }
+
+        public IEnumerable<DocumentoStatus> GetAllDocumentoStatus()
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/wpDocumento/BuscaTodosStatus/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+
+            var result = string.Empty;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            {
+                using (Stream stream = response.GetResponseStream())
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        result = reader.ReadToEnd();
+                    }
+                }
+            }
+
+            var jss = new JavaScriptSerializer();
+            var statuses = jss.Deserialize<IEnumerable<DocumentoStatus>>(result);
+
+            return statuses;
         }
     }
 }
