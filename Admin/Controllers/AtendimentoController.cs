@@ -20,7 +20,8 @@ namespace Admin.Controllers
 
         public ActionResult Editar(int id)
         {
-            var ticketJson = GetTicket(id);
+            //var ticketJson = GetTicket(id);
+            ViewBag.Id = id;
             return View();
         }
 

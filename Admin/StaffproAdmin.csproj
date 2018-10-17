@@ -543,6 +543,7 @@
     <Content Include="Views\Empresas\Listar.cshtml" />
     <Content Include="Views\Profissionais\Index.cshtml" />
     <Content Include="Views\Profissionais\Detalhes.cshtml" />
+    <Content Include="Views\Atendimento\Editar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

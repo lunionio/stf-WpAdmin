@@ -17,7 +17,7 @@ namespace Admin.Models
             Endereco = endereco;
         }
 
-        public ProfissionalViewModel()
+        public ProfissionalViewModel(int iD, string nome)
         {
 
         }

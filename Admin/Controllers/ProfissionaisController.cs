@@ -92,8 +92,8 @@ namespace Admin.Controllers
 
             var response = jss.Deserialize<Profissional>(result);
 
-            var ret = new ProfissionalViewModel(response.ID, response.Nome, string.Empty, response.Telefone.Numero, null, response.Email, response.Endereco) { Documentos = new List<DocumentoViewModel>() };
-            return View(ret);
+            //var ret = new ProfissionalViewModel(response.ID, response.Nome, string.Empty, response.Telefone.Numero, null, response.Email, response.Endereco) { Documentos = new List<DocumentoViewModel>() };
+            return View();
         }
 
         [HttpPost]
