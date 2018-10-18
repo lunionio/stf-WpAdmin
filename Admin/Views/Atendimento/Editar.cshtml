@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewBag.Title = "Atendimento - Editar";
+}
+
+<div class="row">
+    <div class="card col-md-12">
+
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    <p><h4><strong>DADOS</strong></h4></p>
+
+                    <div class="form-group">
+
+                        <label class=" control-label"><strong>E-mail</strong></label>
+                        <input type="text" id="email" name="email" value="teste@teste.com.br" disabled="disabled" class="form-control col-md-12">
+
+                        <label class=" control-label"><strong>Categoria</strong></label>
+                        <input type="text" id="categoria" name="categoria" value="Reclamação" disabled="disabled" class="form-control col-md-12">
+
+                        <label class=" control-label"><strong>Origem</strong></label>
+                        <input type="text" id="origem" name="origem" value="WEB Site" disabled="disabled" class="form-control col-md-12">
+
+                        <label class=" control-label"><strong>Telefone</strong></label>
+                        <input type="text" id="telefone" name="telefone" value="WEB Site" disabled="disabled" class="form-control col-md-12">
+                        <input type="hidden" id="telefoneId" name="telefoneId" value="0" class="form-control col-md-5">
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-9">
+                    <p><h4><strong>COMENTÁRIOS</strong></h4></p>
+                    <div class="form-group">
+                        <textarea id="mensagem" class="form-group col-md-12" rows="8" disabled="disabled"></textarea>
+                        <p><h4><strong>RESPONDER</strong></h4></p>
+                        <div class="form-group">
+                            <textarea id="resposta" class="form-group col-md-12" rows="5"></textarea>
+                        </div>
+                        <input id="btnEncerrar" type="button" class="btn btn-default" value="Encerrar" />
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+
+    </div>
+</div>
