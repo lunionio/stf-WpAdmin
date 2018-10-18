@@ -10,4 +10,10 @@
         public string Avatar { get; set; }
         public int IdEmpresa { get; set; }
     }
+
+    public enum Staus
+    {
+        Ativo = 1,
+        Inativo = 0,
+    }
 }

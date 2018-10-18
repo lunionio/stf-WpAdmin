@@ -163,6 +163,7 @@
     <Compile Include="Helppers\FaleConosco.cs" />
     <Compile Include="Helppers\Oportundiade.cs" />
     <Compile Include="Helppers\PixCore.cs" />
+    <Compile Include="Helppers\ServiceHelper.cs" />
     <Compile Include="Models\AtendimentoViewModel.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\ClienteViewModel.cs" />
