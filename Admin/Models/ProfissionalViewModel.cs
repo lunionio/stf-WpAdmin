@@ -5,7 +5,7 @@ namespace Admin.Models
 {
     public class ProfissionalViewModel
     {
-        public ProfissionalViewModel(int id, string nome, string especialidade, string telefone, int telefoneId, string dataNascimento, string email, Endereco endereco)
+        public ProfissionalViewModel(int id, string nome, string especialidade, string telefone, int telefoneId, string dataNascimento, string email, int usuarioId, Endereco endereco)
         {
             Id = id;
             Nome = nome;
@@ -15,9 +15,15 @@ namespace Admin.Models
             DataNascimento = dataNascimento;
             Email = email;
             Endereco = endereco;
+            UsuarioId = usuarioId;
         }
 
         public ProfissionalViewModel(int iD, string nome)
+        {
+
+        }
+
+        public ProfissionalViewModel()
         {
 
         }
@@ -33,5 +39,6 @@ namespace Admin.Models
         public Endereco Endereco { get; set; }
         public IList<DocumentoViewModel> Documentos { get; set; }
         public string Avatar { get; set; }
+        public int UsuarioId { get; set; }
     }
 }

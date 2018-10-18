@@ -4,6 +4,7 @@ using Admin.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace Admin.Controllers
@@ -16,7 +17,7 @@ namespace Admin.Controllers
             return View();
         }
 
-        public ActionResult GetProfissionais()
+        public ActionResult GetProfissionais() //OK
         {
             var usuario = PixCoreValues.UsuarioLogado;
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
@@ -25,11 +26,15 @@ namespace Admin.Controllers
             var helper = new ServiceHelper();
             var profissionais = helper.Get<IEnumerable<Profissional>>(url);
 
+            var usuarios = GetUsuarios(usuario.idCliente);
+
             IList<ProfissionalViewModel> ret = new List<ProfissionalViewModel>();
 
             foreach (var p in profissionais)
             {
-                ret.Add(new ProfissionalViewModel(p.ID, p.Nome, string.Empty, p.Telefone.Numero, p.Telefone.ID, null, p.Email, p.Endereco));
+                var user = usuarios.FirstOrDefault(u => u.ID.Equals(p.IdUsuario));
+                ret.Add(new ProfissionalViewModel(p.ID, user.Nome, p.Nome, p.Telefone.Numero,
+                    p.Telefone.ID, p.DataNascimento.ToString(), p.Email, p.IdUsuario, p.Endereco));
             }
 
             return Json(ret, JsonRequestBehavior.AllowGet);
@@ -48,22 +53,32 @@ namespace Admin.Controllers
 
             var helper = new ServiceHelper();
             var response = helper.Post<Profissional>(url, envio);
-
-            var ret = new ProfissionalViewModel(response.ID, response.Nome, string.Empty, response.Telefone.Numero, response.Telefone.ID, 
-                null, response.Email, response.Endereco);
-
-            ret.Documentos = GetDocumentos(ret.Id);
-
             var user = GetUsuario(response.IdUsuario);
 
+            var ret = new ProfissionalViewModel(response.ID, user.Nome, response.Nome, response.Telefone.Numero, response.Telefone.ID, 
+                response.DataNascimento.ToString(), response.Email, response.IdUsuario, response.Endereco){ DataCriacao = response.DataCriacao };
+
+            var docs = GetDocumentos(ret.Id);
+
+
+            IList<DocumentoViewModel> models = new List<DocumentoViewModel>();
+
+            foreach (var item in docs)
+            {
+                models.Add(new DocumentoViewModel(item.ID, item.DocumentoTipo.Nome, item.Tipo,
+                    item.DocumentoStatusID, item.DocumentoStatus.Nome, item.DataCriacao.ToString(), item.Arquivo));
+            }
+
+            ret.Documentos = models;
             ret.Avatar = user.Avatar;
 
-            ViewBag.Statuses = GetAllDocumentoStatus();
+            var statuses = GetAllDocumentoStatus();
+            ViewBag.Statuses = statuses;
 
             return View(ret);
         }
 
-        private IList<DocumentoViewModel> GetDocumentos(int profissionalId)
+        private IEnumerable<Documento> GetDocumentos(int profissionalId)
         {
             var usuario = PixCoreValues.UsuarioLogado;
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
@@ -77,15 +92,7 @@ namespace Admin.Controllers
             var helper = new ServiceHelper();
             var response = helper.Post<IEnumerable<Documento>>(url, envio);
 
-            IList<DocumentoViewModel> models = new List<DocumentoViewModel>();
-
-            foreach (var item in response)
-            {
-                models.Add(new DocumentoViewModel(item.ID, item.DocumentoTipo.Nome, item.Tipo, 
-                    item.DocumentoStatusID, item.DocumentoStatus.Nome, item.DataCriacao.ToString(), item.Arquivo));
-            }
-
-            return models;
+            return response;
         }
 
         private Usuario GetUsuario(int usuarioId)
@@ -105,43 +112,82 @@ namespace Admin.Controllers
             return response;
         }
 
+        private IEnumerable<Usuario> GetUsuarios(int idCliente)
+        {
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/Principal/buscarUsuario/" + idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+
+            var helper = new ServiceHelper();
+            var usuarios = helper.Get<IEnumerable<Usuario>>(url);
+
+            return usuarios;
+        }
+
         [HttpPost]
         public ActionResult Alterar(ProfissionalViewModel profissional)
         {
             if(profissional.Id != 0) //Necessário ID
             {
-                var p = new Profissional(profissional.Id, profissional.Nome, profissional.Telefone, profissional.Email, profissional.Endereco) 
-                {
-                    DataEdicao = DateTime.UtcNow,
-                    UsuarioEdicao = PixCoreValues.UsuarioLogado.IdUsuario,
-                    IdCliente = PixCoreValues.UsuarioLogado.idCliente,
-                };
+                var usuario = GetUsuario(profissional.UsuarioId);
+                usuario.Status = (int)Status.Ativo;
 
-                p.Telefone.DataEdicao = DateTime.UtcNow;
-                p.UsuarioEdicao = PixCoreValues.UsuarioLogado.IdUsuario;
-                p.IdCliente = PixCoreValues.UsuarioLogado.idCliente;
-                p.Endereco.UsuarioEdicao = PixCoreValues.UsuarioLogado.IdUsuario;
-                p.Endereco.IdCliente = PixCoreValues.UsuarioLogado.idCliente;
-                p.Endereco.DataEdicao = DateTime.UtcNow;
-                p.Endereco.ProfissionalId = profissional.Id;
-                p.Endereco.Nome = p.Nome;
-                p.Telefone.ID = profissional.TelefoneId;
+                var statuses = GetAllDocumentoStatus();
+                var documentos = GetDocumentos(profissional.Id);
 
-                foreach (var documento in profissional.Documentos)
+                foreach (var item in documentos)
                 {
-                    if(documento.IdStatus == 3) //Reprovado
+                    var pDocStatus = profissional.Documentos.FirstOrDefault(d => d.Id.Equals(item.ID)).Id;
+                    item.DocumentoStatusID = statuses.FirstOrDefault(s => s.ID.Equals(pDocStatus)).ID;
+
+                    if (item.DocumentoStatusID == 3) //Reprovado
                     {
-                        //Muda o status do usuário, Criar Enumerador para Status da base
+                        usuario.Status = (int)Status.Inativo;
                     }
-                }
 
-                p.DataCriacao = profissional.DataCriacao;
-                var result = PostProfissional(p);
-
-                //Atualiza o documento
+                    if (item.DocumentoStatusID == 1) //Pendente
+                    {
+                        usuario.Status = (int)Status.Inativo;
+                    }
+                }                
+                
+                var uResult = PostUsuario(usuario);
+                var dResult = PostDocumentos(documentos);
             }
 
-            return RedirectToAction("index");
+            return RedirectToAction("Index");
+        }
+
+        private string PostDocumentos(IEnumerable<Documento> documentos)
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/wpDocumento/AtualizarDocumentos/" + usuario.idCliente + "/" + usuario.IdUsuario;
+
+            object envio = new
+            {
+                documentos,
+            };
+
+            var helper = new ServiceHelper();
+            var result = helper.Post<string>(url, envio);
+
+            return result;
+        }
+
+        private string PostUsuario(Usuario usuario)
+        {
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/Principal/salvarUsuario/" + usuario.IdCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+
+            object envio = new
+            {
+                usuario,
+            };
+
+            var helper = new ServiceHelper();
+            var result = helper.Post<string>(url, envio);
+
+            return result;
         }
 
         public string PostProfissional(Profissional profissional)
