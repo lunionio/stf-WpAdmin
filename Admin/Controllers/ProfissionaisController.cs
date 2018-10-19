@@ -33,6 +33,9 @@ namespace Admin.Controllers
             foreach (var p in profissionais)
             {
                 var user = usuarios.FirstOrDefault(u => u.ID.Equals(p.IdUsuario));
+
+                //var servicos = GetServico(p.ID);
+
                 ret.Add(new ProfissionalViewModel(p.ID, user.Nome, p.Nome, p.Telefone.Numero,
                     p.Telefone.ID, p.DataNascimento.ToString(), p.Email, p.IdUsuario, p.Endereco));
             }
@@ -54,6 +57,8 @@ namespace Admin.Controllers
             var helper = new ServiceHelper();
             var response = helper.Post<Profissional>(url, envio);
             var user = GetUsuario(response.IdUsuario);
+
+            //var servicos = GetServico(id);
 
             var ret = new ProfissionalViewModel(response.ID, user.Nome, response.Nome, response.Telefone.Numero, response.Telefone.ID, 
                 response.DataNascimento.ToString(), response.Email, response.IdUsuario, response.Endereco){ DataCriacao = response.DataCriacao };
@@ -217,6 +222,23 @@ namespace Admin.Controllers
             var statuses = helper.Get<IEnumerable<DocumentoStatus>>(url);
 
             return statuses;
+        }
+
+        public IEnumerable<Servico> GetServico(int profissionalId)
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/wpProfissionais/BuscarServico/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+
+            var envio = new
+            {
+                idProfissional = profissionalId,
+            };
+
+            var helper = new ServiceHelper();
+            var servico = helper.Post<IEnumerable<Servico>>(url, envio);
+
+            return servico;
         }
     }
 }

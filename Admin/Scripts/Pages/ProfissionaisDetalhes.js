@@ -34,6 +34,8 @@ function atualizar() {
         "data": data
     };
 
+    console.log(data);
+
     $.ajax(settings).done(function (response) {
         if (response == "ok") {
             window.location = "/Index";

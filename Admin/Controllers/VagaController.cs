@@ -1,4 +1,5 @@
-﻿using Admin.Helppser;
+﻿using Admin.Helppers;
+using Admin.Helppser;
 using Admin.Models;
 using Newtonsoft.Json;
 using System;
@@ -18,7 +19,6 @@ namespace Admin.Controllers
         {
             return View();
         }
-
         
         public ActionResult Cadastrar()
         {
@@ -56,7 +56,6 @@ namespace Admin.Controllers
         public PartialViewResult _listarOportunidades()
         {
             var usuario = PixCoreValues.UsuarioLogado;
-            var jss = new JavaScriptSerializer();
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
             var url = keyUrl + "/Seguranca/WpOportunidades/BuscarOportunidadePorEmpresa/" + usuario.idCliente + "/" +
                 PixCoreValues.UsuarioLogado.IdUsuario;
@@ -66,32 +65,8 @@ namespace Admin.Controllers
                 usuario.idEmpresa,
             };
 
-            var data = jss.Serialize(envio);
-
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                streamWriter.Write(data);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var oportunidades = default(IEnumerable<OportunidadeViewModel>);
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                var result = streamReader.ReadToEnd();
-                if (string.IsNullOrEmpty(result)
-                    || "null".Equals(result.ToLower()))
-                {
-                    throw new Exception("Ouve um erro durante o processo.");
-                }
-
-                oportunidades = jss.Deserialize<IEnumerable<OportunidadeViewModel>>(result);
-            }
+            var helper = new ServiceHelper();
+            var oportunidades = helper.Post<IEnumerable<OportunidadeViewModel>>(url, envio);
 
             var vagas = new List<VagaViewModel>();
 
@@ -117,7 +92,6 @@ namespace Admin.Controllers
             try
             {
                 var usuario = PixCoreValues.UsuarioLogado;
-                var jss = new JavaScriptSerializer();
                 var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
                 var url = keyUrl + "/Seguranca/WpOportunidades/SalvarOportunidade/" + usuario.idCliente + "/" +
                     PixCoreValues.UsuarioLogado.IdUsuario;
@@ -131,29 +105,8 @@ namespace Admin.Controllers
                     oportunidade = op,
                 };
 
-                var data = jss.Serialize(envio);
-
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "POST";
-
-                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-                {
-                    streamWriter.Write(data);
-                    streamWriter.Flush();
-                    streamWriter.Close();
-                }
-
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                {
-                    var result = streamReader.ReadToEnd();
-                    if (string.IsNullOrEmpty(result)
-                        || "null".Equals(result.ToLower()))
-                    {
-                        throw new Exception("Ouve um erro durante o processo.");
-                    }
-                }
+                var helper = new ServiceHelper();
+                var resut = helper.Post<object>(url, envio);
 
                 return true;
             }

@@ -1,4 +1,5 @@
-﻿using Admin.Helppser;
+﻿using Admin.Helppers;
+using Admin.Helppser;
 using Admin.Models;
 using System;
 using System.Collections.Generic;
@@ -35,48 +36,41 @@ namespace Admin.Controllers
 
             try
             {
-                using (var client = new WebClient())
+                var url = ConfigurationManager.AppSettings["UrlAPI"];
+                var serverUrl = $"{ url }/Seguranca/Principal/buscarEstruturas/{ PixCoreValues.UsuarioLogado.idCliente }/{ PixCoreValues.UsuarioLogado.IdUsuario }";
+
+                object envio = new
                 {
-                    var jss = new JavaScriptSerializer();
-                    var url = ConfigurationManager.AppSettings["UrlAPI"];
-                    var serverUrl = $"{ url }/Seguranca/Principal/buscarEstruturas/{ PixCoreValues.UsuarioLogado.idCliente }/{ PixCoreValues.UsuarioLogado.IdUsuario }";
-                    client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                    PixCoreValues.UsuarioLogado.idCliente,
+                    idTipoAcoes = tipoAcoes,
+                };
 
-                    object envio = new
+                var helper = new ServiceHelper();
+                var response = helper.Post<List<EstruturaViewModel>>(serverUrl, envio);
+
+                var result = response.OrderBy(r => r.Ordem).ToList();
+
+                if (result != null && result.Count() > 0)
+                {
+                    model = new List<Estrutura>();
+                    foreach (var r in result)
                     {
-                        PixCoreValues.UsuarioLogado.idCliente,
-                        idTipoAcoes = tipoAcoes,
-                    };
+                        r.SubMenus = result.Where(e => e.IdPai.Equals(r.ID)).OrderBy(x => x.Ordem);
 
-                    var data = jss.Serialize(envio);
-                    var response = client.UploadString(serverUrl, "POST", data);
-                    var result = jss.Deserialize<List<EstruturaViewModel>>(response).OrderBy(r => r.Ordem).ToList();
-
-                    if (result != null && result.Count() > 0)
-                    {
-                        model = new List<Estrutura>();
-                        foreach (var r in result)
+                        if (r.IdPai == 0) //TODO: Melhorar para sub-estrutura com filhos...
                         {
-                            r.SubMenus = result.Where(e => e.IdPai.Equals(r.ID)).OrderBy(x => x.Ordem);
-
-                            if (r.IdPai == 0) //TODO: Melhorar para sub-estrutura com filhos...
+                            var estrutura = new Estrutura(r.ID, r.UrlManual, r.ImagemMenu, r.Nome)
                             {
-                                var estrutura = new Estrutura(r.ID, r.UrlManual, r.ImagemMenu, r.Nome)
-                                {
-                                    SubEstruturas = r.SubMenus.Select(s => new Estrutura(s.ID, s.UrlManual, s.ImagemMenu, s.Nome))
-                                };
+                                SubEstruturas = r.SubMenus.Select(s => new Estrutura(s.ID, s.UrlManual, s.ImagemMenu, s.Nome))
+                            };
 
-                                model.Add(estrutura);
-                            }
+                            model.Add(estrutura);
                         }
                     }
                 }
-
             }
             catch (Exception ex)
-            {
-
-                
+            {                
             }
             
             return model;
@@ -84,21 +78,16 @@ namespace Admin.Controllers
 
         private IEnumerable<int> GetTipoAcoes()
         {
-
             try
             {
                 var url = ConfigurationManager.AppSettings["UrlAPI"];
                 var serverUrl = $"{ url }/Permissao/GetPermissoesPorUsuario/{ PixCoreValues.UsuarioLogado.IdUsuario }";
-                var jss = new JavaScriptSerializer();
-                using (var client = new WebClient())
-                {
-                    var result = client.DownloadString(serverUrl);
-                    var permissao = jss.Deserialize<Permissao>(result);
-                    var tipoAcoes = permissao.idTipoAcao.Split(',');
 
-                    return tipoAcoes.Select(id => Convert.ToInt32(id));
-                }
+                var helper = new ServiceHelper();
+                var result = helper.Get<Permissao>(serverUrl);
+                var tipoAcoes = result.idTipoAcao.Split(',');
 
+                return tipoAcoes.Select(id => Convert.ToInt32(id));
             }
             catch (Exception e)
             {

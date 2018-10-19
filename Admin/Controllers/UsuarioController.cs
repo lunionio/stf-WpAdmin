@@ -1,4 +1,5 @@
 ﻿using Admin.Controllers.Attributes;
+using Admin.Helppers;
 using Admin.Helppser;
 using Admin.Models;
 using System;
@@ -36,17 +37,12 @@ namespace Admin.Controllers
         {
             try
             {
-                IEnumerable<PermissaoViewModel> result;
-                using (var client = new WebClient())
-                {
-                    var jss = new JavaScriptSerializer();
-                    var url = ConfigurationManager.AppSettings["UrlAPI"];
-                    //var serverUrl = $"{ url }/permissao/getallpermissao/{ _idCliente }"; //TODO: Necessário cadastrar perfil com id do usuário
-                    var serverUrl = $"{ url }/permissao/getallpermissao/{ 1 }";
-                    client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                    var response = client.DownloadString(new Uri(serverUrl));
-                    result = jss.Deserialize<IEnumerable<PermissaoViewModel>>(response);
-                }
+                var url = ConfigurationManager.AppSettings["UrlAPI"];
+                //var serverUrl = $"{ url }/permissao/getallpermissao/{ _idCliente }"; //TODO: Necessário cadastrar perfil com id do usuário
+                var serverUrl = $"{ url }/permissao/getallpermissao/{ 1 }";
+
+                var helper = new ServiceHelper();
+                var result = helper.Get<IEnumerable<PermissaoViewModel>>(serverUrl);
 
                 return result;
             }
@@ -62,21 +58,8 @@ namespace Admin.Controllers
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
             var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
-            var result = string.Empty;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            {
-                using (Stream stream = response.GetResponseStream())
-                {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        result = reader.ReadToEnd();
-                    }
-                }
-            }
-
-            var jss = new JavaScriptSerializer();
-            var empresas = jss.Deserialize<IEnumerable<EmpresaViewModel>>(result);
+            var helper = new ServiceHelper();
+            var empresas = helper.Get<IEnumerable<EmpresaViewModel>>(url);
 
             return empresas;
         }
@@ -183,7 +166,6 @@ namespace Admin.Controllers
         {
             try
             {
-                var jss = new JavaScriptSerializer();
                 var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
                 var url = keyUrl + "/Seguranca/Principal/salvarUsuario/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
@@ -202,29 +184,9 @@ namespace Admin.Controllers
                         usuario.IdEmpresa,
                     }
                 };
-                var data = jss.Serialize(envio);
 
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "POST";
-
-                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-                {
-                    streamWriter.Write(data);
-                    streamWriter.Flush();
-                    streamWriter.Close();
-                }
-
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                {
-                    var result = streamReader.ReadToEnd();
-                    if (string.IsNullOrEmpty(result) 
-                        || "null".Equals(result.ToLower()))
-                    {
-                        throw new Exception("Ouve um erro durante o processo.");
-                    }
-                }
+                var helper = new ServiceHelper();
+                var result = helper.Post<object>(url, envio);
 
                 return true;
             }
@@ -241,23 +203,20 @@ namespace Admin.Controllers
                 var perfis = GetPermissoes();
                 var empresas = GetEmpresas();
 
-                using (var client = new WebClient())
+                var url = ConfigurationManager.AppSettings["UrlAPI"];
+                var serverUrl = $"{ url }/Seguranca/Principal/buscarUsuario/{ _idCliente }/{ PixCoreValues.UsuarioLogado.IdUsuario }";
+
+                var helper = new ServiceHelper();
+                var result = helper.Get<IEnumerable<UsuarioViewModel>>(serverUrl);
+
+                foreach (var item in result)
                 {
-                    var jss = new JavaScriptSerializer();
-                    var url = ConfigurationManager.AppSettings["UrlAPI"];
-                    var serverUrl = $"{ url }/Seguranca/Principal/buscarUsuario/{ _idCliente }/{ PixCoreValues.UsuarioLogado.IdUsuario }";
-                    client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                    var response = client.DownloadString(new Uri(serverUrl));
-                    var result = jss.Deserialize<IEnumerable<UsuarioViewModel>>(response);
-
-                    foreach (var item in result)
-                    {
-                        item.Empresa = empresas.FirstOrDefault(e => e.Id.Equals(item.IdEmpresa))?.Nome;
-                        item.Perfil = perfis.FirstOrDefault(p => p.ID.Equals(item.PerfilUsuario))?.Nome;
-                    }
-
-                    return result;
+                    item.Empresa = empresas.FirstOrDefault(e => e.Id.Equals(item.IdEmpresa))?.Nome;
+                    item.Perfil = perfis.FirstOrDefault(p => p.ID.Equals(item.PerfilUsuario))?.Nome;
                 }
+
+                return result;
+   
             }
             catch (Exception e)
             {
@@ -269,7 +228,6 @@ namespace Admin.Controllers
         {
             try
             {
-                var jss = new JavaScriptSerializer();
                 var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
                 var url = keyUrl + "/Seguranca/Principal/DeletarUsuario/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
                 object envio = new
@@ -279,29 +237,8 @@ namespace Admin.Controllers
                         idUsuario = usuario.ID
                     }
                 };
-                var data = jss.Serialize(envio);
-
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "POST";
-
-                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-                {
-                    streamWriter.Write(data);
-                    streamWriter.Flush();
-                    streamWriter.Close();
-                }
-
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                {
-                    var result = streamReader.ReadToEnd();
-                    if (string.IsNullOrEmpty(result)
-                        || "null".Equals(result.ToLower()))
-                    {
-                        throw new Exception("Ouve um erro durante o processo.");
-                    }
-                }
+                var helper = new ServiceHelper();
+                var result = helper.Post<object>(url, envio);
 
                 return true;
             }
