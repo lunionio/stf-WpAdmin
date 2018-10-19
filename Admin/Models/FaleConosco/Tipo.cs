@@ -1,7 +1,6 @@
 ﻿namespace Admin.Models.FaleConosco
 {
-    public class Status : Base
+    public class Tipo : Base
     {
-       
     }
 }

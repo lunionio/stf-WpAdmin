@@ -11,6 +11,7 @@ function guardaOpcao(dId) {
         Id: dId,
         Status: $('#' + dId + ' option:selected').text(),
     };
+
     documentos.push(documento);
 }
 
@@ -19,15 +20,13 @@ $('#btnAtualizar').on('click', function () {
 });
 
 function atualizar() {
-    console.log('k');
-
-    var data = {
+    let data = {
         Id: $('#mId').val(),
         UsuarioId: $('#uId').val(),
         Documentos: documentos
     };
 
-    var settings = {
+    let settings = {
         "async": true,
         "crossDomain": true,
         "url": "/Profissionais/Alterar",

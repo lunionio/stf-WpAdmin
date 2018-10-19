@@ -175,9 +175,10 @@
     <Compile Include="Models\Estrutura.cs" />
     <Compile Include="Models\EstruturaViewModel.cs" />
     <Compile Include="Models\FaleconoscoVIewModel.cs" />
-    <Compile Include="Models\Faleconosco\Atendimento.cs" />
-    <Compile Include="Models\Faleconosco\Status.cs" />
-    <Compile Include="Models\Faleconosco\Ticket.cs" />
+    <Compile Include="Models\FaleConosco\Atendimento.cs" />
+    <Compile Include="Models\FaleConosco\Status.cs" />
+    <Compile Include="Models\FaleConosco\Ticket.cs" />
+    <Compile Include="Models\FaleConosco\Tipo.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\OportunidadeViewModel.cs" />
     <Compile Include="Models\PageViewModel.cs" />
@@ -483,6 +484,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\nouislider.min.js" />
+    <Content Include="Scripts\Pages\AtendimentoEditar.js" />
     <Content Include="Scripts\Pages\EmpresaCadastrar.js" />
     <Content Include="Scripts\Pages\EmpresaListar.js" />
     <Content Include="Scripts\Pages\FaleConosco.js" />

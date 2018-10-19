@@ -1,5 +1,8 @@
-﻿using Admin.Helppser;
+﻿using Admin.Helppers;
+using Admin.Helppser;
 using Admin.Models;
+using Admin.Models.FaleConosco;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -20,15 +23,18 @@ namespace Admin.Controllers
 
         public ActionResult Editar(int id)
         {
-            //var ticketJson = GetTicket(id);
             ViewBag.Id = id;
-            return View();
+
+            var result = GetTicket(id);
+            var ticket = JsonConvert.DeserializeObject<Ticket>(result);
+
+            var model = new AtendimentoViewModel(ticket.Email, ticket.Origem, ticket.Tipo.Nome, ticket.Numero, ticket.Descricao, ticket.ID);
+            return View(model);
         }
 
         public ActionResult Excluir(int id)
         {
             var usuario = PixCoreValues.UsuarioLogado;
-            var jss = new JavaScriptSerializer();
 
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
             var url = keyUrl + "/Seguranca/wpAtendimento/DesativarTicket/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
@@ -39,30 +45,9 @@ namespace Admin.Controllers
                     id,
                 }
             };
-            var data = jss.Serialize(envio);
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                streamWriter.Write(data);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var result = string.Empty;
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                result = streamReader.ReadToEnd();
-                if (string.IsNullOrEmpty(result)
-                    || "null".Equals(result.ToLower()))
-                {
-                    throw new Exception("Ouve um erro durante o processo.");
-                }
-            }
+            var helper = new ServiceHelper();
+            var result = helper.Post<string>(url, envio);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -71,7 +56,7 @@ namespace Admin.Controllers
         {
             try
             {
-                if (!string.IsNullOrEmpty(viewModel.Nome) && !string.IsNullOrEmpty(viewModel.Resposta))
+                if (!string.IsNullOrEmpty(viewModel.Resposta))
                 {
                     viewModel.IdCliente = PixCoreValues.UsuarioLogado.idCliente;
 
@@ -80,21 +65,19 @@ namespace Admin.Controllers
 
                     viewModel.UsuarioEdicao = PixCoreValues.UsuarioLogado.IdUsuario;
                     viewModel.Ativo = true;
+
                     if (EnviaAtendimento(viewModel))
                     {
-                        ViewData["ResultadoAtendimento"] = new ResultadoViewModel("Resposta enviada com sucesso!", true);
                         ModelState.Clear();
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index");
                     }
                 }
 
-                ViewData["ResultadoAtendimento"] = new ResultadoViewModel("Informe todos os dados necessários.", false);
-                return View("Index", viewModel);
+                return View("Editar", viewModel);
             }
             catch (Exception e)
             {
-                ViewData["ResultadoAtendimento"] = new ResultadoViewModel("Não foi possível enviar a resposta.", false);
-                return View("Index", viewModel);
+                return View("Editar", viewModel);
             }
         }
 
@@ -104,21 +87,9 @@ namespace Admin.Controllers
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
             var url = keyUrl + "/Seguranca/wpAtendimento/BuscarTickets/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
-            var result = string.Empty;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            {
-                using (Stream stream = response.GetResponseStream())
-                {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        result = reader.ReadToEnd();
-                    }
-                }
-            }
+            var helper = new ServiceHelper();
+            var tickets = helper.Get<IEnumerable<object>>(url);
 
-            var jss = new JavaScriptSerializer();
-            var tickets = jss.Deserialize<IEnumerable<object>>(result);
             return Json(tickets, JsonRequestBehavior.AllowGet);
         }
 
@@ -126,85 +97,50 @@ namespace Admin.Controllers
         {
             try
             {
-                var jss = new JavaScriptSerializer();
                 var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
                 var url = keyUrl + "/Seguranca/wpAtendimento/TicketResposta/" + model.IdCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
+                var atendimento = new Atendimento(model.IdCliente, model.Resposta, model.TicketId)
+                {
+                    IdCliente = model.IdCliente,
+                    Nome = model.Numero,
+                    UsuarioCriacao = PixCoreValues.UsuarioLogado.IdUsuario,
+                    UsuarioEdicao = PixCoreValues.UsuarioLogado.IdUsuario,
+                    Status = 1,
+                    Descricao = model.Descricao,
+                };
+
                 object envio = new
                 {
-                   atendimento = model
+                   atendimento,
                 };
-                var data = jss.Serialize(envio);
 
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "POST";
-
-                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-                {
-                    streamWriter.Write(data);
-                    streamWriter.Flush();
-                    streamWriter.Close();
-                }
-
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                {
-                    var result = streamReader.ReadToEnd();
-                    if (string.IsNullOrEmpty(result)
-                        || "null".Equals(result.ToLower()))
-                    {
-                        throw new Exception("Ouve um erro durante o processo.");
-                    }
-                }
+                var helper = new ServiceHelper();
+                var result = helper.Post<string>(url, envio);
 
                 return true;
             }
             catch (Exception e)
             {
-                throw new Exception("Não foi possível salvar o usuário.", e);
+                throw new Exception("Não foi possível responder o ticket.", e);
             }
         }
 
-        private ActionResult GetTicket(int ticketId)
+        private string GetTicket(int ticketId)
         {
             var usuario = PixCoreValues.UsuarioLogado;
-            var jss = new JavaScriptSerializer();
-
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
             var url = keyUrl + "/Seguranca/wpAtendimento/BuscarTicketPorID/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+
             object envio = new
             {
                 id = ticketId,
             };
-            var data = jss.Serialize(envio);
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
+            var helper = new ServiceHelper();
+            var result = helper.Post<object>(url, envio);
 
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                streamWriter.Write(data);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var result = string.Empty;
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                result = streamReader.ReadToEnd();
-                if (string.IsNullOrEmpty(result)
-                    || "null".Equals(result.ToLower()))
-                {
-                    throw new Exception("Ouve um erro durante o processo.");
-                }
-            }
-
-            //var ticket = jss.Deserialize<object>(result);
-
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return JsonConvert.SerializeObject(result);
         }
     }
 }

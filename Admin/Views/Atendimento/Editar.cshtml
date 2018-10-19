@@ -3,6 +3,7 @@
     ViewBag.Title = "Atendimento - Editar";
 }
 
+@model Admin.Models.AtendimentoViewModel
 <div class="row">
     <div class="card col-md-12">
 
@@ -14,19 +15,20 @@
                     <p><h4><strong>DADOS</strong></h4></p>
 
                     <div class="form-group">
-
+                        <input id="atdId" type="hidden" value="@Model.ID" />
+                        <input id="tId" type="hidden" value="@Model.TicketId" />
                         <label class=" control-label"><strong>E-mail</strong></label>
-                        <input type="text" id="email" name="email" value="teste@teste.com.br" disabled="disabled" class="form-control col-md-12">
+                        <input type="text" id="email" name="email" value="@Model.Email" disabled="disabled" class="form-control col-md-12">
 
                         <label class=" control-label"><strong>Categoria</strong></label>
-                        <input type="text" id="categoria" name="categoria" value="Reclamação" disabled="disabled" class="form-control col-md-12">
+                        <input type="text" id="categoria" name="categoria" value="@Model.Categoria" disabled="disabled" class="form-control col-md-12">
 
                         <label class=" control-label"><strong>Origem</strong></label>
-                        <input type="text" id="origem" name="origem" value="WEB Site" disabled="disabled" class="form-control col-md-12">
+                        <input type="text" id="origem" name="origem" value="@Model.Origem" disabled="disabled" class="form-control col-md-12">
 
-                        <label class=" control-label"><strong>Telefone</strong></label>
-                        <input type="text" id="telefone" name="telefone" value="WEB Site" disabled="disabled" class="form-control col-md-12">
-                        <input type="hidden" id="telefoneId" name="telefoneId" value="0" class="form-control col-md-5">
+                        <label class=" control-label"><strong>Número</strong></label>
+                        <input type="text" id="numero" name="numero" value="@Model.Numero" disabled="disabled" class="form-control col-md-12">
+                        <input type="hidden" id="numeroId" name="numeroId" value="0" class="form-control col-md-5">
 
                     </div>
 
@@ -35,10 +37,10 @@
                 <div class="col-md-9">
                     <p><h4><strong>COMENTÁRIOS</strong></h4></p>
                     <div class="form-group">
-                        <textarea id="mensagem" class="form-group col-md-12" rows="8" disabled="disabled"></textarea>
+                        <textarea id="mensagem" class="form-group col-md-12" rows="8" disabled="disabled">@Model.Descricao</textarea>
                         <p><h4><strong>RESPONDER</strong></h4></p>
                         <div class="form-group">
-                            <textarea id="resposta" class="form-group col-md-12" rows="5"></textarea>
+                            <textarea id="respostaTicket" class="form-group col-md-12" rows="5"></textarea>
                         </div>
                         <input id="btnEncerrar" type="button" class="btn btn-default" value="Encerrar" />
                     </div>
@@ -50,3 +52,7 @@
 
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/Scripts/Pages/AtendimentoEditar.js"></script>
+}
