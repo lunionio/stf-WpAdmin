@@ -1,20 +1,17 @@
 ﻿let documentos = [];
 
 function guardaOpcao(dId) {
-    let r = false;
-    documentos.forEach(function (item, index) {
-        if (item.id === dId) {
-            r = true;
+    documentos.forEach(function (item, index, array) {
+        if (item.Id === dId) {
+            array.splice(index, 1);
         }
     });
 
-    if (!r) {
-        let documento = {
-            Id: dId,
-            Status: $('#' + dId + ' option:selected').text(),
-        };
-        documentos.push(documento);
-    }
+    let documento = {
+        Id: dId,
+        Status: $('#' + dId + ' option:selected').text(),
+    };
+    documentos.push(documento);
 }
 
 $('#btnAtualizar').on('click', function () {

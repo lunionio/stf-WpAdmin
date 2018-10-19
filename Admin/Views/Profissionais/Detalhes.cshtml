@@ -117,7 +117,7 @@
                                         {
                                             foreach (var s in (ViewBag.Statuses as IEnumerable<Admin.Models.DocumentoStatus>))
                                             {
-                                                <option value="@item.Id">@s.Nome</option>
+                                                <option selected="@( s.ID.Equals(item.IdStatus) ? "selected" : "" )" value="@item.Id">@s.Nome</option>
                                             }
                                         }
                                     </select>

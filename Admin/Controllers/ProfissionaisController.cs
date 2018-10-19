@@ -124,8 +124,9 @@ namespace Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Alterar(ProfissionalViewModel profissional)
+        public string Alterar(ProfissionalViewModel profissional)
         {
+            var result = string.Empty;
             if(profissional.Id != 0) //Necessário ID
             {
                 var usuario = GetUsuario(profissional.UsuarioId);
@@ -136,8 +137,8 @@ namespace Admin.Controllers
 
                 foreach (var item in documentos)
                 {
-                    var pDocStatus = profissional.Documentos.FirstOrDefault(d => d.Id.Equals(item.ID)).Id;
-                    item.DocumentoStatusID = statuses.FirstOrDefault(s => s.ID.Equals(pDocStatus)).ID;
+                    var pDocStatus = profissional.Documentos.FirstOrDefault(d => d.Id.Equals(item.ID)).Status;
+                    item.DocumentoStatusID = statuses.FirstOrDefault(s => s.Nome.Equals(pDocStatus)).ID;
 
                     if (item.DocumentoStatusID == 3) //Reprovado
                     {
@@ -150,11 +151,11 @@ namespace Admin.Controllers
                     }
                 }                
                 
-                var uResult = PostUsuario(usuario);
-                var dResult = PostDocumentos(documentos);
+                result += PostUsuario(usuario);
+                result += PostDocumentos(documentos);
             }
 
-            return RedirectToAction("Index");
+            return result;
         }
 
         private string PostDocumentos(IEnumerable<Documento> documentos)
