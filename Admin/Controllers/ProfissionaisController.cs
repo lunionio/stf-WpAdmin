@@ -24,20 +24,17 @@ namespace Admin.Controllers
             var url = keyUrl + "/Seguranca/wpProfissionais/BuscarProfissionais/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
             var helper = new ServiceHelper();
-            var profissionais = helper.Get<IEnumerable<Profissional>>(url);
+            var profissionais = helper.Get<IEnumerable<ProfissionalServico>>(url);
 
-            var usuarios = GetUsuarios(usuario.idCliente);
+            var usuarios = GetUsuarios(profissionais.Select(x => x.Profissional.IdUsuario));
 
             IList<ProfissionalViewModel> ret = new List<ProfissionalViewModel>();
 
             foreach (var p in profissionais)
             {
-                var user = usuarios.FirstOrDefault(u => u.ID.Equals(p.IdUsuario));
 
-                //var servicos = GetServico(p.ID);
-
-                ret.Add(new ProfissionalViewModel(p.ID, user.Nome, p.Nome, p.Telefone.Numero,
-                    p.Telefone.ID, p.DataNascimento.ToString(), p.Email, p.IdUsuario, p.Endereco));
+                ret.Add(new ProfissionalViewModel(p.Profissional.ID, p.Profissional.Nome, p.Servico.Nome, p.Profissional.Telefone.Numero,
+                    p.Profissional.Telefone.ID, p.Profissional.DataNascimento.ToString(), p.Profissional.Email, p.UsuarioId, p.Profissional.Endereco));
             }
 
             return Json(ret, JsonRequestBehavior.AllowGet);
@@ -55,16 +52,14 @@ namespace Admin.Controllers
             };
 
             var helper = new ServiceHelper();
-            var response = helper.Post<Profissional>(url, envio);
-            var user = GetUsuario(response.IdUsuario);
+            var response = helper.Post<ProfissionalServico>(url, envio);
+            var user = GetUsuario(response.Profissional.IdUsuario);
 
-            //var servicos = GetServico(id);
-
-            var ret = new ProfissionalViewModel(response.ID, user.Nome, response.Nome, response.Telefone.Numero, response.Telefone.ID, 
-                response.DataNascimento.ToString(), response.Email, response.IdUsuario, response.Endereco){ DataCriacao = response.DataCriacao };
+            var ret = new ProfissionalViewModel(response.Profissional.ID, user.Nome, response.Nome, response.Profissional.Telefone.Numero, response.Profissional.Telefone.ID, 
+                response.Profissional.DataNascimento.ToString(), response.Profissional.Email,
+                response.Profissional.IdUsuario, response.Profissional.Endereco){ DataCriacao = response.Profissional.DataCriacao };
 
             var docs = GetDocumentos(ret.Id);
-
 
             IList<DocumentoViewModel> models = new List<DocumentoViewModel>();
 
@@ -117,13 +112,19 @@ namespace Admin.Controllers
             return response;
         }
 
-        private IEnumerable<Usuario> GetUsuarios(int idCliente)
+        private IEnumerable<Usuario> GetUsuarios(IEnumerable<int> ids)
         {
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
-            var url = keyUrl + "/Seguranca/Principal/buscarUsuario/" + idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+            var url = keyUrl + "/Seguranca/Principal/BuscarUsuarios/" + PixCoreValues.UsuarioLogado.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+
+            object envio = new
+            {
+                PixCoreValues.UsuarioLogado.idCliente,
+                ids,
+            };
 
             var helper = new ServiceHelper();
-            var usuarios = helper.Get<IEnumerable<Usuario>>(url);
+            var usuarios = helper.Post<IEnumerable<Usuario>>(url, envio);
 
             return usuarios;
         }

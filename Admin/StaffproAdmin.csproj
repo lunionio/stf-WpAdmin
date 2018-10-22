@@ -187,6 +187,7 @@
     <Compile Include="Models\PermissaoViewModel.cs" />
     <Compile Include="Models\Profissional\Profissional.cs" />
     <Compile Include="Models\Profissional\ProfissionalFormacao.cs" />
+    <Compile Include="Models\Profissional\ProfissionalServico.cs" />
     <Compile Include="Models\Profissional\ProfissionalViewModel.cs" />
     <Compile Include="Models\Profissional\Servico.cs" />
     <Compile Include="Models\Profissional\ServicoTipo.cs" />
