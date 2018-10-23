@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -55,6 +56,13 @@ namespace Admin.Controllers
 
         public PartialViewResult _listarOportunidades()
         {
+            IList<VagaViewModel> vagas = GetOportunidades();
+
+            return PartialView(vagas);
+        }
+
+        private static IList<VagaViewModel> GetOportunidades()
+        {
             var usuario = PixCoreValues.UsuarioLogado;
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
             var url = keyUrl + "/Seguranca/WpOportunidades/BuscarOportunidadePorEmpresa/" + usuario.idCliente + "/" +
@@ -72,18 +80,117 @@ namespace Admin.Controllers
 
             foreach (var o in oportunidades)
                 vagas.Add(new VagaViewModel() { Id = o.ID, Nome = o.Nome, ProfissionalNome = o.DescProfissional });
-
-
-            return PartialView(vagas);
+            return vagas;
         }
 
-        public PartialViewResult _lsitarProfissionais()
+        public PartialViewResult _listarProfissionais()
         {
+            int optId = 51;
+            var userXOportunidades = GetProfissionaisByOpt(optId);
+            var profissionais = GetProfissionais(userXOportunidades.Select(x => x.UserId));
+            var users = GetUsers(profissionais.Select(x => x.UsuarioId));
+
+
             return PartialView();
+        }
+
+        private IEnumerable<ProfissionalServico> GetProfissionais(IEnumerable<int> ids)
+        {
+            try
+            {
+                var usuario = PixCoreValues.UsuarioLogado;
+                var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+                var url = keyUrl + "/Seguranca/wpProfissionais/BuscarPorIds/" + usuario.idCliente + "/" +
+                    PixCoreValues.UsuarioLogado.IdUsuario;
+
+                var envio = new
+                {
+                    ids,
+                };
+
+                var helper = new ServiceHelper();
+                var result = helper.Post<IEnumerable<ProfissionalServico>>(url, envio);
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Não foi possível completar a operação.", e);
+            }
+        }
+
+        private IEnumerable<Usuario> GetUsers(IEnumerable<int> ids)
+        {
+            try
+            {
+                var usuario = PixCoreValues.UsuarioLogado;
+                var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+                var url = keyUrl + "/Seguranca/Pincipal/BuscarUsuarios/" + usuario.idCliente + "/" +
+                    PixCoreValues.UsuarioLogado.IdUsuario;
+
+                var envio = new
+                {
+                    ids,
+                };
+
+                var helper = new ServiceHelper();
+                var result = helper.Post<IEnumerable<Usuario>>(url, envio);
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Não foi possível completar a operação.", e);
+            }
+        }
+
+        private IEnumerable<UserXOportunidade> GetProfissionaisByOpt(int idOpt)
+        {
+            try
+            {
+                var usuario = PixCoreValues.UsuarioLogado;
+                var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+                var url = keyUrl + "/Seguranca/WpOportunidades/BuscarUsuariosPorOportunidade/" + usuario.idCliente + "/" +
+                    PixCoreValues.UsuarioLogado.IdUsuario;
+
+                var envio = new
+                {
+                    idOpt,
+                };
+
+                var helper = new ServiceHelper();
+                var result = helper.Post<IEnumerable<UserXOportunidade>>(url, envio);
+
+                return result;
+            }
+            catch(Exception e)
+            {
+                throw new Exception("Não foi possível completar a operação.", e);
+            }
         }
 
         public PartialViewResult _vincularPorifissionais()
         {
+            var t = new UserXOportunidade()
+            {
+                OportunidadeId = 38,
+                UserId = 3,
+                StatusID = 2
+            };
+
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/WpOportunidades/CanditarOportunidade/" + usuario.idCliente + "/" +
+                PixCoreValues.UsuarioLogado.IdUsuario;
+
+            var envio = new
+            {
+                userXOportunidade = t,
+            };
+
+            var helper = new ServiceHelper();
+            var result = helper.Post<IEnumerable<UserXOportunidade>>(url, envio);
+
             return PartialView();
         }
 

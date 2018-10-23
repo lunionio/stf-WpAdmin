@@ -193,6 +193,8 @@
     <Compile Include="Models\Profissional\ServicoTipo.cs" />
     <Compile Include="Models\ResultadoViewModel.cs" />
     <Compile Include="Models\Profissional\Telefone.cs" />
+    <Compile Include="Models\Status.cs" />
+    <Compile Include="Models\UserXOportunidade.cs" />
     <Compile Include="Models\Usuario\Usuario.cs" />
     <Compile Include="Models\Usuario\UsuarioViewModel.cs" />
     <Compile Include="Models\VagaViewModel.cs" />

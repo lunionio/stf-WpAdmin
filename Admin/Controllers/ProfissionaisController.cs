@@ -136,7 +136,7 @@ namespace Admin.Controllers
             if(profissional.Id != 0) //Necessário ID
             {
                 var usuario = GetUsuario(profissional.UsuarioId);
-                usuario.Status = (int)Status.Ativo;
+                usuario.Status = (int)UserStatus.Ativo;
 
                 var statuses = GetAllDocumentoStatus();
                 var documentos = GetDocumentos(profissional.Id);
@@ -148,12 +148,12 @@ namespace Admin.Controllers
 
                     if (item.DocumentoStatusID == 3) //Reprovado
                     {
-                        usuario.Status = (int)Status.Inativo;
+                        usuario.Status = (int)UserStatus.Inativo;
                     }
 
                     if (item.DocumentoStatusID == 1) //Pendente
                     {
-                        usuario.Status = (int)Status.Inativo;
+                        usuario.Status = (int)UserStatus.Inativo;
                     }
                 }                
                 
@@ -176,9 +176,9 @@ namespace Admin.Controllers
             };
 
             var helper = new ServiceHelper();
-            var result = helper.Post<string>(url, envio);
+            var result = helper.Post<object>(url, envio);
 
-            return result;
+            return Convert.ToString(result);
         }
 
         private string PostUsuario(Usuario usuario)
@@ -192,9 +192,9 @@ namespace Admin.Controllers
             };
 
             var helper = new ServiceHelper();
-            var result = helper.Post<string>(url, envio);
+            var result = helper.Post<object>(url, envio);
 
-            return result;
+            return Convert.ToString(result);
         }
 
         public string PostProfissional(Profissional profissional)
@@ -208,9 +208,9 @@ namespace Admin.Controllers
             };
 
             var helper = new ServiceHelper();
-            var result = helper.Post<string>(url, envio);
+            var result = helper.Post<object>(url, envio);
 
-            return result;            
+            return Convert.ToString(result);            
         }
 
         public IEnumerable<DocumentoStatus> GetAllDocumentoStatus()

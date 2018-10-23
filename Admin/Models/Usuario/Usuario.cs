@@ -11,7 +11,7 @@
         public int IdEmpresa { get; set; }
     }
 
-    public enum Status
+    public enum UserStatus
     {
         Ativo = 1,
         Inativo = 0,
