@@ -17,7 +17,7 @@ namespace Admin.Controllers
             return View();
         }
 
-        public ActionResult GetProfissionais() //OK
+        public ActionResult GetProfissionais()
         {
             var usuario = PixCoreValues.UsuarioLogado;
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
@@ -178,7 +178,7 @@ namespace Admin.Controllers
             var helper = new ServiceHelper();
             var result = helper.Post<object>(url, envio);
 
-            return Convert.ToString(result);
+            return (result as string);
         }
 
         private string PostUsuario(Usuario usuario)
@@ -192,9 +192,14 @@ namespace Admin.Controllers
             };
 
             var helper = new ServiceHelper();
-            var result = helper.Post<object>(url, envio);
+            var result = helper.Post<Usuario>(url, envio);
 
-            return Convert.ToString(result);
+            if(usuario.ID > 0)
+            {
+                return "Usuário salvo com sucesso. ";
+            }
+
+            return "Não foi possível atualizar o status do usuário. ";
         }
 
         public string PostProfissional(Profissional profissional)

@@ -93,18 +93,11 @@
     </div>
 </div>
 
-
-
-
-@{ bool result = (ViewData["Resultado"] != null); }
-
 @section Scripts
 {
 
 
     <script>
-
-    let t = @Json.Encode(Convert.ToBoolean(result));
         $("#miolo").addClass("card-wizard");
 
         $('#btnCadastrar').on('click', function () {

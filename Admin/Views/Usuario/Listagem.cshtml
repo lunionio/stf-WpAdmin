@@ -5,41 +5,6 @@
 
 @model IEnumerable<Admin.Models.UsuarioViewModel>
 
-@if (ViewData["ResultadoDelete"] != null)
-{
-    <div class="modal fade" id="myModal" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    @{
-                        if ((ViewData["ResultadoDelete"] as Admin.Models.ResultadoViewModel).Sucesso)
-                        {
-                            <h4 class="modal-title">Sucesso!</h4>
-                        }
-                        else
-                        {
-                            <h4 class="modal-title">Erro!</h4>
-                        }
-                    }
-                </div>
-                <div class="modal-body">
-                    @if (!string.IsNullOrEmpty((ViewData["ResultadoDelete"] as Admin.Models.ResultadoViewModel).Mensagem))
-                    {
-                        <p>@((ViewData["ResultadoDelete"] as Admin.Models.ResultadoViewModel).Mensagem)</p>
-                    }
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-}
-
-
 <div class="row">
     <div class="col-md-12">
         <div id="miolo" class="card strpied-tabled-with-hover card-wizard">
@@ -86,15 +51,11 @@
     </div>
 </div>
 
-
-@{ bool result = (ViewData["ResultadoDelete"] != null); }
-@*<script src="~/Scripts/jquery-3.3.1.min.js"></script>*@
 @section Scripts
 {
     <script src="~/Scripts/jquery.datatables.js"></script>
     <script>
         //"dom": '<"top"f>rt<"bottom"lp><"clear">'
-        let t = @Json.Encode(Convert.ToBoolean(result));
         $(document).ready(function () {
 
             $('.btnAcao').on('click', function () {

@@ -75,11 +75,17 @@ namespace Admin.Controllers
 
             var helper = new ServiceHelper();
             var oportunidades = helper.Post<IEnumerable<OportunidadeViewModel>>(url, envio);
+            var empresas = GetEmpresas();
 
             var vagas = new List<VagaViewModel>();
 
             foreach (var o in oportunidades)
-                vagas.Add(new VagaViewModel() { Id = o.ID, Nome = o.Nome, ProfissionalNome = o.DescProfissional });
+            {
+                var empresa = empresas.FirstOrDefault(e => e.Id.Equals(o.IdEmpresa));
+                vagas.Add(new VagaViewModel() { Id = o.ID, Nome = o.Nome, ProfissionalNome = o.DescProfissional,
+                    NomeEmpresa = empresa.Nome, Qtd = o.Quantidade, Valor = o.Valor, DataEvento = o.DataOportunidade });
+            }
+
             return vagas;
         }
 
@@ -88,8 +94,34 @@ namespace Admin.Controllers
             int optId = 51;
             var userXOportunidades = GetProfissionaisByOpt(optId);
             var profissionais = GetProfissionais(userXOportunidades.Select(x => x.UserId));
-            var users = GetUsers(profissionais.Select(x => x.UsuarioId));
+            var users = GetUsers(profissionais.Select(x => x.Profissional.IdUsuario));
 
+
+            return PartialView();
+        }
+
+        public PartialViewResult _vincularPorifissionais()
+        {
+            var t = new UserXOportunidade()
+            {
+                OportunidadeId = 38,
+                UserId = 3,
+                StatusID = 2
+            };
+
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/WpOportunidades/CanditarOportunidade/" + usuario.idCliente + "/" +
+                PixCoreValues.UsuarioLogado.IdUsuario;
+
+            var envio = new
+            {
+                usuario.idCliente,
+                userXOportunidade = t,
+            };
+
+            var helper = new ServiceHelper();
+            var result = helper.Post<object>(url, envio);
 
             return PartialView();
         }
@@ -105,6 +137,7 @@ namespace Admin.Controllers
 
                 var envio = new
                 {
+                    usuario.idCliente,
                     ids,
                 };
 
@@ -125,11 +158,12 @@ namespace Admin.Controllers
             {
                 var usuario = PixCoreValues.UsuarioLogado;
                 var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
-                var url = keyUrl + "/Seguranca/Pincipal/BuscarUsuarios/" + usuario.idCliente + "/" +
+                var url = keyUrl + "/Seguranca/Principal/BuscarUsuarios/" + usuario.idCliente + "/" +
                     PixCoreValues.UsuarioLogado.IdUsuario;
 
                 var envio = new
                 {
+                    usuario.idCliente,
                     ids,
                 };
 
@@ -168,32 +202,7 @@ namespace Admin.Controllers
                 throw new Exception("Não foi possível completar a operação.", e);
             }
         }
-
-        public PartialViewResult _vincularPorifissionais()
-        {
-            var t = new UserXOportunidade()
-            {
-                OportunidadeId = 38,
-                UserId = 3,
-                StatusID = 2
-            };
-
-            var usuario = PixCoreValues.UsuarioLogado;
-            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
-            var url = keyUrl + "/Seguranca/WpOportunidades/CanditarOportunidade/" + usuario.idCliente + "/" +
-                PixCoreValues.UsuarioLogado.IdUsuario;
-
-            var envio = new
-            {
-                userXOportunidade = t,
-            };
-
-            var helper = new ServiceHelper();
-            var result = helper.Post<IEnumerable<UserXOportunidade>>(url, envio);
-
-            return PartialView();
-        }
-
+        
         private static bool SaveVaga(VagaViewModel vaga)
         {
             try
@@ -221,6 +230,18 @@ namespace Admin.Controllers
             {
                 throw new Exception("Não foi possível salvar o usuário.", e);
             }
-        }  
+        }
+
+        private static IEnumerable<EmpresaViewModel> GetEmpresas()
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+
+            var helper = new ServiceHelper();
+            var empresas = helper.Get<IEnumerable<EmpresaViewModel>>(url);
+
+            return empresas;
+        }
     }
 }

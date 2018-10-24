@@ -191,7 +191,6 @@
     <Compile Include="Models\Profissional\ProfissionalViewModel.cs" />
     <Compile Include="Models\Profissional\Servico.cs" />
     <Compile Include="Models\Profissional\ServicoTipo.cs" />
-    <Compile Include="Models\ResultadoViewModel.cs" />
     <Compile Include="Models\Profissional\Telefone.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="Models\UserXOportunidade.cs" />

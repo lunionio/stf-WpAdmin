@@ -96,19 +96,15 @@ namespace Admin.Controllers
 
                     if (SaveUsuario(viewModel))
                     {
-                        ViewData["Resultado"] = new ResultadoViewModel("Usuário cadastrado com sucesso!", true);
                         ModelState.Clear();
-
                         return RedirectToAction("Listagem");
                     }
                 }
 
-                ViewData["Resultado"] = new ResultadoViewModel("Informe todos os dados necessários.", false);
                 return View("Cadastro", viewModel);
             }
             catch (Exception e)
-            {
-                ViewData["Resultado"] = new ResultadoViewModel("Não foi possível salvar o usuário.", false);                
+            {             
                 return View("Cadastro", viewModel);
             }
         }
@@ -152,12 +148,10 @@ namespace Admin.Controllers
                     return View("Listagem", usuarios);
                 }
 
-                ViewData["ResultadoDelete"] = new ResultadoViewModel("Não foi possível deletar o usuário.", false);
                 return View("Listagem", users);
             }
             catch(Exception e)
             {
-                ViewData["ResultadoDelete"] = new ResultadoViewModel("Não foi possível deletar o usuário.", false);
                 return View("Listagem", users);
             }
         }

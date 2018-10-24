@@ -97,6 +97,7 @@ namespace Admin.Helppser
                         //user.idCliente = Usuario.idCliente;
                         user.idPerfil = Usuario.PerfilUsuario;
                         user.IdUsuario = Usuario.ID;
+                        user.idEmpresa = Usuario.IdEmpresa;
 
                         if (current.Request.Cookies["UsuarioLogado"] != null)
                         {

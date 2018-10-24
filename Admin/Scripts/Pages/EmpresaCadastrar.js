@@ -23,6 +23,7 @@ function PublicarAgora() {
     }
 
     $.ajax(settings).done(function (response) {
+
         if (response == "ok") {
 
             window.location = "/Vaga";
@@ -262,9 +263,10 @@ function Save() {
     }
 
     $.ajax(settings).done(function (response) {
-        //$('#modal').html(response);
-        //$('#myModal').modal('show');
-        //LoadingBodyStop();
+        //console.log(response);
+        $('#modal').html(response);
+        $('#myModal').modal('show');
+        LoadingBodyStop();
     });
 
     return true;

@@ -46,18 +46,15 @@ namespace Admin.Controllers
                     viewModel.Ativo = true;
                     if (SaveEmpresa(viewModel))
                     {
-                        ViewData["ResultadoEmpresa"] = new ResultadoViewModel("Empresa cadastrada com sucesso!", true);
                         ModelState.Clear();
                         return RedirectToAction("Index", "Home");
                     }
                 }
 
-                ViewData["ResultadoEmpresa"] = new ResultadoViewModel("Informe todos os dados necessários.", false);
                 return View("Cadastrar", viewModel);
             }
             catch (Exception e)
             {
-                ViewData["ResultadoEmpresa"] = new ResultadoViewModel("Não foi possível salvar o usuário.", false);
                 return View("Cadastrar", viewModel);
             }
         }
@@ -87,7 +84,8 @@ namespace Admin.Controllers
                             PixCoreValues.UsuarioLogado.IdUsuario,
                             model.UsuarioCriacao,
                             model.UsuarioEdicao,
-                            model.IdCliente
+                            model.IdCliente,
+                            local = model.Rua
                         },
                         model.Nome,
                         model.UsuarioCriacao,
