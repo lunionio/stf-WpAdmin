@@ -49,7 +49,7 @@ namespace Admin.Controllers
                 var response = helper.Post<List<EstruturaViewModel>>(serverUrl, envio);
 
                 var result = response.OrderBy(r => r.Ordem).ToList();
-
+                result = result.Where(x => x.Tipo == 1).ToList();
                 if (result != null && result.Count() > 0)
                 {
                     model = new List<Estrutura>();

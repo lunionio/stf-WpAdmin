@@ -93,8 +93,7 @@ namespace Admin.Helppser
                 {
                     if (Convert.ToBoolean(Usuario.VAdmin))
                     {
-                        user.idCliente = 1; //StaffPro
-                        //user.idCliente = Usuario.idCliente;
+                        user.idCliente = Usuario.idCliente;
                         user.idPerfil = Usuario.PerfilUsuario;
                         user.IdUsuario = Usuario.ID;
                         user.idEmpresa = Usuario.IdEmpresa;
