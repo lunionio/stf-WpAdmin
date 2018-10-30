@@ -31,9 +31,9 @@ namespace Admin.Helppser
                 var DefaultSiteUrl = protocolo + "://" + url + ":" + porta.ToString() + "/";
                 var current = HttpContext.Current;
 
-                if (current.Request.Cookies["IdCliente"] != null)
+                if (current.Request.Cookies["IdClienteStaff"] != null)
                 {
-                    var cookiesValido = current.Request.Cookies["IdCliente"].Value;
+                    var cookiesValido = current.Request.Cookies["IdClienteStaff"].Value;
                     var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
                     IdCliente = jss.Deserialize<int>(cookiesValido);
                     return IdCliente;
@@ -98,14 +98,14 @@ namespace Admin.Helppser
                         user.IdUsuario = Usuario.ID;
                         user.idEmpresa = Usuario.IdEmpresa;
 
-                        if (current.Request.Cookies["UsuarioLogado"] != null)
+                        if (current.Request.Cookies["UsuarioLogadoStaff"] != null)
                         {
-                            cookievalue = current.Request.Cookies["UsuarioLogado"].ToString();
+                            cookievalue = current.Request.Cookies["UsuarioLogadoStaff"].ToString();
                         }
                         else
                         {
-                            current.Response.Cookies["UsuarioLogado"].Value = jss.Serialize(user);
-                            current.Response.Cookies["UsuarioLogado"].Expires = DateTime.Now.AddMinutes(30); // add expiry time
+                            current.Response.Cookies["UsuarioLogadoStaff"].Value = jss.Serialize(user);
+                            current.Response.Cookies["UsuarioLogadoStaff"].Expires = DateTime.Now.AddMinutes(30); // add expiry time
                         }
                         return true;
                     }
@@ -125,9 +125,9 @@ namespace Admin.Helppser
         {
             var current = HttpContext.Current;
 
-            if (current.Request.Cookies["UsuarioLogado"] != null)
+            if (current.Request.Cookies["UsuarioLogadoStaff"] != null)
             {
-                var cookiesValido = current.Request.Cookies["UsuarioLogado"].Value;
+                var cookiesValido = current.Request.Cookies["UsuarioLogadoStaff"].Value;
                 var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
                 LoginViewModel Usuario = jss.Deserialize<LoginViewModel>(cookiesValido);
                 return Usuario;

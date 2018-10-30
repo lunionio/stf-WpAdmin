@@ -52,7 +52,7 @@ namespace Admin.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ResponderTicket(AtendimentoViewModel viewModel)
+        public string ResponderTicket(AtendimentoViewModel viewModel)
         {
             try
             {
@@ -69,15 +69,15 @@ namespace Admin.Controllers
                     if (EnviaAtendimento(viewModel))
                     {
                         ModelState.Clear();
-                        return RedirectToAction("Index");
+                        return "ok";
                     }
                 }
 
-                return View("Editar", viewModel);
+                return "Não foi possível realizar o atendimento.";
             }
             catch (Exception e)
             {
-                return View("Editar", viewModel);
+                return "Não foi possível realizar o atendimento.";
             }
         }
 

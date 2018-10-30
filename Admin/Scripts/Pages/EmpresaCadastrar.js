@@ -263,10 +263,11 @@ function Save() {
     }
 
     $.ajax(settings).done(function (response) {
-        //console.log(response);
-        $('#modal').html(response);
-        $('#myModal').modal('show');
+        console.log(response);
+        //$('#modal').html(response);
+        //$('#myModal').modal('show');
         LoadingBodyStop();
+        window.location = "/Empresas/Listar";
     });
 
     return true;

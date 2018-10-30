@@ -83,7 +83,7 @@ namespace Admin.Controllers
             {
                 var empresa = empresas.FirstOrDefault(e => e.Id.Equals(o.IdEmpresa));
                 vagas.Add(new VagaViewModel() { Id = o.ID, Nome = o.Nome, ProfissionalNome = o.DescProfissional,
-                    NomeEmpresa = empresa.Nome, Qtd = o.Quantidade, Valor = o.Valor, DataEvento = o.DataOportunidade });
+                    NomeEmpresa = empresa?.Nome, Qtd = o.Quantidade, Valor = o.Valor, DataEvento = o.DataOportunidade });
             }
 
             return vagas;

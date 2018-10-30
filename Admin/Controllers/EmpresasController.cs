@@ -37,6 +37,7 @@ namespace Admin.Controllers
             {
                 if (!string.IsNullOrEmpty(viewModel.Nome) && !string.IsNullOrEmpty(viewModel.Cnae))
                 {
+                    viewModel.status = 1;
                     viewModel.IdCliente = _idCliente;
 
                     if (viewModel.Id == 0)
@@ -92,7 +93,7 @@ namespace Admin.Controllers
                         model.UsuarioEdicao,
                         model.Ativo,
                         model.status,
-                        model.IdCliente
+                        model.IdCliente, 
                     }
                 };
 
