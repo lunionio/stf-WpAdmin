@@ -1,6 +1,7 @@
 ﻿
 @{
-    ViewBag.Title = "Listagem";
+    ViewBag.Title = "USUÁRIOS";
+    ViewBag.PageTitle = "USUÁRIOS";
 }
 
 @model IEnumerable<Admin.Models.UsuarioViewModel>
@@ -8,30 +9,28 @@
 <div class="row">
     <div class="col-md-12">
         <div id="miolo" class="card strpied-tabled-with-hover card-wizard">
-
+            <div class="card-header text-center">
+                <h4 class="text-center">LISTAGEM DE USUÁRIOS</h4>
+            </div>
             <div class="card-body">
                 <table id="example" class="display" style="width:100%">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Apelido</th>
-                            <th>Perfil</th>
-                            <th>Empresa</th>
-                            <th></th>
+                            <th class="text-center">ID</th>
+                            <th class="text-center">Nome</th>
+                            <th class="text-center">E-mail</th>
+                            <th class="text-center">Perfil</th>
+                            <th class="text-center">Empresa</th>
+                            <th class="text-center"></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var user in Model)
                         {
-                            <tr>
-                                <td>
-                                    <input type="checkbox" />
-                                </td>
+                            <tr class="text-center">
                                 <td>@user.ID</td>
                                 <td>@user.Nome</td>
-                                <td>@user.SobreNome</td>
+                                <td>@user.Login</td>
                                 <td>@user.Perfil</td>
                                 <td>@user.Empresa</td>
                                 <td class="td-actions text-right">
@@ -68,7 +67,7 @@
 
 
             $('#example').dataTable({
-                "pagingType": "full_numbers",
+                "pagingType": "numbers",
                 "columnDefs": [{
                     "targets": '_all',
                     "orderable": false,
@@ -80,27 +79,17 @@
                             ">" +
                     ">" + '<"clear">',
                 "oLanguage": {
-                    "sLengthMenu": "_MENU_ Linhas visíveis",
+                    "sLengthMenu": "_MENU_",
                     "sZeroRecords": "Nada encontrado",
                     "sInfo": "Mostrando oágina _PAGE_ de _PAGES_",
                     "sInfoEmpty": "Nenhum dado para mostrar",
                     "sInfoFiltered": "(Filtrado de _MAX_ registros)",
-                    "sSearch": "",
-                    "oPaginate": {
-                        "sFirst": "Primeiro",
-                        "sPrevious": "Anterior",
-                        "sNext": "Próximo",
-                        "sLast": "Último"
-                    }
+                    "sSearch": "Pesquisar:",
                 },
             });
 
-            if (t) {
-                $('#myModal').modal('show');
-            }
-            $('#example_length').addClass('pull-left');
-            $('#example_paginate').addClass('pull-right');
-
+            $("[name='example_length']").addClass('pull-left');
+            $("[name='paginate_button']").addClass('pull-right');
         });
 
     </script>
