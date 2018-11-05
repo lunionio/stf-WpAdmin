@@ -213,7 +213,6 @@ namespace Admin.Controllers
                     PixCoreValues.UsuarioLogado.IdUsuario;
 
                 vaga.status = 1;
-                vaga.IdEmpresa = PixCoreValues.UsuarioLogado.idEmpresa;
 
                 var op = Oportundiade.Convert(vaga);
 
@@ -243,6 +242,13 @@ namespace Admin.Controllers
             var empresas = helper.Get<IEnumerable<EmpresaViewModel>>(url);
 
             return empresas;
+        }
+
+        public ActionResult ListarEmpresas()
+        {
+            var empresas = GetEmpresas();
+
+            return Json(empresas, JsonRequestBehavior.AllowGet);
         }
     }
 }

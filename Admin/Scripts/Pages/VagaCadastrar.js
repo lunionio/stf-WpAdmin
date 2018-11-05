@@ -1,4 +1,10 @@
 ﻿
+$(document).ready(function () {
+    $(".chosen-select").chosen({ no_results_text: "Nada encontrado!" });
+    $(".chosen-select").chosen({ allow_single_deselect: true });
+    getEmpresas();
+});
+
 init();
 controlarPaineis();
 getAreaAtuacao();
@@ -92,8 +98,9 @@ function VagaViewModel() {
         Profissional: $('#profissional option:selected').val(),
         ProfissionalNome: $('#profissional option:selected').text(),
         //Qtd: $('#qtd').val(),
-        Total: $('#total').val()
-    }
+        Total: $('#total').val(),
+        IdEmpresa: $('#empresas option:selected').val(),
+    };
     return VagaViewModel;
 }
 
@@ -195,6 +202,25 @@ function LoadingStop() {
 
 function LoadingBodyStop() {
     $('body').loading('stop');
+}
+
+function getEmpresas() {
+
+    var Url = "/Vaga/ListarEmpresas";
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": Url,
+        "method": "GET"
+    };
+
+    $.ajax(settings).done(function (response) {
+        $.each(response, function (index, item) {
+            console.log(item);
+            $('#empresas').append('<option value="' + item.Id + '">' + item.Nome + '</option>');
+            $('#empresas').trigger("chosen:updated");
+        });
+    });
 }
 
 function init() {

@@ -50,9 +50,18 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label class="col-md-3 control-label" for="Perfis">Empresas</label>
+                                    <label class="col-md-3 control-label" for="Cargo">Cargo</label>
+                                    <div class="col-md-7">
+                                        @Html.TextBoxFor(u => u.Cargo, new { placeholder = "Cargo do usuário", name = "cargo", type = "text", @class = "form-control" })
+                                        @Html.ValidationMessageFor(u => u.Cargo)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-3 control-label" for="Perfis">Empresa</label>
                                     <div class="col-md-3">
-                                        @Html.DropDownListFor(u => u.Empresa, (IEnumerable<SelectListItem>)ViewBag.Empresas, new { @class = "form-control perfis" })
+                                        @Html.DropDownListFor(u => u.Empresa, (IEnumerable<SelectListItem>)ViewBag.Empresas, new { @class = "form-control perfis chosen-select" })
                                         @Html.ValidationMessageFor(u => u.Empresa)
                                     </div>
                                     <div class="col-md-6"></div>
@@ -62,7 +71,7 @@
                                 <div class="row">
                                     <label class="col-md-3 control-label" for="Perfis">Credencial</label>
                                     <div class="col-md-3">
-                                        @Html.DropDownListFor(u => u.Perfil, (IEnumerable<SelectListItem>)ViewBag.Perfis, new { @class = "form-control perfis" })
+                                        @Html.DropDownListFor(u => u.Perfil, (IEnumerable<SelectListItem>)ViewBag.Perfis, new { @class = "form-control perfis chosen-select" })
                                         @Html.ValidationMessageFor(u => u.Perfil)
                                     </div>
                                     <div class="col-md-6"></div>
@@ -92,7 +101,7 @@
 
 @section Scripts
 {
-
+<script src="~/Scripts/Plugins/chosen.jquery.js"></script>
 
     <script>
         $("#miolo").addClass("card-wizard");
@@ -110,7 +119,12 @@
         });
 
 
-    });
+        });
+
+        $(document).ready(function () {
+            $(".chosen-select").chosen({ no_results_text: "Nada encontrado!" }); 
+            $(".chosen-select").chosen({ allow_single_deselect: true });
+        });
 
     </script>
 

@@ -17,6 +17,21 @@
                     <div class="tab-pane fade show active" id="tab1" role="tabpanel">
                         <form method="get" action="/" class="form-horizontal">
                             <fieldset>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-sm-2 control-label">EMPRESA</label>
+                                        <div class="col-sm-4">
+                                            <select id="empresas" class="form-control chosen-select">
+                                                <option value="0">Selecione</option>
+                                            </select>
+                                            @*<select id="empresas" class="form-control chosen-select">
+                                                <option value="0">Selecione</option>
+                                            </select>*@
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="form-group">
                                     <div class="row">
                                         <label class="col-sm-2 control-label">NOME DO EVENTO</label>
@@ -176,4 +191,5 @@
     <script src="~/Scripts/Plugins/moment.min.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
     <script src="~/Scripts/Pages/VagaCadastrar.js"></script>
+    <script src="~/Scripts/Plugins/chosen.jquery.js"></script>
 }
