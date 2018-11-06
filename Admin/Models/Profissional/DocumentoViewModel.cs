@@ -9,6 +9,7 @@
         public string Status { get; set; }
         public string Data  { get; set; }
         public string Arquivo { get; set; }
+        public string Observacoes { get; set; }
 
         public DocumentoViewModel()
         {

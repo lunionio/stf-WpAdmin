@@ -167,6 +167,7 @@
     <Compile Include="Models\FaleConosco\AtendimentoViewModel.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\ClienteViewModel.cs" />
+    <Compile Include="Models\Profissional\DocStatusObservacoes.cs" />
     <Compile Include="Models\Profissional\Documento.cs" />
     <Compile Include="Models\Profissional\DocumentoStatus.cs" />
     <Compile Include="Models\Profissional\DocumentoTipo.cs" />

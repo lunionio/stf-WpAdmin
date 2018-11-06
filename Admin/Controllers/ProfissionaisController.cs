@@ -66,7 +66,8 @@ namespace Admin.Controllers
             foreach (var item in docs)
             {
                 models.Add(new DocumentoViewModel(item.ID, item.DocumentoTipo.Nome, item.Tipo,
-                    item.DocumentoStatusID, item.DocumentoStatus.Nome, item.DataCriacao.ToString(), item.Arquivo));
+                    item.DocumentoStatusID, item.DocumentoStatus.Nome, item.DataCriacao.ToString(), item.Arquivo)
+                { Observacoes = item.StatusObservacoes?.Observacoes });
             }
 
             ret.Documentos = models;
@@ -143,8 +144,11 @@ namespace Admin.Controllers
 
                 foreach (var item in documentos)
                 {
-                    var pDocStatus = profissional.Documentos.FirstOrDefault(d => d.Id.Equals(item.ID)).Status;
+                    var doc = profissional.Documentos.FirstOrDefault(d => d.Id.Equals(item.ID));
+                    var pDocStatus = doc.Status;
                     item.DocumentoStatusID = statuses.FirstOrDefault(s => s.Nome.Equals(pDocStatus)).ID;
+
+                    item.StatusObservacoes = new DocStatusObservacoes(item.ID, doc.Observacoes);
 
                     if (item.DocumentoStatusID == 3) //Reprovado
                     {

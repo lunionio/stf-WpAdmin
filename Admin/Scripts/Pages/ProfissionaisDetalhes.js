@@ -20,6 +20,11 @@ $('#btnAtualizar').on('click', function () {
 });
 
 function atualizar() {
+
+    documentos.forEach(function (item, index, array) {
+        item.Observacoes = $('#observacoes').val();
+    });
+
     let data = {
         Id: $('#mId').val(),
         UsuarioId: $('#uId').val(),
