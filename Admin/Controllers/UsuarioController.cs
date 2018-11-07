@@ -176,7 +176,6 @@ namespace Admin.Controllers
                         usuario.UsuarioEdicao,
                         usuario.Ativo,
                         usuario.IdEmpresa,
-                        usuario.Cargo,
                     }
                 };
 

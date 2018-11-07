@@ -22,24 +22,13 @@
                 </a>
                 <div class="collapse" id="collapseExample">
                     <ul class="nav">
-                        <li>
-                            <a href="#pablo">
-                                <span class="sidebar-mini">C</span>
-                                <span class="sidebar-normal">Configurações</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#pablo">
-                                <span class="sidebar-mini">S</span>
-                                <span class="sidebar-normal">Sair</span>
-                            </a>
-                        </li>
+                        
                     </ul>
                 </div>
             </div>
         </div>
 
-        <ul class="nav">
+        <ul class="nav" style="display: flex; flex-direction: column;">
             @if (Model != null && Model.Count() > 0)
             {
                 foreach (var m in Model)
@@ -84,6 +73,16 @@
                     </li>
                 }
             }
+            <li class="nav-item" style="margin-top: auto;">
+                <a class="nav-link" href="#pablo">
+                    <span class="sidebar-normal">Configurações</span>
+                </a>
+            </li>
+            <li class="nav-item" style="margin-top: auto;">
+                <a class="nav-link" href="#pablo">
+                    <span class="sidebar-normal">Sair</span>
+                </a>
+            </li>
         </ul>
     </div>
 </div>

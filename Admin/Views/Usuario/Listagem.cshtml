@@ -21,7 +21,6 @@
                             <th class="text-center">E-mail</th>
                             <th class="text-center">Perfil</th>
                             <th class="text-center">Empresa</th>
-                            <th class="text-center">Cargo</th>
                             <th class="text-center"></th>
                         </tr>
                     </thead>
@@ -34,7 +33,6 @@
                                 <td>@user.Login</td>
                                 <td>@user.Perfil</td>
                                 <td>@user.Empresa</td>
-                                <td>@user.Cargo</td>
                                 <td class="td-actions text-right">
                                     <a href="@Url.Action("Editar", "Usuario", new { user.ID })" rel="tooltip" title="" class="btn btnAcao btn-success btn-link btn-xs" data-original-title="Editar">
                                         <i class="nc-icon nc-credit-card"></i>

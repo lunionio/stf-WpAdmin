@@ -50,15 +50,6 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label class="col-md-3 control-label" for="Cargo">Cargo</label>
-                                    <div class="col-md-7">
-                                        @Html.TextBoxFor(u => u.Cargo, new { placeholder = "Cargo do usuário", name = "cargo", type = "text", @class = "form-control" })
-                                        @Html.ValidationMessageFor(u => u.Cargo)
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
                                     <label class="col-md-3 control-label" for="Perfis">Empresa</label>
                                     <div class="col-md-3">
                                         @Html.DropDownListFor(u => u.Empresa, (IEnumerable<SelectListItem>)ViewBag.Empresas, new { @class = "form-control perfis chosen-select" })
