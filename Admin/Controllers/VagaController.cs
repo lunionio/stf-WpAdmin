@@ -77,7 +77,7 @@ namespace Admin.Controllers
             var oportunidades = helper.Post<IEnumerable<OportunidadeViewModel>>(url, envio);
             var empresas = GetEmpresas();
 
-            var vagas = new List<VagaViewModel>();
+            IList<VagaViewModel> vagas = new List<VagaViewModel>();
 
             foreach (var o in oportunidades)
             {

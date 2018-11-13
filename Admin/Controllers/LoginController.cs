@@ -1,5 +1,9 @@
-﻿using Admin.Helppser;
+﻿using Admin.Helppers;
+using Admin.Helppser;
 using Admin.Models;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Web.Mvc;
 
 namespace Admin.Controllers
@@ -24,7 +28,6 @@ namespace Admin.Controllers
             {
                 if (PixCoreValues.Login(collection))
                 {
-                    // Response.Redirect(PixCoreValues.defaultSiteUrl);
                     TempData["LoginMessage"] = string.Empty;
                     return RedirectToAction("Index", "Home");
                 }
@@ -40,8 +43,6 @@ namespace Admin.Controllers
                 TempData["LoginMessage"] = "Usuário ou senha invalida";
                 return RedirectToAction("Index", "Login");
             }
-
-            
         }
     }
 }

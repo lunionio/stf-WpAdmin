@@ -150,6 +150,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AtendimentoController.cs" />
     <Compile Include="Controllers\Attributes\NoDirectAccessAttribute.cs" />
+    <Compile Include="Controllers\CreditosController.cs" />
     <Compile Include="Controllers\EmpresasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -161,12 +162,17 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helppers\FaleConosco.cs" />
+    <Compile Include="Helppers\FinanceiroHelper.cs" />
     <Compile Include="Helppers\Oportundiade.cs" />
     <Compile Include="Helppers\PixCore.cs" />
     <Compile Include="Helppers\ServiceHelper.cs" />
     <Compile Include="Models\FaleConosco\AtendimentoViewModel.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\ClienteViewModel.cs" />
+    <Compile Include="Models\Financeiro\CreditoViewModel.cs" />
+    <Compile Include="Models\Financeiro\Extrato.cs" />
+    <Compile Include="Models\Financeiro\Natureza.cs" />
+    <Compile Include="Models\Financeiro\Status.cs" />
     <Compile Include="Models\Profissional\DocStatusObservacoes.cs" />
     <Compile Include="Models\Profissional\Documento.cs" />
     <Compile Include="Models\Profissional\DocumentoStatus.cs" />
@@ -566,6 +572,7 @@
     <Content Include="Views\Profissionais\Index.cshtml" />
     <Content Include="Views\Profissionais\Detalhes.cshtml" />
     <Content Include="Views\Atendimento\Editar.cshtml" />
+    <Content Include="Views\Creditos\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
