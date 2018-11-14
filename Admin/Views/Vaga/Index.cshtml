@@ -3,31 +3,49 @@
     ViewBag.Title = "Index";
 }
 
+@model IEnumerable<Admin.Models.EmpresaViewModel>
 <div class="row">
+    <div class="col-sm-12">
+        <div class="row">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="email">Empresas:</label>
+                        <div class="col-sm-7">
+                            <select id="empresas" class="form-control chosen-select">
+                                <option value="0">Selecione</option>
+                                @foreach (var item in Model)
+                                {
+                                    <option value="@item.Id">@item.Nome</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <div id="oportunidades" class="col-md-11"></div>
+            <div id="profissionais" class="col-md-7"></div>
+            <div id="vinculoProfissionais" class="col-md-5"></div>
+        </div>
 
-    <div id="oportunidades" class="col-md-11"></div>
-    <div id="profissionais" class="col-md-7"></div>
-    <div id="vinculoProfissionais" class="col-md-5"></div>
+        <div id="modal">
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog  modal-lg">
+                    <div class="modal-content">
 
 
-</div>
-
-
-
-<div id="modal">
-    <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog  modal-lg">
-            <div class="modal-content">
-
-
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-
 @section Scripts
 {
     <script src="~/Scripts/jquery.datatables.js"></script>
     <script src="~/Scripts/Pages/VagaIndex.js"></script>
+    <script src="~/Scripts/Plugins/chosen.jquery.js"></script>
 }

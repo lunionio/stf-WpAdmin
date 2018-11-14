@@ -44,15 +44,15 @@ namespace Admin.Helppers
             var result = helper.Post<object>(url, envio);
         }
 
-        public static bool VerifcaSaldoCliente(decimal valorVaga, LoginViewModel usuario)
+        public static bool VerifcaSaldoCliente(decimal valorVaga, int idCliente, int idEmpresa, int idUsuario)
         {
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
-            var url = keyUrl + "/Seguranca/WpFinanceiro/BuscarSaldo/" + usuario.idCliente + "/" + usuario.IdUsuario;
+            var url = keyUrl + "/Seguranca/WpFinanceiro/BuscarSaldo/" + idCliente + "/" + idUsuario;
 
             var envio = new
             {
-                usuario.idCliente,
-                destino = usuario.idEmpresa
+                idCliente,
+                idEmpresa
             };
 
             var helper = new ServiceHelper();
@@ -70,7 +70,7 @@ namespace Admin.Helppers
             {
                 var valor1 = (vaga.Valor) * -1;
 
-                var extrato1 = new Extrato(valor1, 2, 1, usuario.idEmpresa.ToString(),
+                var extrato1 = new Extrato(valor1, 2, 2, usuario.idEmpresa.ToString(),
                     usuario.idEmpresa.ToString(), vaga.ID, Status.Aprovado)
                 {
                     Ativo = true,
@@ -132,7 +132,7 @@ namespace Admin.Helppers
                 DataEdicao = DateTime.UtcNow,
                 Descricao = descricao,
                 IdCliente = usuario.idCliente,
-                Nome = "Saldo",
+                Nome = descricao,
                 Status = 1,
                 UsuarioCriacao = usuario.IdUsuario,
                 UsuarioEdicao = usuario.IdUsuario,

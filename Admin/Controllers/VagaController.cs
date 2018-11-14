@@ -18,7 +18,9 @@ namespace Admin.Controllers
         // GET: Vaga
         public ActionResult Index()
         {
-            return View();
+            var empresas = GetEmpresas();
+
+            return View(empresas);
         }
         
         public ActionResult Cadastrar()
@@ -54,14 +56,18 @@ namespace Admin.Controllers
             return PartialView(model);
         }
 
-        public PartialViewResult _listarOportunidades()
+        public PartialViewResult _listarOportunidades(int? idEmpresa)
         {
-            IList<VagaViewModel> vagas = GetOportunidades();
+            if (idEmpresa != null && idEmpresa > 0)
+            {
+                IList<VagaViewModel> vagas = GetOportunidades(idEmpresa);
+                return PartialView(vagas);
+            }
 
-            return PartialView(vagas);
+            return PartialView(new List<VagaViewModel>());
         }
 
-        private static IList<VagaViewModel> GetOportunidades()
+        private static IList<VagaViewModel> GetOportunidades(int? idEmpresa)
         {
             var usuario = PixCoreValues.UsuarioLogado;
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
@@ -70,7 +76,7 @@ namespace Admin.Controllers
 
             var envio = new
             {
-                usuario.idEmpresa,
+                idEmpresa,
             };
 
             var helper = new ServiceHelper();
@@ -91,12 +97,6 @@ namespace Admin.Controllers
 
         public PartialViewResult _listarProfissionais()
         {
-            int optId = 51;
-            var userXOportunidades = GetProfissionaisByOpt(optId);
-            var profissionais = GetProfissionais(userXOportunidades.Select(x => x.UserId));
-            var users = GetUsers(profissionais.Select(x => x.Profissional.IdUsuario));
-
-
             return PartialView();
         }
 
@@ -249,6 +249,111 @@ namespace Admin.Controllers
             var empresas = GetEmpresas();
 
             return Json(empresas, JsonRequestBehavior.AllowGet);
+        }
+
+        public PartialViewResult ModalMatch(int optId)
+        {
+            var userXOportunidades = GetProfissionaisByOpt(optId);
+
+            var op = GetOportunidade(optId);
+            ViewBag.OptNome = op.Nome;
+
+            var profissionais = GetProfissionais(userXOportunidades.Select(x => x.UserId));
+            var users = GetUsers(profissionais.Select(x => x.Profissional.IdUsuario));
+
+            IList<ProfissionalViewModel> models = new List<ProfissionalViewModel>();
+
+            foreach (var item in profissionais)
+            {
+                var user = users.FirstOrDefault(u => u.ID.Equals(item.Profissional.IdUsuario))?.Nome;
+                var model = new ProfissionalViewModel(item.Profissional.ID, user, item.Servico.Nome, item.Profissional.Telefone.Numero,
+                    item.Profissional.Telefone.ID, item.Profissional.DataNascimento.ToShortDateString(), item.Profissional.Email, item.Profissional.IdUsuario, item.Profissional.Endereco)
+                {
+                    StatusId = userXOportunidades.FirstOrDefault(x => x.UserId.Equals(item.Profissional.ID))?.Status.ID,
+                    UserXOportunidadeId = userXOportunidades.FirstOrDefault(x => x.UserId.Equals(item.Profissional.ID))?.ID,
+                    OportunidadeId = op.Id,
+                    Valor = op.Valor,
+                };
+
+                models.Add(model);
+            }
+
+            return PartialView(models);
+        }
+
+        public VagaViewModel GetOportunidade(int id)
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/WpOportunidades/BuscarOportunidadePorID/" + usuario.idCliente + "/" +
+                PixCoreValues.UsuarioLogado.IdUsuario;
+
+            var envio = new
+            {
+                id,
+            };
+
+            var helper = new ServiceHelper();
+            var o = helper.Post<OportunidadeViewModel>(url, envio);
+
+            var vaga = new VagaViewModel()
+            {
+                Id = o.ID,
+                Nome = o.Nome,
+                ProfissionalNome = o.DescProfissional,
+                Qtd = o.Quantidade,
+                Valor = o.Valor,
+                DataEvento = o.DataOportunidade,
+                IdEmpresa = o.IdEmpresa
+            };
+
+            return vaga;
+        }
+
+        [HttpPost]
+        public string Match(UserXOportunidade userXOportunidade)
+        {
+            try
+            {
+                var usuario = PixCoreValues.UsuarioLogado;
+                var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+                var url = keyUrl + "/Seguranca/WpOportunidades/CanditarOportunidade/" + usuario.idCliente + "/" +
+                    PixCoreValues.UsuarioLogado.IdUsuario;
+
+
+                var pServico = GetProfissionais(new List<int>() { userXOportunidade.UserId }).SingleOrDefault();
+                var user = GetUsers(new List<int>() { pServico.Profissional.IdUsuario }).SingleOrDefault();
+                var op = GetOportunidade(userXOportunidade.OportunidadeId);
+
+                if (!FinanceiroHelper.VerifcaSaldoCliente(op.Valor, usuario.idCliente, op.IdEmpresa, usuario.IdUsuario))
+                {
+                    return "Saldo insuficiente para a contratação.";
+                }
+
+                var envio = new
+                {
+                    userXOportunidade,
+                };
+
+                var helper = new ServiceHelper();
+                var o = helper.Post<object>(url, envio);
+
+                if(userXOportunidade.StatusID == 1) //Aprovado
+                {
+                    FinanceiroHelper.LancaTransacoes(op.Valor * -1, op.IdEmpresa.ToString(), 3, op.IdEmpresa.ToString(), 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado);
+                    FinanceiroHelper.LancaTransacoes(op.Valor, op.IdEmpresa.ToString(), 3, pServico.Profissional.ID.ToString(), 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado);
+                }
+
+                return JsonConvert.SerializeObject(new ProfissionalViewModel(pServico.Profissional.ID, user.Nome, pServico.Servico.Nome, pServico.Profissional.Telefone.Numero,
+                    pServico.Profissional.Telefone.ID, pServico.Profissional.DataNascimento.ToShortDateString(), pServico.Profissional.Email, pServico.Profissional.IdUsuario, pServico.Profissional.Endereco)
+                {
+                    Valor = op.Valor,
+                });
+            }
+            catch(Exception e)
+            {
+                return "Não foi possível completar a operação.";
+            }
         }
     }
 }

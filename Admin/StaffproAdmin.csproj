@@ -573,6 +573,7 @@
     <Content Include="Views\Profissionais\Detalhes.cshtml" />
     <Content Include="Views\Atendimento\Editar.cshtml" />
     <Content Include="Views\Creditos\Index.cshtml" />
+    <Content Include="Views\Vaga\ModalMatch.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

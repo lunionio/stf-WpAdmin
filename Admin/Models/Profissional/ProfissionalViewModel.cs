@@ -40,5 +40,10 @@ namespace Admin.Models
         public IList<DocumentoViewModel> Documentos { get; set; }
         public string Avatar { get; set; }
         public int UsuarioId { get; set; }
+        public int? StatusId { get; set; }
+
+        public int OportunidadeId { get; set; }
+        public int? UserXOportunidadeId { get; set; }
+        public decimal Valor { get; set; }
     }
 }
