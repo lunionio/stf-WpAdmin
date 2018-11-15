@@ -24,10 +24,12 @@ namespace Admin.Helppser
                 vaga.Uf + " (" + vaga.Cep + ")"),
                 Estado = vaga.Uf,
                 CEP = vaga.Cep.ToString(),
+                ID = vaga.EnderecoId
             };
 
             return new OportunidadeViewModel
             {
+                ID = vaga.Id,
                 Ativo = true,
                 DataCriacao = DateTime.Now,
                 DataOportunidade = vaga.DataEvento,

@@ -23,9 +23,14 @@ namespace Admin.Controllers
             return View(empresas);
         }
         
-        public ActionResult Cadastrar()
+        public ActionResult Cadastrar(VagaViewModel model)
         {
-            return View();
+            if(model != null)
+            {
+                return View(model);
+            }
+
+            return View(new VagaViewModel());
         }
 
         [HttpPost]
@@ -51,6 +56,7 @@ namespace Admin.Controllers
                     " com nosso suporte técnico.");
         }
         
+        [HttpPost]
         public PartialViewResult ModalConfirmarVaga(VagaViewModel model)
         {
             return PartialView(model);
@@ -87,9 +93,13 @@ namespace Admin.Controllers
 
             foreach (var o in oportunidades)
             {
-                var empresa = empresas.FirstOrDefault(e => e.Id.Equals(o.IdEmpresa));
-                vagas.Add(new VagaViewModel() { Id = o.ID, Nome = o.Nome, ProfissionalNome = o.DescProfissional,
-                    NomeEmpresa = empresa?.Nome, Qtd = o.Quantidade, Valor = o.Valor, DataEvento = o.DataOportunidade });
+                //var empresa = empresas.FirstOrDefault(e => e.Id.Equals(o.IdEmpresa));
+                vagas.Add(new VagaViewModel(o.ID, o.Nome, o.Endereco.CEP, o.Endereco.Local, o.Endereco.Bairro, o.Endereco.Cidade,
+                    o.Endereco.Estado, o.HoraInicio, o.Valor, o.TipoProfissional, o.DescProfissional, o.Endereco.NumeroLocal,
+                    (o.Valor * o.Quantidade).ToString(), o.Quantidade, o.Endereco.Complemento, o.Endereco.Complemento, o.DataOportunidade.ToShortDateString(), o.Status, o.IdEmpresa, o.IdCliente, o.TipoServico)
+                {
+                    EnderecoId = o.Endereco.ID,
+                });
             }
 
             return vagas;

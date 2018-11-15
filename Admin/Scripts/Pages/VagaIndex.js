@@ -1,4 +1,7 @@
 ﻿$(document).ready(function () {
+    $(".chosen-select").chosen({ no_results_text: "Nada encontrado!" });
+    $(".chosen-select").chosen({ allow_single_deselect: true });
+
     $('#empresas').on('change', function (e) {
         LoadPanels(this.value);
     });
