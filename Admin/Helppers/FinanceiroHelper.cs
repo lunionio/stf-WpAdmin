@@ -52,7 +52,7 @@ namespace Admin.Helppers
             var envio = new
             {
                 idCliente,
-                idEmpresa
+                destino = idEmpresa
             };
 
             var helper = new ServiceHelper();
@@ -120,12 +120,12 @@ namespace Admin.Helppers
             var result = helper.Post<object>(url, envio);
         }
 
-        public static void LancaTransacoes(decimal valor, string origem, int tipoOrigem, string destino, int tipoDestino, int natureza, int tipo, string descricao, LoginViewModel usuario)
+        public static void LancaTransacoes(decimal valor, string origem, int tipoOrigem, string destino, int tipoDestino, int natureza, int tipo, string descricao, LoginViewModel usuario, int idOpt = 0)
 
         {
             IList<Extrato> extratos = new List<Extrato>();
 
-            var extrato = new Extrato(valor, natureza, tipo, origem, destino, null, Status.Aprovado)
+            var extrato = new Extrato(valor, natureza, tipo, origem, destino, Status.Aprovado)
             {
                 Ativo = true,
                 DataCriacao = DateTime.UtcNow,
@@ -139,6 +139,11 @@ namespace Admin.Helppers
                 TipoOrigem = tipoOrigem,
                 TipoDestino = tipoDestino,
             };
+
+            if(idOpt > 0)
+            {
+                extrato.CodigoExterno = idOpt;
+            }
 
             extratos.Add(extrato);
 

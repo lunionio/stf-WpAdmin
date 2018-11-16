@@ -8,13 +8,18 @@ namespace Admin.Models.Financeiro
     public class Extrato : Base
     {
         public Extrato(decimal valor, int naturezaId, int tipoId, string origem, string destino, int? codigoExterno, Status statusId)
+            : this(valor, naturezaId, tipoId, origem, destino, statusId)
+        {
+            CodigoExterno = codigoExterno;
+        }
+
+        public Extrato(decimal valor, int naturezaId, int tipoId, string origem, string destino, Status statusId)
         {
             Valor = valor;
             NaturezaId = naturezaId;
             TipoId = tipoId;
             Origem = origem;
             Destino = destino;
-            CodigoExterno = codigoExterno;
             StatusId = statusId;
         }
 

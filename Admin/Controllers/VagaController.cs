@@ -38,22 +38,46 @@ namespace Admin.Controllers
         {
             vaga.status = 1;
             vaga.DataEvento = Convert.ToDateTime(vaga.Date);
-            if (SaveVaga(vaga))
-                return Json("ok");
+
+            if (FinanceiroHelper.VerifcaSaldoCliente(vaga.Valor, PixCoreValues.UsuarioLogado.idCliente, vaga.IdEmpresa, PixCoreValues.UsuarioLogado.IdUsuario))
+            {
+                var op = SaveVaga(vaga);
+                if (op != null && op.ID > 0)
+                {
+                    FinanceiroHelper.LancaTransacoes(op, PixCoreValues.UsuarioLogado);
+                    return Json("ok");
+                }
+                else
+                    return Json("Desculpe, o sistema encontrou um erro ao efetuar sua solicitação." +
+                        " Entre em contato com nosso suporte técnico.");
+            }
             else
-                return Json("Desculpe, o sistema encontrou um erro ao efetuar sua solicitação." +
-                    " Entre em contato com nosso suporte técnico.");
+            {
+                return Json("Saldo insuficiente.");
+            }
         }
 
         [HttpPost]
         public ActionResult PublicarMaisTarde(VagaViewModel vaga)
         {
             vaga.status = 2;
-            if (SaveVaga(vaga))
-                return RedirectToAction("Gerenciar");
+
+            if (FinanceiroHelper.VerifcaSaldoCliente(vaga.Valor, PixCoreValues.UsuarioLogado.idCliente, vaga.IdEmpresa, PixCoreValues.UsuarioLogado.IdUsuario))
+            {
+                var op = SaveVaga(vaga);
+                if (op != null && op.ID > 0)
+                {
+                    FinanceiroHelper.LancaTransacoes(op, PixCoreValues.UsuarioLogado);
+                    return RedirectToAction("Gerenciar");
+                }
+                else
+                    return Json("Desculpe, o sistema encontrou um erro ao efetuar sua solicitação. Entre em contato" +
+                        " com nosso suporte técnico.");
+            }
             else
-                return Json("Desculpe, o sistema encontrou um erro ao efetuar sua solicitação. Entre em contato" +
-                    " com nosso suporte técnico.");
+            {
+                return Json("Saldo insuficiente.");
+            }
         }
         
         [HttpPost]
@@ -216,7 +240,7 @@ namespace Admin.Controllers
             }
         }
         
-        private static bool SaveVaga(VagaViewModel vaga)
+        private OportunidadeViewModel SaveVaga(VagaViewModel vaga)
         {
             try
             {
@@ -235,9 +259,9 @@ namespace Admin.Controllers
                 };
 
                 var helper = new ServiceHelper();
-                var resut = helper.Post<object>(url, envio);
+                var resut = helper.Post<OportunidadeViewModel>(url, envio);
 
-                return true;
+                return resut;
             }
             catch (Exception e)
             {
@@ -333,7 +357,6 @@ namespace Admin.Controllers
                 var url = keyUrl + "/Seguranca/WpOportunidades/CanditarOportunidade/" + usuario.idCliente + "/" +
                     PixCoreValues.UsuarioLogado.IdUsuario;
 
-
                 var pServico = GetProfissionais(new List<int>() { userXOportunidade.UserId }).SingleOrDefault();
                 var user = GetUsers(new List<int>() { pServico.Profissional.IdUsuario }).SingleOrDefault();
                 var op = GetOportunidade(userXOportunidade.OportunidadeId);
@@ -353,8 +376,11 @@ namespace Admin.Controllers
 
                 if(userXOportunidade.StatusID == 1) //Aprovado
                 {
-                    FinanceiroHelper.LancaTransacoes(op.Valor * -1, op.IdEmpresa.ToString(), 3, op.IdEmpresa.ToString(), 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado);
-                    FinanceiroHelper.LancaTransacoes(op.Valor, op.IdEmpresa.ToString(), 3, pServico.Profissional.ID.ToString(), 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado);
+                    FinanceiroHelper.LancaTransacoes(op.Valor * -1, "16", 3, 
+                        "16", 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado, op.Id);
+
+                    FinanceiroHelper.LancaTransacoes(op.Valor, "16", 3, 
+                        pServico.Profissional.ID.ToString(), 1, 2, 1, "Pagando contratado.", PixCoreValues.UsuarioLogado, op.Id);
                 }
 
                 return JsonConvert.SerializeObject(new ProfissionalViewModel(pServico.Profissional.ID, user.Nome, pServico.Servico.Nome, pServico.Profissional.Telefone.Numero,
