@@ -77,8 +77,9 @@ function aplicarMascaras() {
 }
 
 function VagaViewModel() {
-    var data = $('#data').val();
-    var dataEvento = Date.parse(data);
+    let data = $('#data').val();
+    let dataEvento = Date.parse(data);
+
     var VagaViewModel = {
         Id: $('#vagaId').val(),
         Nome: $('#nome').val(),
@@ -102,6 +103,8 @@ function VagaViewModel() {
         Total: $('#total').val(),
         IdEmpresa: $('#empresas option:selected').val(),
         EnderecoId: $('#endId').val(),
+        DataCriacao: $('#vagaData').val(),
+        EnderecoDataCriacao: $('#enderecoData').val()
     };
     return VagaViewModel;
 }

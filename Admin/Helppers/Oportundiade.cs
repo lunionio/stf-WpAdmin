@@ -23,15 +23,19 @@ namespace Admin.Helppser
                 Descricao = (vaga.Rua + ". " + vaga.Numero + ". " + vaga.Bairro + " - " + vaga.Cidade + " /" +
                 vaga.Uf + " (" + vaga.Cep + ")"),
                 Estado = vaga.Uf,
-                CEP = vaga.Cep.ToString(),
-                ID = vaga.EnderecoId
+                CEP = vaga.Cep,
+                ID = vaga.EnderecoId,
+                Status = vaga.status,
+                DataCriacao = System.Convert.ToDateTime(vaga.EnderecoDataCriacao),
+                OportunidadeId = vaga.Id,
+                UsuarioEdicao = PixCoreValues.UsuarioLogado.idCliente,
             };
 
             return new OportunidadeViewModel
             {
                 ID = vaga.Id,
                 Ativo = true,
-                DataCriacao = DateTime.Now,
+                DataCriacao = System.Convert.ToDateTime(vaga.DataCriacao),
                 DataOportunidade = vaga.DataEvento,
                 DescProfissional = vaga.ProfissionalNome,
                 Nome = vaga.Nome,
@@ -46,6 +50,7 @@ namespace Admin.Helppser
                 IdCliente = PixCoreValues.UsuarioLogado.idCliente,
                 Valor = vaga.Valor,
                 Status = vaga.status,
+                UsuarioEdicao = PixCoreValues.UsuarioLogado.idCliente,
             };
 
         }

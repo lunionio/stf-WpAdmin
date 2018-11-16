@@ -96,9 +96,12 @@ namespace Admin.Controllers
                 //var empresa = empresas.FirstOrDefault(e => e.Id.Equals(o.IdEmpresa));
                 vagas.Add(new VagaViewModel(o.ID, o.Nome, o.Endereco.CEP, o.Endereco.Local, o.Endereco.Bairro, o.Endereco.Cidade,
                     o.Endereco.Estado, o.HoraInicio, o.Valor, o.TipoProfissional, o.DescProfissional, o.Endereco.NumeroLocal,
-                    (o.Valor * o.Quantidade).ToString(), o.Quantidade, o.Endereco.Complemento, o.Endereco.Complemento, o.DataOportunidade.ToShortDateString(), o.Status, o.IdEmpresa, o.IdCliente, o.TipoServico)
+                    (o.Valor * o.Quantidade).ToString(), o.Quantidade, o.Endereco.Complemento, o.Endereco.Complemento, 
+                    o.DataOportunidade.ToShortDateString(), o.Status, o.IdEmpresa, o.IdCliente, o.TipoServico)
                 {
                     EnderecoId = o.Endereco.ID,
+                    EnderecoDataCriacao = o.Endereco.DataCriacao.ToShortDateString(),
+                    DataCriacao = o.DataCriacao.ToShortDateString()
                 });
             }
 
@@ -363,6 +366,36 @@ namespace Admin.Controllers
             catch(Exception e)
             {
                 return "Não foi possível completar a operação.";
+            }
+        }
+
+        public ActionResult Remover(VagaViewModel model)
+        {
+            try
+            {
+                var usuario = PixCoreValues.UsuarioLogado;
+                var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+                var url = keyUrl + "/Seguranca/WpOportunidades/DeletarOportunidade/" + usuario.idCliente + "/" +
+                    PixCoreValues.UsuarioLogado.IdUsuario;
+
+                var op = Oportundiade.Convert(model);
+
+                var envio = new
+                {
+                    oportunidade = op,
+                };
+
+                var helper = new ServiceHelper();
+                var resut = helper.Post<object>(url, envio);
+
+                var oportunidades = GetOportunidades(op.IdEmpresa);
+
+                return View("Index", oportunidades);
+            }
+            catch(Exception e)
+            {
+                ViewBag.ErrorMessage = "Não foi possível desativar a oportunidade.";
+                return View("Index");
             }
         }
     }

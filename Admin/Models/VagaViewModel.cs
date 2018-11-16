@@ -33,6 +33,8 @@ namespace Admin.Models
         public int IdCliente { get; set; }
         public string NomeEmpresa { get; set; }
         public int AreaAtuacao { get; set; }
+        public string DataCriacao { get; set; }
+        public string EnderecoDataCriacao { get; set; }
 
         public VagaViewModel()
         {
