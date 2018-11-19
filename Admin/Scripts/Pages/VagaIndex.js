@@ -177,23 +177,28 @@ function aprovarProfissional(userXOpt, optId, userId) {
     };
 
     $.ajax(settings).done(function (response) {
-        var p = JSON.parse(response);
+        try {
+            var p = JSON.parse(response);
 
-        if (p.Id == undefined) {
-            alert(response);
+            if (p.Id == undefined) {
+                alert(response);
+            }
+            else {
+                let table = $('#tbContratar').DataTable();
+                table.row("#" + userId).remove().draw();
+                var contratados = $('#tbContratados').DataTable();
+                var row = contratados.row.add([
+                    p.Id,
+                    p.Nome,
+                    p.Especialidade,
+                    p.Endereco.Local,
+                    p.Valor,
+                    'Avaliação'
+                ]).draw(false);
+            }
         }
-        else {
-            let table = $('#tbContratar').DataTable();
-            table.row("#" + userId).remove().draw();
-            var contratados = $('#tbContratados').DataTable();
-            var row = contratados.row.add([
-                p.Id,
-                p.Nome,
-                p.Especialidade,
-                p.Endereco.Local,
-                p.Valor,
-                'Avaliação'
-            ]).draw(false);
+        catch {
+            alert(response);
         }
     });
 }
@@ -215,14 +220,19 @@ function reprovarProfissional(userXOpt, optId, userId) {
     };
 
     $.ajax(settings).done(function (response) {
-        var p = JSON.parse(response);
+        try {
+            var p = JSON.parse(response);
 
-        if (p.Id == undefined) {
-            alert(response);
+            if (p.Id == undefined) {
+                alert(response);
+            }
+            else {
+                let table = $('#tbContratar').DataTable();
+                table.row("#" + userId).remove().draw();
+            }
         }
-        else {
-            let table = $('#tbContratar').DataTable();
-            table.row("#" + userId).remove().draw();
+        catch {
+            alert(response);
         }
     });
 }

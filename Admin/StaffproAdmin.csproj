@@ -155,6 +155,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ProfissionaisController.cs" />
+    <Compile Include="Controllers\RelatoriosController.cs" />
     <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Controllers\VagaController.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="Models\Profissional\Servico.cs" />
     <Compile Include="Models\Profissional\ServicoTipo.cs" />
     <Compile Include="Models\Profissional\Telefone.cs" />
+    <Compile Include="Models\RelatorioViewModel.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="Models\UserXOportunidade.cs" />
     <Compile Include="Models\Usuario\Usuario.cs" />
@@ -574,6 +576,7 @@
     <Content Include="Views\Atendimento\Editar.cshtml" />
     <Content Include="Views\Creditos\Index.cshtml" />
     <Content Include="Views\Vaga\ModalMatch.cshtml" />
+    <Content Include="Views\Relatorios\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
