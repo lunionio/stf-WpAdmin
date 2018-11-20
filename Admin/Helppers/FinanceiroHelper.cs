@@ -120,7 +120,8 @@ namespace Admin.Helppers
             var result = helper.Post<object>(url, envio);
         }
 
-        public static void LancaTransacoes(decimal valor, string origem, int tipoOrigem, string destino, int tipoDestino, int natureza, int tipo, string descricao, LoginViewModel usuario, int idOpt = 0)
+        public static void LancaTransacoes(decimal valor, string origem, int tipoOrigem, 
+            string destino, int tipoDestino, int natureza, int tipo, string descricao, LoginViewModel usuario, int idOpt = 0)
 
         {
             IList<Extrato> extratos = new List<Extrato>();

@@ -111,13 +111,11 @@ namespace Admin.Controllers
 
             var helper = new ServiceHelper();
             var oportunidades = helper.Post<IEnumerable<OportunidadeViewModel>>(url, envio);
-            var empresas = GetEmpresas();
 
             IList<VagaViewModel> vagas = new List<VagaViewModel>();
 
             foreach (var o in oportunidades)
             {
-                //var empresa = empresas.FirstOrDefault(e => e.Id.Equals(o.IdEmpresa));
                 vagas.Add(new VagaViewModel(o.ID, o.Nome, o.Endereco.CEP, o.Endereco.Local, o.Endereco.Bairro, o.Endereco.Cidade,
                     o.Endereco.Estado, o.HoraInicio, o.Valor, o.TipoProfissional, o.DescProfissional, o.Endereco.NumeroLocal,
                     (o.Valor * o.Quantidade).ToString(), o.Quantidade, o.Endereco.Complemento, o.Endereco.Complemento, 
@@ -438,9 +436,10 @@ namespace Admin.Controllers
                 var helper = new ServiceHelper();
                 var resut = helper.Post<object>(url, envio);
 
-                var oportunidades = GetOportunidades(op.IdEmpresa);
+                //var oportunidades = GetOportunidades(op.IdEmpresa);
+                var empresas = GetEmpresas();
 
-                return View("Index", oportunidades);
+                return View("Index", empresas);
             }
             catch(Exception e)
             {

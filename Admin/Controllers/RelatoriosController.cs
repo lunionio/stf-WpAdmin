@@ -23,7 +23,6 @@ namespace Admin.Controllers
             return View();
         }
 
-
         public ActionResult Gerar()
         {
             var usuario = PixCoreValues.UsuarioLogado;

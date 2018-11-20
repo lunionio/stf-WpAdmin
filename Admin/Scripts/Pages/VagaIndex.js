@@ -28,7 +28,7 @@ function LoadingStop(elemento) {
 
 function getOportunidades(idEmpresa) {
 
-    var Url = "vaga/_listarOportunidades?idEmpresa=" + idEmpresa;
+    var Url = "/Vaga/_listarOportunidades?idEmpresa=" + idEmpresa;
     var settings = {
         "async": true,
         "crossDomain": true,
