@@ -362,56 +362,56 @@ namespace Admin.Controllers
                 var candidatos = GetProfissionaisByOpt(userXOportunidade.OportunidadeId);
                 var qtdCandAprovados = candidatos.Where(c => c.OportunidadeId.Equals(op.Id) && c.StatusID == 1).Count();
 
-                if (op.Qtd > qtdCandAprovados && userXOportunidade.StatusID != 3)
+                if (op.Qtd <= qtdCandAprovados && userXOportunidade.StatusID == 1)
                 {
-                    if (!FinanceiroHelper.VerifcaSaldoCliente(op.Valor, usuario.idCliente, op.IdEmpresa, usuario.IdUsuario))
+                    //Reprovando os demais profissionais
+                    var profissionais = candidatos.Where(c => c.OportunidadeId.Equals(op.Id) && c.StatusID == 2);
+                    foreach (var item in profissionais)
                     {
-                        return "Saldo insuficiente para a contratação.";
+                        item.StatusID = 3;
+
+                        var e = new
+                        {
+                            userXOportunidade = item,
+                        };
+
+                        var service = new ServiceHelper();
+                        var r = service.Post<object>(url, e);
                     }
 
-                    var envio = new
-                    {
-                        userXOportunidade,
-                    };
-
-                    var helper = new ServiceHelper();
-                    var o = helper.Post<object>(url, envio);
-
-                    if (userXOportunidade.StatusID == 1) //Aprovado
-                    {
-                        FinanceiroHelper.LancaTransacoes(op.Valor * -1, "16", 3,
-                            "16", 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado, op.Id);
-
-                        FinanceiroHelper.LancaTransacoes(op.Valor, "16", 3,
-                            pServico.Profissional.ID.ToString(), 1, 2, 1, "Pagando contratado.", PixCoreValues.UsuarioLogado, op.Id);
-                    }
-
-                    return JsonConvert.SerializeObject(new ProfissionalViewModel(pServico.Profissional.ID, user.Nome, pServico.Servico.Nome, pServico.Profissional.Telefone.Numero,
-                        pServico.Profissional.Telefone.ID, pServico.Profissional.DataNascimento.ToShortDateString(), pServico.Profissional.Email, pServico.Profissional.IdUsuario, pServico.Profissional.Endereco)
-                    {
-                        Valor = op.Valor,
-                    });
+                    return "Não é possível aprovar mais profissionais para essa vaga.";
                 }
 
-                //Reprovando os demais profissionais
-                var profissionais = candidatos.Where(c => c.OportunidadeId.Equals(op.Id) && c.StatusID == 2);
-                foreach (var item in profissionais)
+                if (!FinanceiroHelper.VerifcaSaldoCliente(op.Valor,
+                    usuario.idCliente, op.IdEmpresa, usuario.IdUsuario) && userXOportunidade.StatusID != 3)
                 {
-                    item.StatusID = 3;
-
-                    var envio = new
-                    {
-                        userXOportunidade = item,
-                    };
-
-                    var helper = new ServiceHelper();
-                    var o = helper.Post<object>(url, envio);
+                    return "Saldo insuficiente para a contratação.";
                 }
 
+                var envio = new
+                {
+                    userXOportunidade,
+                };
 
-                return "Não é possível aprovar mais profissionais para essa vaga.";
+                var helper = new ServiceHelper();
+                var o = helper.Post<object>(url, envio);
+
+                if (userXOportunidade.StatusID == 1) //Aprovado
+                {
+                    FinanceiroHelper.LancaTransacoes(op.Valor * -1, "16", 3,
+                        "16", 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado, op.Id);
+
+                    FinanceiroHelper.LancaTransacoes(op.Valor, "16", 3,
+                        pServico.Profissional.ID.ToString(), 1, 2, 1, "Pagando contratado.", PixCoreValues.UsuarioLogado, op.Id);
+                }
+
+                return JsonConvert.SerializeObject(new ProfissionalViewModel(pServico.Profissional.ID, user.Nome, pServico.Servico.Nome, pServico.Profissional.Telefone.Numero,
+                    pServico.Profissional.Telefone.ID, pServico.Profissional.DataNascimento.ToShortDateString(), pServico.Profissional.Email, pServico.Profissional.IdUsuario, pServico.Profissional.Endereco)
+                {
+                    Valor = op.Valor,
+                });
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return "Não foi possível completar a operação.";
             }

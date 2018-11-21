@@ -44,7 +44,7 @@ namespace Admin.Helppers
             var result = helper.Post<object>(url, envio);
         }
 
-        public static bool VerifcaSaldoCliente(decimal valorVaga, int idCliente, int idEmpresa, int idUsuario)
+        public static bool VerifcaSaldoCliente(decimal valorVaga, int idCliente, int idEmpresa, int idUsuario, int tipoDestino = 3)
         {
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
             var url = keyUrl + "/Seguranca/WpFinanceiro/BuscarSaldo/" + idCliente + "/" + idUsuario;
@@ -52,7 +52,8 @@ namespace Admin.Helppers
             var envio = new
             {
                 idCliente,
-                destino = idEmpresa
+                destino = idEmpresa,
+                tipoDestino
             };
 
             var helper = new ServiceHelper();
