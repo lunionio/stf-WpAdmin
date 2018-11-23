@@ -167,6 +167,8 @@
     <Compile Include="Helppers\Oportundiade.cs" />
     <Compile Include="Helppers\PixCore.cs" />
     <Compile Include="Helppers\ServiceHelper.cs" />
+    <Compile Include="Models\CheckIn\CheckIn.cs" />
+    <Compile Include="Models\CheckIn\CheckInViewModel.cs" />
     <Compile Include="Models\FaleConosco\AtendimentoViewModel.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\ClienteViewModel.cs" />
@@ -174,6 +176,7 @@
     <Compile Include="Models\Financeiro\Extrato.cs" />
     <Compile Include="Models\Financeiro\Natureza.cs" />
     <Compile Include="Models\Financeiro\Status.cs" />
+    <Compile Include="Models\Profissional\DadosBancarios.cs" />
     <Compile Include="Models\Profissional\DocStatusObservacoes.cs" />
     <Compile Include="Models\Profissional\Documento.cs" />
     <Compile Include="Models\Profissional\DocumentoStatus.cs" />
@@ -200,7 +203,8 @@
     <Compile Include="Models\Profissional\Servico.cs" />
     <Compile Include="Models\Profissional\ServicoTipo.cs" />
     <Compile Include="Models\Profissional\Telefone.cs" />
-    <Compile Include="Models\RelatorioViewModel.cs" />
+    <Compile Include="Models\Relatorio\RelatorioModel.cs" />
+    <Compile Include="Models\Relatorio\RelatorioViewModel.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="Models\UserXOportunidade.cs" />
     <Compile Include="Models\Usuario\Usuario.cs" />
@@ -577,6 +581,9 @@
     <Content Include="Views\Creditos\Index.cshtml" />
     <Content Include="Views\Vaga\ModalMatch.cshtml" />
     <Content Include="Views\Relatorios\Index.cshtml" />
+    <Content Include="Views\Vaga\ModalProfissional.cshtml" />
+    <Content Include="Views\Usuario\Editar.cshtml" />
+    <Content Include="Views\Vaga\ModalCheckIn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

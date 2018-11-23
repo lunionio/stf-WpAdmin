@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿let pagamentosParaLiberar = [];
+
+$(document).ready(function () {
     $(".chosen-select").chosen({ no_results_text: "Nada encontrado!" });
     $(".chosen-select").chosen({ allow_single_deselect: true });
 
@@ -157,6 +159,28 @@ function getModalMatch(idOpt) {
                 "sSearch": "Pesquisar:",
             },
         });
+
+        $('#tbCheckIn').dataTable({
+            "pagingType": "numbers",
+            "columnDefs": [{
+                "targets": "_all",
+                "orderable": false,
+            }],
+            "dom": '<"top"f>rt' + "<'bottom col-sm-12'" +
+                "<'row'" +
+                "<'col-sm-6'l>" +
+                "<'col-sm-6'p>" +
+                ">" +
+                ">" + '<"clear">',
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+                "sZeroRecords": "Nada encontrado",
+                "sInfo": "Mostrando oágina _PAGE_ de _PAGES_",
+                "sInfoEmpty": "Nenhum dado para mostrar",
+                "sInfoFiltered": "(Filtrado de _MAX_ registros)",
+                "sSearch": "Pesquisar:",
+            },
+        });
     });
 }
 
@@ -234,5 +258,66 @@ function reprovarProfissional(userXOpt, optId, userId) {
         catch {
             alert(response);
         }
+    });
+}
+
+function getProfissional(id) {
+    var Url = "/Vaga/ModalProfissional?pId=" + id;
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": Url,
+        "method": "GET"
+    };
+
+    $.ajax(settings).done(function (response) {
+        $('#modalProfissional').html(response);
+        $('#profissionalModal').modal('show');
+    });
+}
+
+function guardaCache(optId, profissionalId) {
+    pagamentosParaLiberar.forEach(function (item, index, array) {
+        if (item.Id === profissionalId) {
+            array.splice(index, 1);
+        }
+    });
+
+    let pagamento = {
+        Id: profissionalId,
+        OportunidadeId: optId,
+        Status: $('#' + optId + ' option:selected').text(),
+        StatusPagamento: $('#' + optId + ' option:selected').val()
+    };
+
+    pagamentosParaLiberar.push(pagamento);
+}
+
+function liberarPagamentos() {
+    let settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "/Vaga/LiberarPagamentos",
+        "method": "POST",
+        "data": { models: pagamentosParaLiberar }
+    };
+
+    $.ajax(settings).done(function (response) {
+        alert(response);
+    });
+}
+
+function getModalCheckIn(profissionalId) {
+    var Url = "/Vaga/ModalCheckIn?pId=" + profissionalId;
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": Url,
+        "method": "GET"
+    };
+
+    $.ajax(settings).done(function (response) {
+        $('#modalCheckIn').html(response);
+        $('#checkinModal').modal('show');
     });
 }

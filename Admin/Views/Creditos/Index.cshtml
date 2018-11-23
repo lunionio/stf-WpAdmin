@@ -22,7 +22,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label class="col-md-3 control-label" for="Perfis">Empresa</label>
-                                    <div class="col-md-7">
+                                    <div class="col-md-4">
                                         @Html.DropDownListFor(u => u.Empresa, (IEnumerable<SelectListItem>)ViewBag.Empresas, new { @class = "form-control perfis chosen-select" })
                                         @Html.ValidationMessageFor(u => u.Empresa)
                                     </div>
@@ -40,7 +40,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label class="col-md-3 control-label" for="Perfis">Natureza da Operação</label>
-                                    <div class="col-md-7">
+                                    <div class="col-md-4">
                                         @Html.DropDownListFor(u => u.Natureza, (IEnumerable<SelectListItem>)ViewBag.Naturezas, new { @class = "form-control perfis chosen-select" })
                                         @Html.ValidationMessageFor(u => u.Natureza)
                                     </div>
@@ -49,7 +49,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label class="col-md-3 control-label" for="Nome">Taxa</label>
-                                    <div class="col-md-7">
+                                    <div class="col-md-2">
                                         @Html.TextBoxFor(u => u.Taxa, new { name = "Taxa", @class = "form-control", type = "number" })
                                         @Html.ValidationMessageFor(u => u.Taxa)
                                     </div>

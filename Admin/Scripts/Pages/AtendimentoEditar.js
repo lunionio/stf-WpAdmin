@@ -26,7 +26,7 @@ function encerrar() {
 
     $.ajax(settings).done(function (response) {
         if (response == "ok") {
-            window.location = "/Index";
+            window.location = "/Atendimento/Index";
         }
         else {
             alert(response);
