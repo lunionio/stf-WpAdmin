@@ -289,7 +289,7 @@ namespace Admin.Controllers
                 ViewBag.Empresas = new SelectList(GetEmpresas().Select(e => e.Nome));
                 ViewBag.Perfis = new SelectList(GetPermissoes().Select(p => p.Nome));
 
-                return RedirectToAction("Editar", result);
+                return RedirectToAction("EditarUsuario");
             }
             catch(Exception e)
             {
