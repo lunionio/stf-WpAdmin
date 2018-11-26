@@ -41,7 +41,6 @@ function adicionarLinhaTabela(response) {
     }
 }
 
-
 function adicionarLinhaTabelaFechada(response) {
     if (response.status == 2) {
         var newRow = $("<tr>"); var cols = "";
@@ -57,7 +56,6 @@ function adicionarLinhaTabelaFechada(response) {
         newRow.append(cols); $("#tbAtendimentoFechado").append(newRow);
     }
 }
-
 
 function LoadingInit(elemento) {
     $(elemento).loading({
