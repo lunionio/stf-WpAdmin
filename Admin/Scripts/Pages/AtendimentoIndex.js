@@ -26,7 +26,7 @@ function popularTabela() {
 }
 
 function adicionarLinhaTabela(response) {
-    if (response.status == 1) {
+    if (response.ticketStatusID == 1) {
         var newRow = $("<tr>"); var cols = "";
         cols += '<td>' + response.numero + '</td>';
         cols += '<td>' + response.email + '</td>';
@@ -42,7 +42,7 @@ function adicionarLinhaTabela(response) {
 }
 
 function adicionarLinhaTabelaFechada(response) {
-    if (response.status == 2) {
+    if (response.ticketStatusID == 3) {
         var newRow = $("<tr>"); var cols = "";
         cols += '<td>' + response.numero + '</td>';
         cols += '<td>' + response.email + '</td>';

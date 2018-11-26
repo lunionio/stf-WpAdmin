@@ -35,14 +35,14 @@ namespace Admin
             if (idCliente != 0)
             {
                 var cookievalue = string.Empty;
-                if (Request.Cookies["IdCliente"] != null)
+                if (Request.Cookies["IdClienteStaff"] != null)
                 {
-                    cookievalue = Request.Cookies["IdCliente"].ToString();
+                    cookievalue = Request.Cookies["IdClienteStaff"].ToString();
                 }
                 else
                 {
-                    Response.Cookies["IdCliente"].Value = idCliente.ToString();
-                    Response.Cookies["IdCliente"].Expires = DateTime.Now.AddMinutes(1); // add expiry time
+                    Response.Cookies["IdClienteStaff"].Value = idCliente.ToString();
+                    Response.Cookies["IdClienteStaff"].Expires = DateTime.Now.AddMinutes(1); // add expiry time
                 }
                 PixCoreValues.RenderUrlPage(HttpContext.Current);
             }

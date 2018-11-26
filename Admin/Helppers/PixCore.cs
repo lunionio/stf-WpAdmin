@@ -31,9 +31,9 @@ namespace Admin.Helppser
                 var DefaultSiteUrl = protocolo + "://" + url + ":" + porta.ToString() + "/";
                 var current = HttpContext.Current;
 
-                if (current.Request.Cookies["IdCliente"] != null)
+                if (current.Request.Cookies["IdClienteStaff"] != null)
                 {
-                    var cookiesValido = current.Request.Cookies["IdCliente"].Value;
+                    var cookiesValido = current.Request.Cookies["IdClienteStaff"].Value;
                     var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
                     IdCliente = jss.Deserialize<int>(cookiesValido);
                     return IdCliente;
@@ -93,19 +93,21 @@ namespace Admin.Helppser
                 {
                     if (Convert.ToBoolean(Usuario.VAdmin))
                     {
-                        user.idCliente = 1; //StaffPro
-                        //user.idCliente = Usuario.idCliente;
+                        user.idCliente = Usuario.idCliente;
                         user.idPerfil = Usuario.PerfilUsuario;
                         user.IdUsuario = Usuario.ID;
+                        user.idEmpresa = Usuario.IdEmpresa;
+                        user.Nome = Usuario.Nome;
+                        user.Avatar = Usuario.Avatar;
 
-                        if (current.Request.Cookies["UsuarioLogado"] != null)
+                        if (current.Request.Cookies["UsuarioLogadoStaff"] != null)
                         {
-                            cookievalue = current.Request.Cookies["UsuarioLogado"].ToString();
+                            cookievalue = current.Request.Cookies["UsuarioLogadoStaff"].ToString();
                         }
                         else
                         {
-                            current.Response.Cookies["UsuarioLogado"].Value = jss.Serialize(user);
-                            current.Response.Cookies["UsuarioLogado"].Expires = DateTime.Now.AddMinutes(30); // add expiry time
+                            current.Response.Cookies["UsuarioLogadoStaff"].Value = jss.Serialize(user);
+                            current.Response.Cookies["UsuarioLogadoStaff"].Expires = DateTime.Now.AddMinutes(30); // add expiry time
                         }
                         return true;
                     }
@@ -121,13 +123,29 @@ namespace Admin.Helppser
 
         }
 
+        public static void AtualizarUsuarioLogado(UsuarioViewModel usuario)
+        {
+            var login = new LoginViewModel()
+            {
+                idCliente = usuario.idCliente,
+                idPerfil = usuario.PerfilUsuario,
+                IdUsuario = usuario.ID,
+                idEmpresa = usuario.IdEmpresa,
+                Nome = usuario.Nome,
+                Avatar = usuario.Avatar,
+            };
+
+            HttpContext.Current.Response.Cookies["UsuarioLogadoStaff"].Value = null;
+            HttpContext.Current.Response.Cookies["UsuarioLogadoStaff"].Value = new JavaScriptSerializer().Serialize(login);
+        }
+
         public static LoginViewModel VerificaLogado()
         {
             var current = HttpContext.Current;
 
-            if (current.Request.Cookies["UsuarioLogado"] != null)
+            if (current.Request.Cookies["UsuarioLogadoStaff"] != null)
             {
-                var cookiesValido = current.Request.Cookies["UsuarioLogado"].Value;
+                var cookiesValido = current.Request.Cookies["UsuarioLogadoStaff"].Value;
                 var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
                 LoginViewModel Usuario = jss.Deserialize<LoginViewModel>(cookiesValido);
                 return Usuario;
@@ -197,6 +215,13 @@ namespace Admin.Helppser
                 //TODO: Necessário? página criada localmente via html...
                 //HttpContext.Current.Response.StatusCode = 404;
             }
+        }
+
+        public static void Sair()
+        {
+            var current = HttpContext.Current;
+            current.Request.Cookies["UsuarioLogadoStaff"].Value = null;
+            current.Request.Cookies["IdClienteStaff"].Value = null;
         }
     }
 }

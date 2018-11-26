@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Profissionais - Detalhes";
+    ViewBag.PageTitle = "Profissionais";
 }
 
 
@@ -9,19 +10,21 @@
 
     <div class="col-md-12">
         <div id="miolo" class="card strpied-tabled-with-hover card-wizard">
-            <div class="card-header ">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item" style="width:100%">
-                        <a class="nav-link active" href="#tab1" data-toggle="tab" role="tab" aria-controls="tab1"
-                           aria-selected="true">CONTROOLE DE DOCUMENTOS -@Model.Id</a>
-                    </li>
-                </ul>
+            <div class="card-header text-center">
+                <h4 class="text-center">CONTROLE DE DOCUMENTOS</h4>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-2">
                         <div class="photo">
-                            <img width="150px" height="auto" src="data:image/png;base64, @Model.Avatar" />
+                            @if (string.IsNullOrEmpty(Model.Avatar))
+                            {
+                                <img src="~/img/avatar.png" width="150" height="150" />
+                            }
+                            else
+                            {
+                                <img width="150px" height="auto" src="@Model.Avatar" />
+                            }
                         </div>
 
                     </div>
@@ -29,6 +32,8 @@
                         <fieldset>
                             <div class="form-group">
                                 <div class="row">
+                                    <input type="hidden" value="@Model.Id" id="mId" />
+                                    @Html.HiddenFor(p => p.UsuarioId, new { id = "uId" })
                                     <label class="col-sm-2 control-label">NOME</label>
                                     <div class="col-sm-10">
                                         <input type="text" id="nome" name="Nome" value="@Model.Nome" class="form-control">
@@ -46,11 +51,11 @@
                                     </div>
                                     <label class="col-sm-2 control-label">Idade</label>
                                     <div class="col-sm-2">
-                                        <input type="text" id="nome" name="Nome" value="18" disabled="disabled" ="" class="form-control">
+                                        <input type="text" id="nome" name="Nome" value="18" disabled="disabled" class="form-control">
                                     </div>
                                     <label class="col-sm-2 control-label">Cadastrado em:</label>
                                     <div class="col-sm-2">
-                                        <input type="text" id="nome" name="Nome" value="" disabled="disabled" ="" class="form-control">
+                                        <input type="text" id="nome" name="Nome" value="@Model.DataCriacao.ToString()" disabled="disabled" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -77,7 +82,7 @@
                                 <div class="row">
                                     <label class="col-sm-2 control-label">Endereço</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="nome" name="Nome" value="" class="form-control">
+                                        <input type="text" id="nome" name="Nome" value="@( $"{ Model.Endereco.Local }, { Model.Endereco.NumeroLocal } - { Model.Endereco.Bairro }, { Model.Endereco.Cidade } - { Model.Endereco.Estado }" )" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -93,22 +98,21 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card stacked-form">
-            
             <div class="card-body">
                 <div class="row">
-
                     @foreach (var item in Model.Documentos)
                     {
                         <div class="col-md-3">
                             <div class="card md-3 shadow-sm">
                                 <strong>@item.TipoNome</strong>
-                                <img width="100%" height="auto" src="data:image/png;base64, @item.Arquivo" />
+                                    <img width="100%" height="auto" src="data:image/png;base64, @item.Arquivo" />
                                 <br />
                                 <div style="margin-left:15px">
                                     <p class="card-text">
                                         <strong>@item.Data</strong>
                                     </p>
-                                    <select id="atuacao" data-title="Selecione" name="currency"
+
+                                    <select onchange="guardaOpcao(@item.Id)" id="@item.Id" data-title="Selecione" name="currency"
                                             class="selectpicker" data-style="btn-default btn-outline"
                                             data-menu-style="dropdown-blue">
                                         <option value="0">Selecione</option>
@@ -116,7 +120,7 @@
                                         {
                                             foreach (var s in (ViewBag.Statuses as IEnumerable<Admin.Models.DocumentoStatus>))
                                             {
-                                                <option value="@s.ID">@s.Nome</option>
+                                                <option @( s.ID.Equals(item.IdStatus) ? "selected" : "" ) value="@item.Id">@s.Nome</option>
                                             }
                                         }
                                     </select>
@@ -125,7 +129,21 @@
                         </div>
                     }
                 </div>
+                <textarea style="height:100px;" class="form-control" placeholder="Observações..." id="observacoes">@(Model.Documentos.FirstOrDefault()?.Observacoes)</textarea>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-10"></div>
+                        <div class="col-md-2">
+                            <button type="submit" id="btnAtualizar" class="btn btn-fill btn-primary">Atualizar</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+    <script src="~/Scripts/Pages/ProfissionaisDetalhes.js"></script>
+}

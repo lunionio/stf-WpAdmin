@@ -23,6 +23,7 @@ function PublicarAgora() {
     }
 
     $.ajax(settings).done(function (response) {
+
         if (response == "ok") {
 
             window.location = "/Vaga";
@@ -262,9 +263,11 @@ function Save() {
     }
 
     $.ajax(settings).done(function (response) {
+        console.log(response);
         //$('#modal').html(response);
         //$('#myModal').modal('show');
-        //LoadingBodyStop();
+        LoadingBodyStop();
+        window.location = "/Empresas/Listar";
     });
 
     return true;

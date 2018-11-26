@@ -44,6 +44,7 @@ namespace Admin
                         "~/Content/light-bootstrap-dashboard.css",
                         "~/Content/pe-icon-7-stroke.css",
                         "~/Content/Custom.css",
+                        "~/Content/bootstrap-chosen.css",
                         "~/Content/jquery.loading.css"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're

@@ -4,7 +4,7 @@
 function popularTabela() {
     LoadingInit('.content');
     //var Url = "GetProfissionais";
-    var Url = "Profissionais/GetProfissionais";
+    var Url = "/Profissionais/GetProfissionais";
     var settings = {
         "async": true,
         "crossDomain": true,
@@ -29,7 +29,7 @@ function adicionarLinhaTabela(response) {
     cols += '<td>' + response.Email + '</td>';
     cols += '<td>' + response.Telefone + '</td>';
     cols += '<td>';
-    cols += '<a href="Profissionais/Detalhes/' + response.Id + '" class="btn btnAcao btn-success btn-link btn-xs" data-original-title="Editar">';
+    cols += '<a href="/Profissionais/Detalhes/' + response.Id + '" class="btn btnAcao btn-success btn-link btn-xs" data-original-title="Editar">';
     cols += '<i class="nc-icon nc-credit-card" ></i >';
     cols += '</td>';
     newRow.append(cols); $("#tbEmpresas").append(newRow);

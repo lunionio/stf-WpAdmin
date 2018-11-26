@@ -1,4 +1,4 @@
-﻿namespace Admin.Models.Faleconosco
+﻿namespace Admin.Models.FaleConosco
 {
     public class Status : Base
     {

@@ -1,5 +1,9 @@
-﻿using Admin.Helppser;
+﻿using Admin.Helppers;
+using Admin.Helppser;
 using Admin.Models;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Web.Mvc;
 
 namespace Admin.Controllers
@@ -12,7 +16,7 @@ namespace Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(string login, string senha)
+        public ActionResult Login(string login, string senha)
         {
             var collection = new LoginViewModel
             {
@@ -24,24 +28,28 @@ namespace Admin.Controllers
             {
                 if (PixCoreValues.Login(collection))
                 {
-                    // Response.Redirect(PixCoreValues.defaultSiteUrl);
-
+                    TempData["LoginMessage"] = string.Empty;
                     return RedirectToAction("Index", "Home");
                 }
                 else
                 {
 
-                    ViewData["TemporariaMensagem"] = "Usuario ou senha invalida";
+                    TempData["LoginMessage"] = "Usuário ou senha invalida";
                     return RedirectToAction("Index", "Login");
                 }
             }
             catch
             {
-                ViewData["TemporariaMensagem"] = "Usuario ou senha invalida";
+                TempData["LoginMessage"] = "Usuário ou senha invalida";
                 return RedirectToAction("Index", "Login");
             }
+        }
 
-            
+        public ActionResult Sair()
+        {
+            PixCoreValues.Sair();
+
+            return RedirectToAction("Index", "Login");
         }
     }
 }

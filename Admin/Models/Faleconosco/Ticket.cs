@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Admin.Models.Faleconosco
+namespace Admin.Models.FaleConosco
 {
     public class Ticket : Base
     {
         public string Assunto { get; set; }
         public int TipoID { get; set; }
+        public Tipo Tipo { get; set; }
         public int IdUsuario { get; set; }
         public int TicketStatusID { get; set; }
         public Status TicketStatus { get; set; }

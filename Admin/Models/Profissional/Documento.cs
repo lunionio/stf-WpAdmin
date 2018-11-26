@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Admin.Models
 {
@@ -13,15 +12,13 @@ namespace Admin.Models
         public int DocumentoStatusID { get; set; }
         public DocumentoTipo DocumentoTipo { get; set; }
         public DocumentoStatus DocumentoStatus { get; set; }
+        public DocStatusObservacoes StatusObservacoes { get; set; }
 
         private byte[] _conteudo;
         public byte[] Conteudo
         {
             get => _conteudo;
-            set
-            {
-                _conteudo = Convert.FromBase64String(Arquivo);
-            }
+            set => _conteudo = Convert.FromBase64String(Arquivo);
         }
 
         public Documento()

@@ -10,8 +10,9 @@ namespace Admin.Models
     public class VagaViewModel
     {
         public int Id { get; set; }
+        public int EnderecoId { get; set; }
         public string Nome { get; set; }
-        public int Cep { get; set; }
+        public string Cep { get; set; }
         public string Rua { get; set; }
         public string Bairro { get; set; }
         public string Cidade { get; set; }
@@ -31,5 +32,40 @@ namespace Admin.Models
         public int IdEmpresa { get; set; }
         public int IdCliente { get; set; }
         public string NomeEmpresa { get; set; }
+        public int AreaAtuacao { get; set; }
+        public string DataCriacao { get; set; }
+        public string EnderecoDataCriacao { get; set; }
+
+        public VagaViewModel()
+        {
+
+        }
+
+        public VagaViewModel(int id, string nome, string cep, string rua, string bairro, 
+            string cidade, string uf, string hora, decimal valor, int profissional, string profissionalNome,
+            int numero, string total, int qtd, string complemento, string referencia, string dataEvento, int status, int idEmpresa, int idCliente, int areaAtuacao)
+        {
+            Id = id;
+            Nome = nome;
+            Cep = cep;
+            Rua = rua;
+            Bairro = bairro;
+            Cidade = cidade;
+            Uf = uf;
+            Hora = hora;
+            Valor = valor;
+            Profissional = profissional;
+            ProfissionalNome = profissionalNome;
+            Numero = numero;
+            Total = total;
+            Qtd = qtd;
+            Complemento = complemento;
+            Referencia = referencia;
+            DataEvento = Convert.ToDateTime(dataEvento);
+            this.status = status;
+            IdEmpresa = idEmpresa;
+            IdCliente = idCliente;
+            AreaAtuacao = areaAtuacao;
+        }
     }
 }

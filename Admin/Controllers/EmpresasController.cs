@@ -1,4 +1,5 @@
-﻿using Admin.Helppser;
+﻿using Admin.Helppers;
+using Admin.Helppser;
 using Admin.Models;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,7 @@ namespace Admin.Controllers
             {
                 if (!string.IsNullOrEmpty(viewModel.Nome) && !string.IsNullOrEmpty(viewModel.Cnae))
                 {
+                    viewModel.status = 1;
                     viewModel.IdCliente = _idCliente;
 
                     if (viewModel.Id == 0)
@@ -45,18 +47,15 @@ namespace Admin.Controllers
                     viewModel.Ativo = true;
                     if (SaveEmpresa(viewModel))
                     {
-                        ViewData["ResultadoEmpresa"] = new ResultadoViewModel("Empresa cadastrada com sucesso!", true);
                         ModelState.Clear();
                         return RedirectToAction("Index", "Home");
                     }
                 }
 
-                ViewData["ResultadoEmpresa"] = new ResultadoViewModel("Informe todos os dados necessários.", false);
                 return View("Cadastrar", viewModel);
             }
             catch (Exception e)
             {
-                ViewData["ResultadoEmpresa"] = new ResultadoViewModel("Não foi possível salvar o usuário.", false);
                 return View("Cadastrar", viewModel);
             }
         }
@@ -65,7 +64,6 @@ namespace Admin.Controllers
         {
             try
             {
-                var jss = new JavaScriptSerializer();
                 var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
                 var url = keyUrl + "/Seguranca/wpEmpresas/SalvarEmpresas/" + model.IdCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
@@ -87,39 +85,20 @@ namespace Admin.Controllers
                             PixCoreValues.UsuarioLogado.IdUsuario,
                             model.UsuarioCriacao,
                             model.UsuarioEdicao,
-                            model.IdCliente
+                            model.IdCliente,
+                            local = model.Rua
                         },
                         model.Nome,
                         model.UsuarioCriacao,
                         model.UsuarioEdicao,
                         model.Ativo,
                         model.status,
-                        model.IdCliente
+                        model.IdCliente, 
                     }
                 };
-                var data = jss.Serialize(envio);
 
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "POST";
-
-                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-                {
-                    streamWriter.Write(data);
-                    streamWriter.Flush();
-                    streamWriter.Close();
-                }
-
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                {
-                    var result = streamReader.ReadToEnd();
-                    if (string.IsNullOrEmpty(result)
-                        || "null".Equals(result.ToLower()))
-                    {
-                        throw new Exception("Ouve um erro durante o processo.");
-                    }
-                }
+                var helper = new ServiceHelper();
+                var result = helper.Post<object>(url, envio);
 
                 return true;
             }
@@ -144,8 +123,6 @@ namespace Admin.Controllers
         public ActionResult Excluir(int id, string cnpj) //Necessário passar o CNPJ
         {
             var usuario = PixCoreValues.UsuarioLogado;
-            var jss = new JavaScriptSerializer();
-
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
             var url = keyUrl + "/Seguranca/wpEmpresas/DeletarEmpresa/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
             object envio = new
@@ -156,30 +133,9 @@ namespace Admin.Controllers
                     cnpj,
                 }
             };
-            var data = jss.Serialize(envio);
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                streamWriter.Write(data);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var result = string.Empty;
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                result = streamReader.ReadToEnd();
-                if (string.IsNullOrEmpty(result)
-                    || "null".Equals(result.ToLower()))
-                {
-                    throw new Exception("Ouve um erro durante o processo.");
-                }
-            }
+            var helper = new ServiceHelper();
+            var result = helper.Post<object>(url, envio);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -190,29 +146,15 @@ namespace Admin.Controllers
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
             var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
-            var result = string.Empty;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            {
-                using (Stream stream = response.GetResponseStream())
-                {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        result = reader.ReadToEnd();
-                    }
-                }
-            }
+            var helper = new ServiceHelper();
+            var empresas = helper.Get<IEnumerable<object>>(url);
 
-            var jss = new JavaScriptSerializer();
-            var empresas = jss.Deserialize<IEnumerable<object>>(result);
             return Json(empresas, JsonRequestBehavior.AllowGet);
         }
 
         private ActionResult GetEmpresa(int empresaId)
         {
             var usuario = PixCoreValues.UsuarioLogado;
-            var jss = new JavaScriptSerializer();
-
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
             var url = keyUrl + "/Seguranca/wpEmpresas/BuscarPorId/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
             object envio = new
@@ -220,32 +162,9 @@ namespace Admin.Controllers
                 usuario.idCliente,
                 id = empresaId,
             };
-            var data = jss.Serialize(envio);
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                streamWriter.Write(data);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var result = string.Empty;
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                result = streamReader.ReadToEnd();
-                if (string.IsNullOrEmpty(result)
-                    || "null".Equals(result.ToLower()))
-                {
-                    throw new Exception("Ouve um erro durante o processo.");
-                }
-            }
-
-            //var empresa = jss.Deserialize<object>(result);
+            var helper = new ServiceHelper();
+            var result = helper.Post<object>(url, envio);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

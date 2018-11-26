@@ -1,4 +1,10 @@
 ﻿
+$(document).ready(function () {
+    $(".chosen-select").chosen({ no_results_text: "Nada encontrado!" });
+    $(".chosen-select").chosen({ allow_single_deselect: true });
+    getEmpresas();
+});
+
 init();
 controlarPaineis();
 getAreaAtuacao();
@@ -16,13 +22,13 @@ $('#btnAgora').on('click', function () {
 });
 
 function PublicarAgora() {
-    
+    console.log('Entrou');
     LoadingInitBase('.body');
     var vaga = VagaViewModel();
     var settings = {
         "async": true,
         "crossDomain": true,
-        "url": "PublicarAgora",
+        "url": "/Vaga/PublicarAgora",
         "method": "POST",
         "data": vaga
     }
@@ -71,16 +77,18 @@ function aplicarMascaras() {
 }
 
 function VagaViewModel() {
-    var data = $('#data').val();
-    var dataEvento = Date.parse(data);
+    let data = $('#data').val();
+    let dataEvento = Date.parse(data);
+
     var VagaViewModel = {
+        Id: $('#vagaId').val(),
         Nome: $('#nome').val(),
         Cep: $('#cep').val(),
         Rua: $('#rua').val(),
         Bairro: $('#bairro').val(),
         Numero: $('#numero').val(),
         Cidade: $('#cidade').val(),
-        Date: $('#data').val(),
+        Date: data,
         Complemento: $('#complemento').val(),
         Referencia: $('#referencia').val(),
         Uf: $('#uf').val(),
@@ -91,9 +99,13 @@ function VagaViewModel() {
         Atuacao: $('#atuacao').val(),
         Profissional: $('#profissional option:selected').val(),
         ProfissionalNome: $('#profissional option:selected').text(),
-        Qtd: $('#qtd').val(),
-        Total: $('#total').val()
-    }
+        //Qtd: $('#qtd').val(),
+        Total: $('#total').val(),
+        IdEmpresa: $('#empresas option:selected').val(),
+        EnderecoId: $('#endId').val(),
+        DataCriacao: $('#vagaData').val(),
+        EnderecoDataCriacao: $('#enderecoData').val()
+    };
     return VagaViewModel;
 }
 
@@ -111,6 +123,13 @@ function getAreaAtuacao() {
         for (var i = 0; i < response.length; i++) {
             $('#atuacao').append('<option value="' + response[i].id + '">' + response[i].nome + '</option>');
             $('#atuacao').selectpicker('refresh');
+        }
+
+        let area = $('#areaSelected').val();
+
+        if (area > 0) {
+            $('#atuacao').val(area).change();
+            $('#atuacao').trigger("chosen:updated");
         }
     });
 }
@@ -145,7 +164,12 @@ function getProfissionalPorAtuacao(id) {
                 $('#profissional').append('<option value="' + response[i].id + '">' + response[i].nome + '</option>');
                 $('#profissional').selectpicker('refresh');
             }
+        }
 
+        let profissional = $('#profissionalSelected').val();
+        if (profissional > 0) {
+            $('#profissional').val(profissional).change();
+            $('#profissional').trigger("chosen:updated");
         }
     });
 }
@@ -195,6 +219,28 @@ function LoadingStop() {
 
 function LoadingBodyStop() {
     $('body').loading('stop');
+}
+
+function getEmpresas() {
+
+    var Url = "/Vaga/ListarEmpresas";
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": Url,
+        "method": "GET"
+    };
+
+    $.ajax(settings).done(function (response) {
+        $.each(response, function (index, item) {
+            $('#empresas').append('<option value="' + item.Id + '">' + item.Nome + '</option>');
+            $('#empresas').trigger("chosen:updated");
+        });
+
+        let empresa = $('#empresaSelected').val();
+        $('#empresas').val(empresa);
+        $('#empresas').trigger("chosen:updated");
+    });
 }
 
 function init() {
@@ -280,8 +326,9 @@ function carregaModal() {
 
     LoadingInit('body');
     var vagaViewModel = VagaViewModel();
+    console.log(vagaViewModel);
     var settings = {
-        "url": "ModalConfirmarVaga",
+        "url": "/Vaga/ModalConfirmarVaga",
         "method": "POST",
         "data": vagaViewModel
     }
