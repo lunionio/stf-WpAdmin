@@ -28,7 +28,7 @@ function adicionarLinhaTabela(response) {
     cols += '<td>'+response.cnpj+'</td>';
     cols += '<td>'+response.razaoSocial+'</td>';
     cols += '<td>'+response.email+'</td>';
-    cols += '<td>'+response.telefone+'</td>';
+    cols += '<td>'+response.telefone.numero +'</td>';
     cols += '<td>';
     cols += '<a href="Editar/'+response.id+'" class="btn btnAcao btn-success btn-link btn-xs" data-original-title="Editar">';
     cols += '<i class="nc-icon nc-credit-card" ></i >';

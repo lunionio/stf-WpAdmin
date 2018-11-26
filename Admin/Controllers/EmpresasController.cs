@@ -94,6 +94,15 @@ namespace Admin.Controllers
                         model.Ativo,
                         model.status,
                         model.IdCliente, 
+                        model.Email,
+                        Telefone = new
+                        {
+                            Numero = model.Telefone,
+                            model.IdCliente,
+                            Status = 1,
+                            UsuarioCriacao = PixCoreValues.UsuarioLogado.IdUsuario,
+                            UsuarioEdicao = PixCoreValues.UsuarioLogado.IdUsuario,
+                        },
                     }
                 };
 

@@ -34,23 +34,6 @@
                         <div class="col-sm-12">
                             <table id="tbRelatorio" hidden class="table table-hover table-responsive">
                                 <thead>
-                                    <tr>
-                                        <th> Codigo </th>
-                                        <th> Cliente </th>
-                                        <th> Cnpj </th>
-                                        <th> Titulo </th>
-                                        <th> CriadoEm </th>
-                                        <th> DataEvento </th>
-                                        <th> Endereco </th>
-                                        <th> Categoria </th>
-                                        <th> Profissiona </th>
-                                        <th> Valor </th>
-                                        <th> Quantidade </th>
-                                        <th> Total </th>
-                                        <th> Candidatos </th>
-                                        <th> Aprovados </th>
-                                        <th> Reprovados </th>
-                                    </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
@@ -95,28 +78,85 @@
             };
 
             $.ajax(settings).done(function (response) {
+                if ($.fn.DataTable.isDataTable("#tbRelatorio")) {
+                    $('#tbRelatorio').DataTable().clear().destroy();
+                }
                 $('#tbRelatorio tbody').empty();
+                $('#tbRelatorio thead').empty();
                 $("#tbRelatorio").removeAttr("hidden");
-                var result = response;
-                $.each(result, function (index, element, array) {
-                    $("#tbRelatorio > tbody").append("<tr>" +
-                        "<td>" + element.Codigo + "</td>" +
-                        "<td>" + element.Cliente + "</td>" +
-                        "<td>" + element.Cnpj + "</td>" +
-                        "<td>" + element.Titulo + "</td>" +
-                        "<td>" + element.CriadoEm + "</td>" +
-                        "<td>" + element.DataEvento + "</td>" +
-                        "<td>" + element.Endereco + "</td>" +
-                        "<td>" + element.Categoria + "</td>" +
-                        "<td>" + element.Profissional + "</td>" +
-                        "<td>" + element.Valor + "</td>" +
-                        "<td>" + element.Quantidade + "</td>" +
-                        "<td>" + element.Total + "</td>" +
-                        "<td>" + element.Candidatos + "</td>" +
-                        "<td>" + element.Aprovados + "</td>" +
-                        "<td>" + element.Reprovados + "</td>" +
+
+                if (r == 1) {
+                    $("#tbRelatorio > thead").append("<tr>" +
+                        "<th>Codigo</th>" +
+                        "<th>Cliente</th>" +
+                        "<th>Cnpj</th>" +
+                        "<th>Titulo</th>" +
+                        "<th>Criado Em</th>" +
+                        "<th>Data Evento</th>" +
+                        "<th>Endereco</th>" +
+                        "<th>Categoria</th>" +
+                        "<th>Profissional</th>" +
+                        "<th>Valor</th>" +
+                        "<th>Quantidade</th>" +
+                        "<th>Total</th>" +
+                        "<th>Candidatos</th>" +
+                        "<th>Aprovados</th>" +
+                        "<th>Reprovados</th>" +
                         "</tr>");
-                });
+
+                    var result1 = response;
+                    $.each(result1, function (index, element, array) {
+                        console.log(element);
+                        $("#tbRelatorio > tbody").append("<tr>" +
+                            "<td>" + element.Codigo + "</td>" +
+                            "<td>" + element.Cliente + "</td>" +
+                            "<td>" + element.Cnpj + "</td>" +
+                            "<td>" + element.Titulo + "</td>" +
+                            "<td>" + element.CriadoEm + "</td>" +
+                            "<td>" + element.DataEvento + "</td>" +
+                            "<td>" + element.Endereco + "</td>" +
+                            "<td>" + element.Categoria + "</td>" +
+                            "<td>" + element.Profissional + "</td>" +
+                            "<td>" + element.Valor + "</td>" +
+                            "<td>" + element.Quantidade + "</td>" +
+                            "<td>" + element.Total + "</td>" +
+                            "<td>" + element.Candidatos + "</td>" +
+                            "<td>" + element.Aprovados + "</td>" +
+                            "<td>" + element.Reprovados + "</td>" +
+                            "</tr>");
+                    });
+                }
+                else if(r == 6) {
+                    $("#tbRelatorio > thead").append("<tr>" +
+                        "<th>Codigo</th>" +
+                        "<th>Origem</th>" +
+                        "<th>Destino</th>" +
+                        "<th>Descrição</th>" +
+                        "<th>Valor</th>" +
+                        "<th>Natureza da Operação</th>" +
+                        "<th>Usuário</th>" +
+                        "<th>Data</th>" +
+                        "<th>Hora</th>" +
+                        "<th>Status</th>" +
+                        "</tr>");
+
+                    var result2 = response;
+                    $.each(result2, function (index, element, array) {
+
+                        $("#tbRelatorio > tbody").append("<tr>" +
+                            "<td>" + element.Codigo + "</td>" +
+                            "<td>" + element.Origem + "</td>" +
+                            "<td>" + element.Destino + "</td>" +
+                            "<td>" + element.Descricao + "</td>" +
+                            "<td>" + element.Valor + "</td>" +
+                            "<td>" + element.NaturezaOperacao + "</td>" +
+                            "<td>" + element.Usuario + "</td>" +
+                            "<td>" + element.Data + "</td>" +
+                            "<td>" + element.Hora + "</td>" +
+                            "<td>" + element.Status + "</td>" +
+                            "</tr>");
+                    });
+                }
 
                 $("#tbRelatorio").DataTable({
                     "pagingType": "numbers",

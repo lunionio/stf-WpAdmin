@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Admin.Models
 {
-    public class RelatorioViewModel
+    public class RelatorioOportunidadeViewModel
     {
         public string Codigo { get; set; }
         public string Cliente { get; set; }
@@ -23,7 +23,7 @@ namespace Admin.Models
         public string Aprovados { get; set; }
         public string Reprovados { get; set; }
 
-        public RelatorioViewModel()
+        public RelatorioOportunidadeViewModel()
         {
 
         }

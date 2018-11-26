@@ -66,7 +66,7 @@ function aplicarMascaras() {
 
 function EmpresaViewModel() {
     var VagaViewModel = {
-        Nome: $('#nome').val(),
+        Nome: $('#razaoSocial').val(),
         Cep: $('#cep').val(),
         Rua: $('#rua').val(),
         Bairro: $('#bairro').val(),
@@ -77,8 +77,10 @@ function EmpresaViewModel() {
         Uf: $('#uf').val(),
         RazaoSocial: $('#razaoSocial').val(),
         Cnpj: $('#cnpj').val(),
-        Cnae: $('#cnae').val()
-    }
+        Cnae: $('#cnae').val(),
+        Email: $('#email').val(),
+        Telefone: $('#telefone').val()
+    };
     return VagaViewModel;
 }
 

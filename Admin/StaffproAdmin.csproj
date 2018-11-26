@@ -203,8 +203,9 @@
     <Compile Include="Models\Profissional\Servico.cs" />
     <Compile Include="Models\Profissional\ServicoTipo.cs" />
     <Compile Include="Models\Profissional\Telefone.cs" />
+    <Compile Include="Models\Relatorio\RelatorioExtratoViewModel.cs" />
     <Compile Include="Models\Relatorio\RelatorioModel.cs" />
-    <Compile Include="Models\Relatorio\RelatorioViewModel.cs" />
+    <Compile Include="Models\Relatorio\RelatorioOportunidadeViewModel.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="Models\UserXOportunidade.cs" />
     <Compile Include="Models\Usuario\Usuario.cs" />

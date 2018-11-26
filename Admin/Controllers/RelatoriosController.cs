@@ -1,6 +1,7 @@
 ﻿using Admin.Helppers;
 using Admin.Helppser;
 using Admin.Models;
+using Admin.Models.Relatorio;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -45,10 +46,19 @@ namespace Admin.Controllers
 
         public ActionResult Gerar(int relatorioId)
         {
+            object result = null;
+
             if (relatorioId == 1)
             {
-                var result = GetOptRelatorios();
+                result = GetOptRelatorios();
+            }
+            else if(relatorioId == 6)
+            {
+                result = GetExtratoGeralRelatorio();
+            }
 
+            if (result != null)
+            {
                 var json = JsonConvert.SerializeObject(result);
                 var dt = (DataTable)JsonConvert.DeserializeObject(json, typeof(DataTable));
 
@@ -77,7 +87,19 @@ namespace Admin.Controllers
             return View("Index", relatorios);
         }
 
-        private IEnumerable<RelatorioViewModel> GetOptRelatorios()
+        private IList<RelatorioExtratoViewModel> GetExtratoGeralRelatorio()
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/WpRelatorios/ExtratoGeral/" + usuario.idCliente + "/" +
+                PixCoreValues.UsuarioLogado.IdUsuario;
+
+            var helper = new ServiceHelper();
+            var result = helper.Get<IList<RelatorioExtratoViewModel>>(url);
+            return result;
+        }
+
+        private IEnumerable<RelatorioOportunidadeViewModel> GetOptRelatorios()
         {
             var usuario = PixCoreValues.UsuarioLogado;
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
@@ -85,7 +107,7 @@ namespace Admin.Controllers
                 PixCoreValues.UsuarioLogado.IdUsuario;
 
             var helper = new ServiceHelper();
-            var result = helper.Get<IEnumerable<RelatorioViewModel>>(url);
+            var result = helper.Get<IEnumerable<RelatorioOportunidadeViewModel>>(url);
             return result;
         }
 
@@ -95,6 +117,11 @@ namespace Admin.Controllers
             if (relatorioId == 1)
             { 
                 var result = Json(GetOptRelatorios().ToList(), JsonRequestBehavior.AllowGet);
+                return result;
+            }
+            else if(relatorioId == 6)
+            {
+                var result = Json(GetExtratoGeralRelatorio().ToList(), JsonRequestBehavior.AllowGet);
                 return result;
             }
 
