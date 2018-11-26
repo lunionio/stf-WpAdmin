@@ -517,6 +517,7 @@
     <Content Include="Scripts\Pages\AtendimentoIndex.js" />
     <Content Include="Scripts\Pages\ProfissionaisDetalhes.js" />
     <Content Include="Scripts\Pages\ProfissionaisIndex.js" />
+    <Content Include="Scripts\Pages\RelatoriosIndex.js" />
     <Content Include="Scripts\Pages\VagaCadastrar.js" />
     <Content Include="Scripts\Pages\VagaIndex.js" />
     <Content Include="Scripts\perfect-scrollbar.jquery.min.js" />
