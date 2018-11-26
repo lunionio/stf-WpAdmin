@@ -20,7 +20,7 @@ namespace Admin.Models
         public string Uf { get; set; }
         public int Numero { get; set; }
         public string Complemento { get; set; }
-        public string Referencia { get; set; }
+        //public string Referencia { get; set; }
         public int status { get; set; }
         public int IdCliente { get; set; }
 
@@ -29,6 +29,8 @@ namespace Admin.Models
         public bool Ativo { get; set; }
         public string Telefone { get; set; }
         public string Email { get; set; }
+        public int TelefoneId { get; set; }
+        public int EnderecoId { get; set; }
 
         public EmpresaViewModel()
         {

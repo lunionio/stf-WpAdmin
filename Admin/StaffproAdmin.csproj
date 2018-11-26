@@ -169,6 +169,7 @@
     <Compile Include="Helppers\ServiceHelper.cs" />
     <Compile Include="Models\CheckIn\CheckIn.cs" />
     <Compile Include="Models\CheckIn\CheckInViewModel.cs" />
+    <Compile Include="Models\Empresa\Empresa.cs" />
     <Compile Include="Models\FaleConosco\AtendimentoViewModel.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\ClienteViewModel.cs" />

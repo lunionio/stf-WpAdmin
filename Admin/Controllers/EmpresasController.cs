@@ -28,14 +28,14 @@ namespace Admin.Controllers
 
         public ActionResult Cadastrar()
         {
-            return View();
+            return View(new EmpresaViewModel());
         }
 
         public ActionResult Salvar(EmpresaViewModel viewModel)
         {
             try
             {
-                if (!string.IsNullOrEmpty(viewModel.Nome) && !string.IsNullOrEmpty(viewModel.Cnae))
+                if (!string.IsNullOrEmpty(viewModel.RazaoSocial) && !string.IsNullOrEmpty(viewModel.Cnpj))
                 {
                     viewModel.status = 1;
                     viewModel.IdCliente = _idCliente;
@@ -77,6 +77,8 @@ namespace Admin.Controllers
                         model.Cnpj,
                         endereco = new
                         {
+                            DataCriacao = DateTime.UtcNow,
+                            Id = model.EnderecoId,
                             model.Cep,
                             model.Cidade,
                             model.Bairro,
@@ -86,7 +88,9 @@ namespace Admin.Controllers
                             model.UsuarioCriacao,
                             model.UsuarioEdicao,
                             model.IdCliente,
-                            local = model.Rua
+                            Local = model.Rua,
+                            model.status,
+                            EmpresaId = model.Id,
                         },
                         model.Nome,
                         model.UsuarioCriacao,
@@ -97,11 +101,14 @@ namespace Admin.Controllers
                         model.Email,
                         Telefone = new
                         {
+                            DataCriacao = DateTime.UtcNow,
+                            Id = model.TelefoneId,
                             Numero = model.Telefone,
                             model.IdCliente,
-                            Status = 1,
+                            model.status,
                             UsuarioCriacao = PixCoreValues.UsuarioLogado.IdUsuario,
                             UsuarioEdicao = PixCoreValues.UsuarioLogado.IdUsuario,
+                            EmpresaId = model.Id,
                         },
                     }
                 };
@@ -124,12 +131,12 @@ namespace Admin.Controllers
 
         public ActionResult Editar(int id)
         {
-            var empresaJson = GetEmpresa(id);
+            var empresa = GetEmpresa(id);
 
-            return View();
+            return View("Cadastrar", empresa);
         }
 
-        public ActionResult Excluir(int id, string cnpj) //Necessário passar o CNPJ
+        public ActionResult Excluir(int id)
         {
             var usuario = PixCoreValues.UsuarioLogado;
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
@@ -139,14 +146,14 @@ namespace Admin.Controllers
                 empresa = new
                 {
                     id,
-                    cnpj,
+                    cnpj = "0",
                 }
             };
 
             var helper = new ServiceHelper();
             var result = helper.Post<object>(url, envio);
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return RedirectToAction("Listar");
         }
 
         public ActionResult GetEmpresas()
@@ -161,7 +168,7 @@ namespace Admin.Controllers
             return Json(empresas, JsonRequestBehavior.AllowGet);
         }
 
-        private ActionResult GetEmpresa(int empresaId)
+        private EmpresaViewModel GetEmpresa(int empresaId)
         {
             var usuario = PixCoreValues.UsuarioLogado;
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
@@ -173,9 +180,34 @@ namespace Admin.Controllers
             };
 
             var helper = new ServiceHelper();
-            var result = helper.Post<object>(url, envio);
+            var result = helper.Post<Empresa>(url, envio);
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            var empresa = new EmpresaViewModel()
+            {
+                Ativo = result.Ativo,
+                Bairro = result.Endereco.Bairro,
+                Cep = result.Endereco.CEP,
+                Cidade = result.Endereco.Cidade,
+                Cnae = result.CNAE_S,
+                Cnpj = result.CNPJ,
+                Complemento = result.Endereco.Complemento,
+                Email = result.Email,
+                EnderecoId = result.Endereco.ID,
+                Id = result.ID,
+                IdCliente = result.IdCliente,
+                Nome = result.Nome,
+                Numero = result.Endereco.NumeroLocal,
+                RazaoSocial = result.RazaoSocial,
+                Rua = result.Endereco.Local,
+                status = result.Status,
+                Telefone = result.Telefone.Numero,
+                TelefoneId = result.Telefone.ID,
+                Uf = result.Endereco.Uf,
+                UsuarioCriacao = result.UsuarioCriacao,
+                UsuarioEdicao = result.UsuarioEdicao,
+            };
+
+            return empresa;
         }
     }
 }

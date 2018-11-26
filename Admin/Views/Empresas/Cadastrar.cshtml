@@ -5,7 +5,7 @@
 }
 
 
-
+@model Admin.Models.EmpresaViewModel
 <div class="row">
     <div class="col-md-12">
         <div id="miolo" class="card strpied-tabled-with-hover card-wizard">
@@ -17,13 +17,15 @@
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="tab1" role="tabpanel">
                         <form method="get" action="/" class="form-horizontal">
-
+                            <input type="hidden" id="empresaId" value="@Model.Id" />
+                            <input type="hidden" id="telefoneId" value="@Model.TelefoneId" />
+                            <input type="hidden" id="enderecoId" value="@Model.EnderecoId" />
                             <fieldset>
                                 <div class="form-group">
                                     <div class="row">
                                         <label class="col-sm-2 control-label">RAZÃO SOCIAL</label>
                                         <div class="col-sm-10">
-                                            <input type="text" id="razaoSocial" name="razaoSocial" placeholder="Digite a razão social da empresa" class="form-control">
+                                            <input type="text" id="razaoSocial" name="razaoSocial" value="@Model.RazaoSocial" placeholder="Digite a razão social da empresa" class="form-control">
                                             @*<small class="form-text text-muted">A block of help text that breaks onto a new line.</small>*@
                                         </div>
                                     </div>
@@ -35,16 +37,16 @@
                                     <div class="row">
                                         <label class="col-sm-2 control-label">CNPJ</label>
                                         <div class="col-sm-5">
-                                            <input type="text" id="cnpj" name="cnpj" class="form-control">
+                                            <input type="text" value="@Model.Cnpj" id="cnpj" name="cnpj" class="form-control">
                                         </div>
                                         <label class="col-sm-2 control-label">E-mail</label>
-                                        <div class="col-sm-5">
-                                            <input type="text" id="email" placeholder="E-mail da Empresa" name="email" class="form-control">
+                                        <div class="col-sm-3">
+                                            <input type="text" id="email" value="@Model.Email" placeholder="E-mail da Empresa" name="email" class="form-control">
                                         </div>
                                         @*<label class="col-sm-2 control-label">CNAE</label>
-                                        <div class="col-sm-3">
-                                            <input type="text" id="cnae" name="cnae" class="form-control">
-                                        </div>*@
+                    <div class="col-sm-3">
+                        <input type="text" id="cnae" name="cnae" class="form-control">
+                    </div>*@
                                     </div>
                                 </div>
                             </fieldset>
@@ -54,23 +56,23 @@
                                     <div class="row">
                                         <label class="col-sm-2 control-label">Telefone</label>
                                         <div class="col-sm-10">
-                                            <input type="text" id="telefone" name="telefone" placeholder="Digite o telefone da empresa" class="form-control">
+                                            <input type="text" id="telefone" value="@Model.Telefone" name="telefone" placeholder="Digite o telefone da empresa" class="form-control">
                                         </div>
                                     </div>
                                 </div>
                             </fieldset>
 
                             @*<fieldset>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <label class="col-sm-2 control-label">NOME EMPRESA</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" id="nome" name="nome" placeholder="Digite o nome da empresa" class="form-control">
-                                            @*<small class="form-text text-muted">A block of help text that breaks onto a new line.</small>*@
-                                        @*</div>
-                                    </div>
-                                </div>
-                            </fieldset>*@
+        <div class="form-group">
+            <div class="row">
+                <label class="col-sm-2 control-label">NOME EMPRESA</label>
+                <div class="col-sm-10">
+                    <input type="text" id="nome" name="nome" placeholder="Digite o nome da empresa" class="form-control">
+                    @*<small class="form-text text-muted">A block of help text that breaks onto a new line.</small>*@
+                            @*</div>
+                </div>
+            </div>
+        </fieldset>*@
 
 
                             <fieldset class="pnEndereco">
@@ -78,12 +80,12 @@
                                     <div class="row">
                                         <label class="col-sm-2 control-label">CEP</label>
                                         <div class="col-sm-2">
-                                            <input type="text" id="cep" name="CEP" placeholder="00000-000" class="form-control">
+                                            <input type="text" id="cep" name="CEP" value="@Model.Cep" placeholder="00000-000" class="form-control">
                                             @*<small class="form-text text-muted">A block of help text that breaks onto a new line.</small>*@
                                         </div>
                                         <label class="col-sm-3 control-label">ENDEREÇO</label>
                                         <div class="col-sm-5">
-                                            <input type="text" id="rua" name="Rua" placeholder="" class="form-control">
+                                            <input type="text" id="rua" value="@Model.Rua" name="Rua" placeholder="" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -94,41 +96,41 @@
                                     <div class="row">
                                         <label class="col-sm-2 control-label">NÚMERO </label>
                                         <div class="col-sm-2">
-                                            <input type="text" id="numero" name="Numero" placeholder="EX 500" class="form-control">
+                                            <input type="text" id="numero" value="@Model.Numero" name="Numero" placeholder="EX 500" class="form-control">
                                         </div>
                                         <label class="col-sm-3 control-label">COMPLEMENTO</label>
                                         <div class="col-sm-5">
-                                            <input type="text" id="complemento" name="Complemento" placeholder="EX Apto 100" class="form-control">
+                                            <input type="text" id="complemento" value="@Model.Complemento" name="Complemento" placeholder="EX Apto 100" class="form-control">
                                         </div>
                                     </div>
                                 </div>
                             </fieldset>
 
-                            <fieldset class="pnEndereco">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <label class="col-sm-2 control-label">REFERÊNCIA </label>
-                                        <div class="col-sm-10">
-                                            <input type="text" id="referencia" name="Numero" placeholder="Prox ao..." class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
+                            @*<fieldset class="pnEndereco">
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-sm-2 control-label">REFERÊNCIA </label>
+                    <div class="col-sm-10">
+                        <input type="text" id="referencia" name="Numero" placeholder="Prox ao..." class="form-control">
+                    </div>
+                </div>
+            </div>
+        </fieldset>*@
 
                             <fieldset class="pnEndereco">
                                 <div class="form-group">
                                     <div class="row">
                                         <label class="col-sm-2 control-label">BAIRRO</label>
                                         <div class="col-sm-2">
-                                            <input type="text" id="bairro" name="Bairro" placeholder="" class="form-control">
+                                            <input type="text" id="bairro" value="@Model.Bairro" name="Bairro" placeholder="" class="form-control">
                                         </div>
                                         <label class="col-sm-2 control-label">CIDADE</label>
                                         <div class="col-sm-2">
-                                            <input type="text" id="cidade" name="CIdade" placeholder="São Paulo" disabled="disabled" class="form-control">
+                                            <input type="text" id="cidade" value="@Model.Cidade" name="CIdade" placeholder="São Paulo" disabled="disabled" class="form-control">
                                         </div>
                                         <label class="col-sm-2 control-label">UF</label>
                                         <div class="col-sm-2">
-                                            <input type="text" id="uf" name="UF" placeholder="SP" disabled="disabled" class="form-control">
+                                            <input type="text" id="uf" name="UF" value="@Model.Uf" placeholder="SP" disabled="disabled" class="form-control">
                                         </div>
 
                                     </div>

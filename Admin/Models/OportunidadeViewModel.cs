@@ -49,6 +49,7 @@ namespace Admin.Models
         public int IdUsuario { get; set; }
         public int OportunidadeId { get; set; }
         public int ProfissionalId { get; set; }
+        public string Uf { get; set; }
 
     }
 

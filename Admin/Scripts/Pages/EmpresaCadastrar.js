@@ -41,19 +41,19 @@ function PublicarDepois() {
 
 function getFormData() {
     return {
-        nome: $('#nome').val(),
+        //nome: $('#nome').val(),
         cep: $('#cep').val(),
         rua: $('#rua').val(),
         bairro: $('#bairro').val(),
         numero: $('#numero').val(),
         cidade: $('#cidade').val(),
         uf: $('#uf').val(),
-        data: $('#data').val(),
+        //data: $('#data').val(),
         razaoSocial: $('#razaoSocial').val(),
         cnpj: $('#cnpj').val(),
         cnae: $('#cnae').val(),
-        Qtd: $('#qtd').val(),
-        Total: $('#total').val()
+        //Qtd: $('#qtd').val(),
+        //Total: $('#total').val()
     }
 }
 
@@ -73,13 +73,16 @@ function EmpresaViewModel() {
         Numero: $('#numero').val(),
         Cidade: $('#cidade').val(),
         Complemento: $('#complemento').val(),
-        Referencia: $('#referencia').val(),
+        //Referencia: $('#referencia').val(),
         Uf: $('#uf').val(),
         RazaoSocial: $('#razaoSocial').val(),
         Cnpj: $('#cnpj').val(),
         Cnae: $('#cnae').val(),
         Email: $('#email').val(),
-        Telefone: $('#telefone').val()
+        Telefone: $('#telefone').val(),
+        TelefoneId: $('#telefoneId').val(),
+        Id: $('#empresaId').val(),
+        EnderecoId: $('#enderecoId').val(),
     };
     return VagaViewModel;
 }
@@ -243,12 +246,12 @@ function controlarPaineis() {
 function validarCampos() {
     var form = getFormData();
 
-    if (form.nome == "" || form.nome == null) {
-        demo.showNotification('top', 'right', 'Campo nome é obrigatório!');
-        $('#nome').focus();
-        return false;
-    }
-    else if (form.cep == "" || form.rua == "" || form.cidade == "" || form.uf == "" || form.bairro == "") {
+    //if (form.nome == "" || form.nome == null) {
+    //    demo.showNotification('top', 'right', 'Campo nome é obrigatório!');
+    //    $('#nome').focus();
+    //    return false;
+    //}
+    /*else*/ if (form.cep == "" || form.rua == "" || form.cidade == "" || form.uf == "" || form.bairro == "") {
         demo.showNotification('top', 'right', 'Informe um endereço válido!');
         $('#cep').focus();
         return false;
@@ -268,7 +271,7 @@ function Save() {
     LoadingInit('body');
     var empresaViewModel = EmpresaViewModel();
     var settings = {
-        "url": "Salvar",
+        "url": "/Empresas/Salvar",
         "method": "POST",
         "data": empresaViewModel
     }
