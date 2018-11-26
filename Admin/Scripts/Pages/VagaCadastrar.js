@@ -298,7 +298,7 @@ function preencherEndereco(cep) {
         "data": "{\"cep\": \"" + cep + "\"}"
     }
 
-    LoadingInit('.card-body');
+    LoadingInit('body');
     $.ajax(settings).done(function (response) {
         if (response.endereco == '' || response.endereco == null) {
             demo.showNotification('top', 'right', 'Por favor digite um CEP válido!');
@@ -361,7 +361,7 @@ function controlarPaineis() {
     });
 
     getForm().atuacao.on("change", function () {
-        LoadingInitBase('.card-body');
+        LoadingInitBase('body');
         getProfissionalPorAtuacao($(this).val());
         $(".pnProfissional").fadeIn();
         LoadingStop();

@@ -61,6 +61,7 @@ function aplicarMascaras() {
     $('#data').mask('00/00/0000');
     $('#numero').mask('9999');
     $('#cep').mask('99999-999');
+    $("#cnpj").mask("99.999.999/9999-99");
 }
 
 function EmpresaViewModel() {
@@ -124,7 +125,7 @@ function LoadingInitBase(elemento) {
 }
 
 function LoadingStop() {
-    $('.card-body').loading('stop');
+    $('body').loading('stop');
 }
 
 function LoadingBodyStop() {
@@ -149,7 +150,6 @@ function desbloqueiaEndereco() {
     $("#bairro").prop("disabled", false);
     $("#cidade").prop("disabled", false);
     $("#uf").prop("disabled", false);
-    $("#numero").focus();
 
 }
 
@@ -177,28 +177,36 @@ function preencherEndereco(cep) {
         "data": "{\"cep\": \"" + cep + "\"}"
     }
 
-    LoadingInit('.card-body');
-    $.ajax(settings).done(function (response) {
-        if (response.endereco == '' || response.endereco == null) {
-            demo.showNotification('top', 'right', 'Por favor digite um CEP válido!');
-            limpaEndereco();
-            desbloqueiaEndereco();
-            $("#cep").focus();
-            LoadingStop();
-        }
-        else {
-            $('#rua').val(response.endereco);
-            $('#bairro').val(response.bairro);
-            $('#cidade').val(response.cidade);
-            $('#uf').val(response.uf);
+    LoadingInit('body');
+    try {
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+            if (response == null) {
+                $("#cep").val("");
+                $("#cep").focus();
+                demo.showNotification('top', 'right', 'Por favor digite um CEP válido!');
+                limpaEndereco();
+                desbloqueiaEndereco();
+                LoadingStop();
+            }
+            else {
+                $('#rua').val(response.endereco);
+                $('#bairro').val(response.bairro);
+                $('#cidade').val(response.cidade);
+                $('#uf').val(response.uf);
+                $("#numero").focus();
 
-            bloqueiaEndereco();
-            LoadingStop();
-        }
+                bloqueiaEndereco();
+                LoadingStop();
+            }
 
-    });
-
-
+        });
+    } catch (e) {
+        $("#cep").val("");
+        $("#cep").focus();
+        LoadingStop();
+    }
+ 
 }
 
 function controlarPaineis() {
@@ -210,7 +218,7 @@ function controlarPaineis() {
     getForm().razaoSocial.on("change", function () {
         $("#cnpj").focus();
     });
-    
+
     getForm().cnpj.on("change", function () {
         $("#cnae").focus();
     });
@@ -224,7 +232,8 @@ function controlarPaineis() {
     });
 
     getForm().cep.on("change", function () {
-        preencherEndereco($(this).val());
+        if ($(this).val() != "" || $(this).val() != null)
+            preencherEndereco($(this).val());
     });
 
 }
