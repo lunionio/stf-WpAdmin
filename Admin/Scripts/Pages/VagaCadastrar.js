@@ -233,6 +233,7 @@ function getEmpresas() {
 
     $.ajax(settings).done(function (response) {
         $.each(response, function (index, item) {
+            console.log(item);
             $('#empresas').append('<option value="' + item.Id + '">' + item.Nome + '</option>');
             $('#empresas').trigger("chosen:updated");
         });

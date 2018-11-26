@@ -275,9 +275,9 @@ namespace Admin.Controllers
             var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
             var helper = new ServiceHelper();
-            var empresas = helper.Get<IEnumerable<EmpresaViewModel>>(url);
+            var empresas = helper.Get<object>(url);
 
-            return empresas;
+            return empresas as IEnumerable<EmpresaViewModel>;
         }
 
         public ActionResult ListarEmpresas()
