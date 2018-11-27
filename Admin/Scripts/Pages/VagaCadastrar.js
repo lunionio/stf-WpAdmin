@@ -90,13 +90,13 @@ function VagaViewModel() {
         Cidade: $('#cidade').val(),
         Date: data,
         Complemento: $('#complemento').val(),
-        Referencia: $('#referencia').val(),
+        Referencia: $('#complemento').val(),
         Uf: $('#uf').val(),
         DataEvento: dataEvento,
         Hora: $('#txtHoraInicio').val(),
         Qtd: $('#qtd').val(),
         Valor: $('#valor').val(),
-        Atuacao: $('#atuacao').val(),
+        AreaAtuacao: $('#atuacao').val(),
         Profissional: $('#profissional option:selected').val(),
         ProfissionalNome: $('#profissional option:selected').text(),
         //Qtd: $('#qtd').val(),
@@ -104,7 +104,8 @@ function VagaViewModel() {
         IdEmpresa: $('#empresas option:selected').val(),
         EnderecoId: $('#endId').val(),
         DataCriacao: $('#vagaData').val(),
-        EnderecoDataCriacao: $('#enderecoData').val()
+        EnderecoDataCriacao: $('#enderecoData').val(),
+        Servico: $('#atuacao option:selected').text()
     };
     return VagaViewModel;
 }
@@ -213,10 +214,6 @@ function LoadingInitBase(elemento) {
     });
 }
 
-function LoadingStop() {
-    $('.card-body').loading('stop');
-}
-
 function LoadingBodyStop() {
     $('body').loading('stop');
 }
@@ -232,8 +229,9 @@ function getEmpresas() {
     };
 
     $.ajax(settings).done(function (response) {
+
         $.each(response, function (index, item) {
-            console.log(item);
+            //console.log(item);
             $('#empresas').append('<option value="' + item.Id + '">' + item.Nome + '</option>');
             $('#empresas').trigger("chosen:updated");
         });
@@ -283,6 +281,10 @@ function bloqueiaEndereco() {
     $("#numero").focus();
     $('.card-body').loading('stop');
 }
+function LoadingStop(elemento) {
+    $(elemento).loading('stop');
+}
+
 
 function preencherEndereco(cep) {
     var settings = {
@@ -306,7 +308,7 @@ function preencherEndereco(cep) {
             limpaEndereco();
             desbloqueiaEndereco();
             $("#cep").focus();
-            LoadingStop();
+            LoadingStop('body');
         }
         else {
             $('#rua').val(response.endereco);
@@ -315,7 +317,7 @@ function preencherEndereco(cep) {
             $('#uf').val(response.uf);
 
             bloqueiaEndereco();
-            LoadingStop();
+            LoadingStop('body');
         }
 
     });
@@ -365,7 +367,7 @@ function controlarPaineis() {
         LoadingInitBase('body');
         getProfissionalPorAtuacao($(this).val());
         $(".pnProfissional").fadeIn();
-        LoadingStop();
+        LoadingStop('body');
     });
 
     getForm().profissional.on("change", function () {

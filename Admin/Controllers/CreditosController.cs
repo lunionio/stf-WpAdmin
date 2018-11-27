@@ -31,9 +31,41 @@ namespace Admin.Controllers
             var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
             var helper = new ServiceHelper();
-            var empresas = helper.Get<IEnumerable<EmpresaViewModel>>(url);
+            var empresas = helper.Get<IEnumerable<Empresa>>(url);
 
-            return empresas;
+            IList<EmpresaViewModel> models = new List<EmpresaViewModel>();
+
+            foreach (var item in empresas)
+            {
+                var empresa = new EmpresaViewModel()
+                {
+                    Ativo = item.Ativo,
+                    Bairro = item.Endereco.Bairro,
+                    Cep = item.Endereco.CEP,
+                    Cidade = item.Endereco.Cidade,
+                    Cnae = item.CNAE_S,
+                    Cnpj = item.CNPJ,
+                    Complemento = item.Endereco.Complemento,
+                    Email = item.Email,
+                    EnderecoId = item.Endereco.ID,
+                    Id = item.ID,
+                    IdCliente = item.IdCliente,
+                    Nome = item.Nome,
+                    Numero = item.Endereco.NumeroLocal,
+                    RazaoSocial = item.RazaoSocial,
+                    Rua = item.Endereco.Local,
+                    status = item.Status,
+                    Telefone = item.Telefone.Numero,
+                    TelefoneId = item.Telefone.ID,
+                    Uf = item.Endereco.Uf,
+                    UsuarioCriacao = item.UsuarioCriacao,
+                    UsuarioEdicao = item.UsuarioEdicao,
+                };
+
+                models.Add(empresa);
+            }
+
+            return models;
         }
 
         public IEnumerable<Natureza> GetNaturezas()

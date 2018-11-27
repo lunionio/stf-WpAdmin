@@ -124,7 +124,8 @@ namespace Admin.Controllers
                 {
                     EnderecoId = o.Endereco.ID,
                     EnderecoDataCriacao = o.Endereco.DataCriacao.ToShortDateString(),
-                    DataCriacao = o.DataCriacao.ToShortDateString()
+                    DataCriacao = o.DataCriacao.ToShortDateString(),
+                    Uf = o.Endereco.Uf,
                 });
             }
 
@@ -268,16 +269,48 @@ namespace Admin.Controllers
             }
         }
 
-        private static IEnumerable<EmpresaViewModel> GetEmpresas()
+        private IEnumerable<EmpresaViewModel> GetEmpresas()
         {
             var usuario = PixCoreValues.UsuarioLogado;
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
             var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
             var helper = new ServiceHelper();
-            var empresas = helper.Get<object>(url);
+            var empresas = helper.Get<IEnumerable<Empresa>>(url);
 
-            return empresas as IEnumerable<EmpresaViewModel>;
+            IList<EmpresaViewModel> models = new List<EmpresaViewModel>();
+
+            foreach (var item in empresas)
+            {
+                var empresa = new EmpresaViewModel()
+                {
+                    Ativo = item.Ativo,
+                    Bairro = item.Endereco.Bairro,
+                    Cep = item.Endereco.CEP,
+                    Cidade = item.Endereco.Cidade,
+                    Cnae = item.CNAE_S,
+                    Cnpj = item.CNPJ,
+                    Complemento = item.Endereco.Complemento,
+                    Email = item.Email,
+                    EnderecoId = item.Endereco.ID,
+                    Id = item.ID,
+                    IdCliente = item.IdCliente,
+                    Nome = item.Nome,
+                    Numero =item.Endereco.NumeroLocal,
+                    RazaoSocial = item.RazaoSocial,
+                    Rua = item.Endereco.Local,
+                    status = item.Status,
+                    Telefone = item.Telefone.Numero,
+                    TelefoneId = item.Telefone.ID,
+                    Uf = item.Endereco.Uf,
+                    UsuarioCriacao = item.UsuarioCriacao,
+                    UsuarioEdicao = item.UsuarioEdicao,                    
+                };
+
+                models.Add(empresa);
+            }
+
+            return models;
         }
 
         public ActionResult ListarEmpresas()

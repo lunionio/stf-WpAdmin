@@ -29,6 +29,7 @@ namespace Admin.Helppser
                 DataCriacao = System.Convert.ToDateTime(vaga.EnderecoDataCriacao),
                 OportunidadeId = vaga.Id,
                 UsuarioEdicao = PixCoreValues.UsuarioLogado.idCliente,
+                Uf = vaga.Uf,
             };
 
             return new OportunidadeViewModel
@@ -51,6 +52,7 @@ namespace Admin.Helppser
                 Valor = vaga.Valor,
                 Status = vaga.status,
                 UsuarioEdicao = PixCoreValues.UsuarioLogado.idCliente,
+                DescServico = vaga.Servico
             };
 
         }

@@ -35,6 +35,7 @@ namespace Admin.Models
         public int AreaAtuacao { get; set; }
         public string DataCriacao { get; set; }
         public string EnderecoDataCriacao { get; set; }
+        public string Servico { get; set; }
 
         public VagaViewModel()
         {
