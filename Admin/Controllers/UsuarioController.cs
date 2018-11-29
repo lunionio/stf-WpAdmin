@@ -59,9 +59,41 @@ namespace Admin.Controllers
             var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
             var helper = new ServiceHelper();
-            var empresas = helper.Get<IEnumerable<EmpresaViewModel>>(url);
+            var empresas = helper.Get<IEnumerable<Empresa>>(url);
 
-            return empresas;
+            IList<EmpresaViewModel> models = new List<EmpresaViewModel>();
+
+            foreach (var result in empresas)
+            {
+                var empresa = new EmpresaViewModel()
+                {
+                    Ativo = result.Ativo,
+                    Bairro = result.Endereco.Bairro,
+                    Cep = result.Endereco.CEP,
+                    Cidade = result.Endereco.Cidade,
+                    Cnae = result.CNAE_S,
+                    Cnpj = result.CNPJ,
+                    Complemento = result.Endereco.Complemento,
+                    Email = result.Email,
+                    EnderecoId = result.Endereco.ID,
+                    Id = result.ID,
+                    IdCliente = result.IdCliente,
+                    Nome = result.Nome,
+                    Numero = result.Endereco.NumeroLocal,
+                    RazaoSocial = result.RazaoSocial,
+                    Rua = result.Endereco.Local,
+                    status = result.Status,
+                    Telefone = result.Telefone.Numero,
+                    TelefoneId = result.Telefone.ID,
+                    Uf = result.Endereco.Uf,
+                    UsuarioCriacao = result.UsuarioCriacao,
+                    UsuarioEdicao = result.UsuarioEdicao,
+                };
+
+                models.Add(empresa);
+            }
+
+            return models;
         }
 
         public ActionResult Listagem()
