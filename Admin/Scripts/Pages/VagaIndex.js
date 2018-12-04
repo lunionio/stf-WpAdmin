@@ -13,7 +13,7 @@ $("#linhaPadrao").remove();
 $('.carousel').carousel();
 
 function LoadPanels(idEmpresa) {
-    Loading('.content');
+    Loading('body');
     getOportunidades(idEmpresa);
 }
 
@@ -39,7 +39,7 @@ function getOportunidades(idEmpresa) {
     };
 
     $.ajax(settings).done(function (response) {
-        LoadingStop('.content');
+        LoadingStop('body');
         $('#oportunidades').hide();
         $('#oportunidades').html(response);
         $('#oportunidades').fadeIn();
@@ -201,7 +201,6 @@ function aprovarProfissional(userXOpt, optId, userId) {
     };
 
     $.ajax(settings).done(function (response) {
-        try {
             var p = JSON.parse(response);
 
             if (p.Id == undefined) {
@@ -220,10 +219,6 @@ function aprovarProfissional(userXOpt, optId, userId) {
                     'Avaliação'
                 ]).draw(false);
             }
-        }
-        catch {
-            alert(response);
-        }
     });
 }
 
@@ -244,7 +239,6 @@ function reprovarProfissional(userXOpt, optId, userId) {
     };
 
     $.ajax(settings).done(function (response) {
-        try {
             var p = JSON.parse(response);
 
             if (p.Id == undefined) {
@@ -254,10 +248,6 @@ function reprovarProfissional(userXOpt, optId, userId) {
                 let table = $('#tbContratar').DataTable();
                 table.row("#" + userId).remove().draw();
             }
-        }
-        catch {
-            alert(response);
-        }
     });
 }
 

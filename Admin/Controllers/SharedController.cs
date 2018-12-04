@@ -23,76 +23,79 @@ namespace Admin.Controllers
         [ChildActionOnly]
         public ActionResult GetMenus()
         {
-            var tipoAcoes = GetTipoAcoes();
-            var model = GetEstruturas(tipoAcoes);
-            
+            var perfil = GetPerfil(PixCoreValues.UsuarioLogado.idPerfil);
+            var permissoes = GetPermissoes(perfil.idPermissao.Split(',').Select(id => Convert.ToInt32(id)));
+            var model = GetEstruturas(1, permissoes);
+
             return PartialView("PartialMenu", model);
         }
 
-
-        private IEnumerable<Estrutura> GetEstruturas(IEnumerable<int> tipoAcoes)
+        private IEnumerable<Estrutura> GetEstruturas(int tipo, IEnumerable<Permissao> permissoes)
         {
+            var url = ConfigurationManager.AppSettings["UrlAPI"];
+            var serverUrl = $"{ url }/Seguranca/Principal/BuscaEstruturasPorMotor/{PixCoreValues.UsuarioLogado.idCliente}/{ PixCoreValues.UsuarioLogado.IdUsuario }";
+
+            IDictionary<string, string> valuePairs = new Dictionary<string, string>();
+
+            foreach (var item in permissoes)
+            {
+                valuePairs.Add(item.IdAux.ToString(), item.idTipoAcao);
+            }
+
+            var envio = new
+            {
+                tipo,
+                PixCoreValues.UsuarioLogado.idCliente,
+                valuePairs,
+            };
+
+            var helper = new ServiceHelper();
+            var result = helper.Post<IEnumerable<EstruturaViewModel>>(serverUrl, envio).OrderBy(e => e.Ordem);
+
             var model = default(IList<Estrutura>);
 
-            try
+            if (result != null && result.Count() > 0)
             {
-                var url = ConfigurationManager.AppSettings["UrlAPI"];
-                var serverUrl = $"{ url }/Seguranca/Principal/buscarEstruturas/{ PixCoreValues.UsuarioLogado.idCliente }/{ PixCoreValues.UsuarioLogado.IdUsuario }";
-
-                object envio = new
+                model = new List<Estrutura>();
+                foreach (var r in result)
                 {
-                    PixCoreValues.UsuarioLogado.idCliente,
-                    idTipoAcoes = tipoAcoes,
-                };
+                    r.SubMenus = result.Where(e => e.IdPai.Equals(r.ID)).OrderBy(x => x.Ordem);
 
-                var helper = new ServiceHelper();
-                var response = helper.Post<List<EstruturaViewModel>>(serverUrl, envio);
-
-                var result = response.OrderBy(r => r.Ordem).ToList();
-                result = result.Where(x => x.Tipo == 1).ToList();
-                if (result != null && result.Count() > 0)
-                {
-                    model = new List<Estrutura>();
-                    foreach (var r in result)
+                    if (r.IdPai == 0) //TODO: Melhorar para sub-estrutura com filhos...
                     {
-                        r.SubMenus = result.Where(e => e.IdPai.Equals(r.ID)).OrderBy(x => x.Ordem);
-
-                        if (r.IdPai == 0) //TODO: Melhorar para sub-estrutura com filhos...
+                        var estrutura = new Estrutura(r.ID, r.UrlManual, r.Imagem, r.Nome)
                         {
-                            var estrutura = new Estrutura(r.ID, r.UrlManual, r.ImagemMenu, r.Nome)
-                            {
-                                SubEstruturas = r.SubMenus.Select(s => new Estrutura(s.ID, s.UrlManual, s.ImagemMenu, s.Nome))
-                            };
+                            SubEstruturas = r.SubMenus.Select(s => new Estrutura(s.ID, s.UrlManual, s.Imagem, s.Nome))
+                        };
 
-                            model.Add(estrutura);
-                        }
+                        model.Add(estrutura);
                     }
                 }
             }
-            catch (Exception ex)
-            {                
-            }
-            
+
             return model;
         }
 
-        private IEnumerable<int> GetTipoAcoes()
+        private Perfil GetPerfil(int id)
         {
-            try
-            {
-                var url = ConfigurationManager.AppSettings["UrlAPI"];
-                var serverUrl = $"{ url }/Permissao/GetPermissoesPorUsuario/{ PixCoreValues.UsuarioLogado.IdUsuario }";
+            var url = ConfigurationManager.AppSettings["UrlAPI"];
+            var serverUrl = $"{ url }/Perfil/GetPerfilByID/{ id }";
 
-                var helper = new ServiceHelper();
-                var result = helper.Get<Permissao>(serverUrl);
-                var tipoAcoes = result.idTipoAcao.Split(',');
+            var helper = new ServiceHelper();
+            var result = helper.Get<Perfil>(serverUrl);
 
-                return tipoAcoes.Select(id => Convert.ToInt32(id));
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
+            return result;
+        }
+
+        private IEnumerable<Permissao> GetPermissoes(IEnumerable<int> ids)
+        {
+            var url = ConfigurationManager.AppSettings["UrlAPI"];
+            var serverUrl = $"{ url }/Permissao/BuscaPermissoesPorIds/";
+
+            var helper = new ServiceHelper();
+            var result = helper.Post<IEnumerable<Permissao>>(serverUrl, ids);
+
+            return result;
         }
     }
 }

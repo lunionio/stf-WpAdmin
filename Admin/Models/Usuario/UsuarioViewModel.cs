@@ -18,5 +18,7 @@ namespace Admin.Models
         public string Perfil { get; set; }
         public string Empresa { get; set; }
         public string Avatar { get; set; }
+
+        public UsuarioXPerfil UsuarioXPerfil { get; set; }
     }
 }

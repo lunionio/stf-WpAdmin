@@ -8,5 +8,10 @@ namespace Admin.Models
     {
         public string Numero { get; set; }
         public int ProfissionalId { get; set; }
+
+        public Telefone()
+        {
+
+        }
     }
 }

@@ -91,13 +91,16 @@ namespace Admin.Controllers
                             Local = model.Rua,
                             model.status,
                             EmpresaId = model.Id,
+                            model.Uf,
+                            Estado = model.Uf,
+                            Ativo = true,
                         },
                         model.Nome,
                         model.UsuarioCriacao,
                         model.UsuarioEdicao,
                         model.Ativo,
                         model.status,
-                        model.IdCliente, 
+                        model.IdCliente,
                         model.Email,
                         Telefone = new
                         {
@@ -109,12 +112,18 @@ namespace Admin.Controllers
                             UsuarioCriacao = PixCoreValues.UsuarioLogado.IdUsuario,
                             UsuarioEdicao = PixCoreValues.UsuarioLogado.IdUsuario,
                             EmpresaId = model.Id,
+                            Ativo = true,
                         },
                     }
                 };
 
                 var helper = new ServiceHelper();
                 var result = helper.Post<object>(url, envio);
+
+                if(result is KeyValuePair<string, string>)
+                {
+                    return false;
+                }
 
                 return true;
             }
@@ -163,7 +172,7 @@ namespace Admin.Controllers
             var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
             var helper = new ServiceHelper();
-            var empresas = helper.Get<IEnumerable<object>>(url);
+            var empresas = helper.Get<IEnumerable<Empresa>>(url);
 
             return Json(empresas, JsonRequestBehavior.AllowGet);
         }

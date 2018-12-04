@@ -5,11 +5,9 @@ using Admin.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
 
 namespace Admin.Controllers
 {
@@ -25,30 +23,30 @@ namespace Admin.Controllers
 
         public ActionResult Cadastro()
         {
-            var result = GetPermissoes();
+            var result = GetPerfis().Select(p => p.Nome);
             var empresas = GetEmpresas();
 
             ViewBag.Empresas = new SelectList(empresas.Select(e => e.Nome));
-            ViewBag.Perfis = new SelectList(result.Select(p => p.Nome));
+            ViewBag.Perfis = new SelectList(result);
             return View();
         }
 
-        private static IEnumerable<PermissaoViewModel> GetPermissoes()
+        private IEnumerable<Perfil> GetPerfis()
         {
             try
             {
-                var url = ConfigurationManager.AppSettings["UrlAPI"];
-                //var serverUrl = $"{ url }/permissao/getallpermissao/{ _idCliente }"; //TODO: Necessário cadastrar perfil com id do usuário
-                var serverUrl = $"{ url }/permissao/getallpermissao/{ 1 }";
+                var usuario = PixCoreValues.UsuarioLogado;
+                var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+                var url = keyUrl + "/Perfil/GetAllPerfil/" + _idCliente;
 
                 var helper = new ServiceHelper();
-                var result = helper.Get<IEnumerable<PermissaoViewModel>>(serverUrl);
+                var result = helper.Get<IEnumerable<Perfil>>(url);
 
                 return result;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                return new List<PermissaoViewModel>();
+                return new List<Perfil>();
             }
         }
 
@@ -107,7 +105,7 @@ namespace Admin.Controllers
         {
             try
             {
-                var result = GetPermissoes();
+                var result = GetPerfis();
                 var empresas = GetEmpresas();
 
                 ViewBag.Empresas = new SelectList(empresas.Select(e => e.Nome));
@@ -123,13 +121,23 @@ namespace Admin.Controllers
 
                     viewModel.UsuarioEdicao = PixCoreValues.UsuarioLogado.IdUsuario;
                     viewModel.Ativo = true;
-                    viewModel.PerfilUsuario = result.Where(r => r.Nome.Equals(viewModel.Perfil)).FirstOrDefault().ID;
                     viewModel.IdEmpresa = empresas.Where(r => r.Nome.Equals(viewModel.Empresa)).FirstOrDefault().Id;
+                    viewModel.VAdmin = "true";
+                    viewModel.Status = 1;
 
-                    if (SaveUsuario(viewModel))
+                    var user = SaveUsuario(viewModel);
+                    var perfil = result.SingleOrDefault(p => p.Nome.Equals(viewModel.Perfil));
+
+                    if (user.ID > 0)
                     {
                         ModelState.Clear();
-                        return RedirectToAction("Listagem");
+
+                        var usuarioXPerfil = VincularPerfil(user.ID, perfil.ID, viewModel.UsuarioXPerfil.Id);
+
+                        if (usuarioXPerfil.Id > 0)
+                        {
+                            return RedirectToAction("Listagem");
+                        }
                     }
                 }
 
@@ -143,7 +151,7 @@ namespace Admin.Controllers
 
         public ActionResult Editar(int? id)
         {
-            var result = GetPermissoes();
+            var result = GetPerfis();
             var empresas = GetEmpresas();
 
             ViewBag.Empresas = new SelectList(empresas.Select(e => e.Nome));
@@ -154,9 +162,8 @@ namespace Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var usuarios = GetUsuarios(_idCliente);
 
-            var usuarioFiltrado = usuarios.FirstOrDefault(x => x.ID.Equals(id));
+            var usuarioFiltrado = GetUsuario((int)id, _idCliente);
 
             return View("Cadastro", usuarioFiltrado);
         }
@@ -188,7 +195,7 @@ namespace Admin.Controllers
             }
         }
 
-        private bool SaveUsuario(UsuarioViewModel usuario)
+        private UsuarioViewModel SaveUsuario(UsuarioViewModel usuario)
         {
             try
             {
@@ -197,25 +204,13 @@ namespace Admin.Controllers
 
                 object envio = new 
                 {
-                    usuario = new
-                    {
-                        usuario.ID,
-                        usuario.idCliente,
-                        usuario.Nome,
-                        usuario.Login,
-                        usuario.Senha,
-                        usuario.UsuarioCriacao,
-                        usuario.UsuarioEdicao,
-                        usuario.Ativo,
-                        usuario.IdEmpresa,
-                        status = 1,
-                    }
+                    usuario,
                 };
 
                 var helper = new ServiceHelper();
-                var result = helper.Post<object>(url, envio);
+                var result = helper.Post<UsuarioViewModel>(url, envio);
 
-                return true;
+                return result;
             }
             catch (Exception e)
             {
@@ -227,7 +222,7 @@ namespace Admin.Controllers
         {
             try
             {
-                var perfis = GetPermissoes();
+                var perfis = GetPerfis();
                 var empresas = GetEmpresas();
 
                 var url = ConfigurationManager.AppSettings["UrlAPI"];
@@ -235,15 +230,19 @@ namespace Admin.Controllers
 
                 var helper = new ServiceHelper();
                 var result = helper.Get<IEnumerable<UsuarioViewModel>>(serverUrl);
+                var usuariosXPerfis = GetPerfisUsuarios(result.Select(u => u.ID));
 
                 foreach (var item in result)
                 {
                     item.Empresa = empresas.FirstOrDefault(e => e.Id.Equals(item.IdEmpresa))?.Nome;
-                    item.Perfil = perfis.FirstOrDefault(p => p.ID.Equals(item.PerfilUsuario))?.Nome;
+                    item.UsuarioXPerfil = usuariosXPerfis.FirstOrDefault(x => x.IdUsuario.Equals(item.ID));
+                    if (item.UsuarioXPerfil != null)
+                    {
+                        item.Perfil = perfis.FirstOrDefault(p => p.ID.Equals(item.UsuarioXPerfil.IdPerfil))?.Nome;
+                    }
                 }
 
-                return result;
-   
+                return result;   
             }
             catch (Exception e)
             {
@@ -266,6 +265,8 @@ namespace Admin.Controllers
                 };
                 var helper = new ServiceHelper();
                 var result = helper.Post<object>(url, envio);
+
+                DesvincularPerfil(usuario.ID);
 
                 return true;
             }
@@ -290,8 +291,15 @@ namespace Admin.Controllers
             var helper = new ServiceHelper();
             var result = helper.Post<UsuarioViewModel>(url, envio);
 
-            ViewBag.Empresas = new SelectList(GetEmpresas().Select(e => e.Nome));
-            ViewBag.Perfis = new SelectList(GetPermissoes().Select(p => p.Nome));
+            result.UsuarioXPerfil = GetPerfilUsuario(result.ID);
+            result.Perfil = GetPerfil(result.UsuarioXPerfil.IdPerfil).Nome;
+
+            var empresas = GetEmpresas();
+
+            result.Empresa = empresas.SingleOrDefault(e => e.Id.Equals(result.IdEmpresa))?.Nome;
+
+            ViewBag.Empresas = new SelectList(empresas.Select(e => e.Nome));
+            ViewBag.Perfis = new SelectList(GetPerfis().Select(p => p.Nome));
 
             return View("Editar", result);
         }
@@ -320,13 +328,114 @@ namespace Admin.Controllers
                 PixCoreValues.AtualizarUsuarioLogado(result);
 
                 ViewBag.Empresas = new SelectList(GetEmpresas().Select(e => e.Nome));
-                ViewBag.Perfis = new SelectList(GetPermissoes().Select(p => p.Nome));
+                ViewBag.Perfis = new SelectList(GetPerfis().Select(p => p.Nome));
 
                 return RedirectToAction("EditarUsuario");
             }
             catch(Exception e)
             {
                 throw new Exception("Não foi possível editar o usuário.", e);
+            }
+        }
+
+        private UsuarioXPerfil VincularPerfil(int usuarioId, int perfilId, int vinculoId = 0)
+        {
+            try
+            {
+                var usuarioXPerfil = new UsuarioXPerfil()
+                {
+                    Id = vinculoId,
+                    DataCriacao = DateTime.UtcNow,
+                    DataEdicao = DateTime.UtcNow,
+                    IdPerfil = perfilId,
+                    IdUsuario = usuarioId,
+                    UsuarioCriacao = PixCoreValues.UsuarioLogado.IdUsuario,
+                    UsuarioEdicao = PixCoreValues.UsuarioLogado.IdUsuario,
+                };
+
+                var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+                var url = $"{ keyUrl }/Perfil/SaveUsuarioXPerfil/";
+
+                var helper = new ServiceHelper();
+                var result = helper.Post<UsuarioXPerfil>(url, usuarioXPerfil);
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                return new UsuarioXPerfil();
+            }
+        }
+
+        private IEnumerable<UsuarioXPerfil> GetPerfisUsuarios(IEnumerable<int> ids)
+        {
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = $"{ keyUrl }/Perfil/GetUsuariosXPerfis/";
+
+            var helper = new ServiceHelper();
+            var usuariosXPerfis = helper.Post<IEnumerable<UsuarioXPerfil>>(url, ids);
+
+            return usuariosXPerfis;
+        }
+
+        private void DesvincularPerfil(int id)
+        {
+            var usuarioXPerfil = GetPerfilUsuario(id);
+
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = $"{ keyUrl }/Perfil/DesvincularPerfil/";
+
+            var helper = new ServiceHelper();
+            var result = helper.Post<object>(url, usuarioXPerfil);
+        }
+
+        private UsuarioXPerfil GetPerfilUsuario(int usuarioId)
+        {
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = $"{ keyUrl }/Perfil/GetPerfilByUsuario/{ usuarioId }";
+
+            var helper = new ServiceHelper();
+            var usuarioXPerfil = helper.Get<UsuarioXPerfil>(url);
+
+            return usuarioXPerfil;
+        }
+
+        private Perfil GetPerfil(int idPerfil)
+        {
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = $"{ keyUrl }/Perfil/GetPerfilByID/{ idPerfil }";
+
+            var helper = new ServiceHelper();
+            var result = helper.Get<Perfil>(url);
+
+            return result;
+        }
+
+        public UsuarioViewModel GetUsuario(int id, int idCliente)
+        {
+            try
+            {
+                var url = ConfigurationManager.AppSettings["UrlAPI"];
+                var serverUrl = $"{ url }/Seguranca/Principal/BuscarUsuarioPorId/{ _idCliente }/{ PixCoreValues.UsuarioLogado.IdUsuario }";
+
+                var envio = new
+                {
+                    idCliente,
+                    idUsuario = id,
+                };
+
+                var helper = new ServiceHelper();
+                var result = helper.Post<UsuarioViewModel>(serverUrl, envio);
+
+                result.UsuarioXPerfil = GetPerfilUsuario(result.ID);
+
+                result.Perfil = GetPerfil(result.UsuarioXPerfil.IdPerfil).Nome;
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Não foi possível listar os usuários.", e);
             }
         }
     }

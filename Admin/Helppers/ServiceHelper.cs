@@ -55,11 +55,11 @@ namespace Admin.Helppers
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
                 result = streamReader.ReadToEnd();
-                if (string.IsNullOrEmpty(result)
-                    || "null".Equals(result.ToLower()))
-                {
-                    throw new Exception("Ouve um erro durante o processo.");
-                }
+                //if (string.IsNullOrEmpty(result)
+                //    || "null".Equals(result.ToLower()))
+                //{
+                //    throw new Exception("Ouve um erro durante o processo.");
+                //}
             }
 
             var response = jss.Deserialize<T>(result);

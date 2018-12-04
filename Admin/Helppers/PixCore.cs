@@ -1,4 +1,5 @@
-﻿using Admin.Models;
+﻿using Admin.Helppers;
+using Admin.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -31,7 +32,7 @@ namespace Admin.Helppser
                 var DefaultSiteUrl = protocolo + "://" + url + ":" + porta.ToString() + "/";
                 var current = HttpContext.Current;
 
-                if (current.Request.Cookies["IdClienteStaff"] != null)
+                if (!string.IsNullOrEmpty(current.Request.Cookies["IdClienteStaff"].Value))
                 {
                     var cookiesValido = current.Request.Cookies["IdClienteStaff"].Value;
                     var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -86,6 +87,7 @@ namespace Admin.Helppser
                 var result = client.UploadString(url, "POST", data);
                 UsuarioViewModel Usuario = jss.Deserialize<UsuarioViewModel>(result);
 
+                Usuario.UsuarioXPerfil = GetPerfilUsuario(Usuario.ID);
 
                 var current = HttpContext.Current;
                 string cookievalue;
@@ -94,11 +96,11 @@ namespace Admin.Helppser
                     if (Convert.ToBoolean(Usuario.VAdmin))
                     {
                         user.idCliente = Usuario.idCliente;
-                        user.idPerfil = Usuario.PerfilUsuario;
                         user.IdUsuario = Usuario.ID;
                         user.idEmpresa = Usuario.IdEmpresa;
                         user.Nome = Usuario.Nome;
                         user.Avatar = Usuario.Avatar;
+                        user.idPerfil = Usuario.UsuarioXPerfil.IdPerfil;
 
                         if (current.Request.Cookies["UsuarioLogadoStaff"] != null)
                         {
@@ -119,16 +121,27 @@ namespace Admin.Helppser
                     return false;
                 }
             }
+        }
 
+        private static UsuarioXPerfil GetPerfilUsuario(int id)
+        {
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = $"{ keyUrl }/Perfil/GetPerfilByUsuario/{ id }";
 
+            var helper = new ServiceHelper();
+            var usuarioXPerfil = helper.Get<UsuarioXPerfil>(url);
+
+            return usuarioXPerfil;
         }
 
         public static void AtualizarUsuarioLogado(UsuarioViewModel usuario)
         {
+            usuario.UsuarioXPerfil = GetPerfilUsuario(usuario.ID);
+
             var login = new LoginViewModel()
             {
                 idCliente = usuario.idCliente,
-                idPerfil = usuario.PerfilUsuario,
+                idPerfil = usuario.UsuarioXPerfil.IdPerfil,
                 IdUsuario = usuario.ID,
                 idEmpresa = usuario.IdEmpresa,
                 Nome = usuario.Nome,

@@ -15,5 +15,10 @@ namespace Admin.Models
         //public IList<Contato> Contatos { get; set; }
         public string Email { get; set; }
         public Telefone Telefone { get; set; }
+
+        public Empresa()
+        {
+
+        }
     }
 }

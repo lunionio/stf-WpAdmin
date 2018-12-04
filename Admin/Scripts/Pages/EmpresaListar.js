@@ -2,7 +2,7 @@
 
 
 function popularTabela() {
-    LoadingInit('.content');
+    LoadingInit('body');
     var Url = "GetEmpresas";
     var settings = {
         "async": true,
@@ -11,34 +11,30 @@ function popularTabela() {
         "method": "GET"
     }
 
-    $.ajax(settings).done(function (response) {
+    $.ajax(settings).done(function (result) {
 
-        for (var i = 0; i < response.length; i++) {
-            console.log(response[i]);
+        for (var i = 0; i < result.length; i++) {
+            console.log(result[i]);
+            var response = result[i];
 
-            adicionarLinhaTabela(response[i]);
+            var newRow = $("<tr>"); var cols = "";
+            cols += '<td>' + response.CNPJ + '</td>';
+            cols += '<td>' + response.RazaoSocial + '</td>';
+            cols += '<td>' + response.Email + '</td>';
+            cols += '<td>' + response.Telefone.Numero + '</td>';
+            cols += '<td>';
+            cols += '<a href="Editar/' + response.ID + '" class="btn btnAcao btn-success btn-link btn-xs" data-original-title="Editar">';
+            cols += '<i class="nc-icon nc-credit-card" ></i >';
+
+            cols += '<a href="Excluir/' + response.ID + '" rel="tooltip" title="Excluir" class="btn btnAcao btn-danger btn-link btn-xs" data-original-title="Remover">';
+            cols += '<i class="nc-icon nc-simple-remove" ></i></a>';
+            cols += '</td>';
+            newRow.append(cols); $("#tbEmpresas").append(newRow);
         }
-        LoadingStop('.content');
+        LoadingStop('body');
     });
 
 }
-
-function adicionarLinhaTabela(response) {
-    var newRow = $("<tr>"); var cols = "";
-    cols += '<td>'+response.cnpj+'</td>';
-    cols += '<td>'+response.razaoSocial+'</td>';
-    cols += '<td>'+response.email+'</td>';
-    cols += '<td>'+response.telefone.numero +'</td>';
-    cols += '<td>';
-    cols += '<a href="Editar/'+response.id+'" class="btn btnAcao btn-success btn-link btn-xs" data-original-title="Editar">';
-    cols += '<i class="nc-icon nc-credit-card" ></i >';
-
-    cols += '<a href="Excluir/' + response.id + '" rel="tooltip" title="Excluir" class="btn btnAcao btn-danger btn-link btn-xs" data-original-title="Remover">';
-    cols += '<i class="nc-icon nc-simple-remove" ></i></a>';
-    cols += '</td>';
-    newRow.append(cols); $("#tbEmpresas").append(newRow);
-}
-
 function LoadingInit(elemento) {
     $(elemento).loading({
         theme: 'dark',

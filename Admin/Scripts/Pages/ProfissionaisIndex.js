@@ -2,7 +2,7 @@
 
 
 function popularTabela() {
-    LoadingInit('.content');
+    LoadingInit('body');
     //var Url = "GetProfissionais";
     var Url = "/Profissionais/GetProfissionais";
     var settings = {
@@ -16,7 +16,7 @@ function popularTabela() {
         for (var i = 0; i < response.length; i++) {
             adicionarLinhaTabela(response[i]);
         }
-        LoadingStop('.content');
+        LoadingStop('body');
     });
 
 }

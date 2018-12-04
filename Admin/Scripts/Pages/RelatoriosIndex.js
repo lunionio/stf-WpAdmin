@@ -5,7 +5,7 @@
 
 $('#download').click(function () {
     var r = $('#relatorios option:selected').val();
-    window.location.href = '@Url.Action("Gerar", "Relatorios")/' + '?relatorioId=' + r;
+    window.location.href = 'Gerar' + '?relatorioId=' + r;
 });
 
 $('.botoes').hide();

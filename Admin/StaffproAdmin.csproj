@@ -211,6 +211,7 @@
     <Compile Include="Models\UserXOportunidade.cs" />
     <Compile Include="Models\Usuario\Usuario.cs" />
     <Compile Include="Models\Usuario\UsuarioViewModel.cs" />
+    <Compile Include="Models\Usuario\UsuarioXPerfil.cs" />
     <Compile Include="Models\VagaViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

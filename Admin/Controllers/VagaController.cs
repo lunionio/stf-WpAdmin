@@ -276,7 +276,7 @@ namespace Admin.Controllers
             var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
             var helper = new ServiceHelper();
-            var empresas = helper.Get<IEnumerable<Empresa>>(url);
+            var empresas = helper.Get<IList<Empresa>>(url);
 
             IList<EmpresaViewModel> models = new List<EmpresaViewModel>();
 
@@ -432,13 +432,18 @@ namespace Admin.Controllers
                 var helper = new ServiceHelper();
                 var o = helper.Post<object>(url, envio);
 
+                if(o is KeyValuePair<string, string>)
+                {
+                    return ((KeyValuePair<string, string>)o).Value;
+                }
+
                 if (userXOportunidade.StatusID == 1) //Aprovado
                 {
                     FinanceiroHelper.LancaTransacoes(op.Valor * -1, "16", 3,
                         "16", 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado, op.Id);
 
                     FinanceiroHelper.LancaTransacoes(op.Valor, "16", 3,
-                        pServico.Profissional.ID.ToString(), 1, 2, 1, "Pagando contratado.", PixCoreValues.UsuarioLogado, op.Id);
+                        pServico.Profissional.ID.ToString(), 1, 2, 1, "Pagando contratado.", PixCoreValues.UsuarioLogado, op.Id, 2);
                 }
 
                 return JsonConvert.SerializeObject(new ProfissionalViewModel(pServico.Profissional.ID, user.Nome, pServico.Servico.Nome, pServico.Profissional.Telefone.Numero,
