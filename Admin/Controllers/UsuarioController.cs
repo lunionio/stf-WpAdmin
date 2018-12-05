@@ -254,6 +254,11 @@ namespace Admin.Controllers
         {
             try
             {
+                if (PixCoreValues.UsuarioLogado.IdUsuario.Equals(usuario.ID))
+                {
+                    return false;
+                }
+
                 var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
                 var url = keyUrl + "/Seguranca/Principal/DeletarUsuario/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
                 object envio = new
@@ -264,9 +269,12 @@ namespace Admin.Controllers
                     }
                 };
                 var helper = new ServiceHelper();
-                var result = helper.Post<object>(url, envio);
+                var result = helper.Post<Dictionary<object, string>>(url, envio);
 
-                DesvincularPerfil(usuario.ID);
+                if (result != null && Convert.ToBoolean(result.FirstOrDefault().Value))
+                {
+                    DesvincularPerfil(usuario.ID);
+                }
 
                 return true;
             }
