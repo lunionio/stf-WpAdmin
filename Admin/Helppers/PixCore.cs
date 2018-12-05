@@ -91,7 +91,7 @@ namespace Admin.Helppser
 
                 var current = HttpContext.Current;
                 string cookievalue;
-                if (Usuario.ID != 0)
+                if (Usuario.ID != 0 && Usuario.Ativo && Usuario.Status != 9)
                 {
                     if (Convert.ToBoolean(Usuario.VAdmin))
                     {

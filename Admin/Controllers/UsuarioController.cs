@@ -176,22 +176,21 @@ namespace Admin.Controllers
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
 
-                var users = GetUsuarios(_idCliente);
+                var usuarios = GetUsuarios(_idCliente);
+
             try
             {
-                var usuario = users.FirstOrDefault(u => u.ID.Equals(id));
-
+                var usuario = usuarios.FirstOrDefault(u => u.ID.Equals(id));
                 if (DeleteUsuario(usuario))
                 {
-                    var usuarios = GetUsuarios(_idCliente);
-                    return View("Listagem", usuarios);
+                    return View("Listagem", GetUsuarios(_idCliente));
                 }
 
-                return View("Listagem", users);
+                return View("Listagem", usuarios);
             }
             catch(Exception e)
             {
-                return View("Listagem", users);
+                return View("Listagem", usuarios);
             }
         }
 
@@ -242,7 +241,7 @@ namespace Admin.Controllers
                     }
                 }
 
-                return result;   
+                return result.Where(u => u.Ativo && u.Status != 9);   
             }
             catch (Exception e)
             {
@@ -259,24 +258,17 @@ namespace Admin.Controllers
                     return false;
                 }
 
-                var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
-                var url = keyUrl + "/Seguranca/Principal/DeletarUsuario/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
-                object envio = new
-                {
-                    usuario = new
-                    {
-                        idUsuario = usuario.ID
-                    }
-                };
-                var helper = new ServiceHelper();
-                var result = helper.Post<Dictionary<object, string>>(url, envio);
+                usuario.Ativo = false;
+                usuario.Status = 9;
 
-                if (result != null && Convert.ToBoolean(result.FirstOrDefault().Value))
+                var result = SaveUsuario(usuario);
+
+                if(result.Status == 9 && !result.Ativo)
                 {
-                    DesvincularPerfil(usuario.ID);
+                    return true;
                 }
 
-                return true;
+                return false;
             }
             catch (Exception e)
             {
