@@ -38,7 +38,7 @@ namespace Admin.Controllers
                     return RedirectToAction("Index", "Login");
                 }
             }
-            catch
+            catch (Exception e)
             {
                 TempData["LoginMessage"] = "Usuário ou senha invalida";
                 return RedirectToAction("Index", "Login");

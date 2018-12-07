@@ -23,6 +23,7 @@ namespace Admin.Controllers
         [ChildActionOnly]
         public ActionResult GetMenus()
         {
+
             var perfil = GetPerfil(PixCoreValues.UsuarioLogado.idPerfil);
             var permissoes = GetPermissoes(perfil.idPermissao.Split(',').Select(id => Convert.ToInt32(id)));
             var model = GetEstruturas(1, permissoes);

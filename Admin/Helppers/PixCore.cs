@@ -104,13 +104,18 @@ namespace Admin.Helppser
 
                         if (current.Request.Cookies["UsuarioLogadoStaff"] != null)
                         {
-                            cookievalue = current.Request.Cookies["UsuarioLogadoStaff"].ToString();
+                            current.Request.Cookies["UsuarioLogadoStaff"].Value = string.Empty;
                         }
-                        else
-                        {
-                            current.Response.Cookies["UsuarioLogadoStaff"].Value = jss.Serialize(user);
-                            current.Response.Cookies["UsuarioLogadoStaff"].Expires = DateTime.Now.AddMinutes(30); // add expiry time
-                        }
+
+                        //if (current.Request.Cookies["UsuarioLogadoStaff"] != null)
+                        //{
+                        //    cookievalue = current.Request.Cookies["UsuarioLogadoStaff"].ToString();
+                        //}
+                        //else
+                        //{
+                        current.Response.Cookies["UsuarioLogadoStaff"].Value = jss.Serialize(user);
+                        current.Response.Cookies["UsuarioLogadoStaff"].Expires = DateTime.Now.AddMinutes(30); // add expiry time
+                        //}
                         return true;
                     }
                     else
@@ -233,8 +238,16 @@ namespace Admin.Helppser
         public static void Sair()
         {
             var current = HttpContext.Current;
-            current.Request.Cookies["UsuarioLogadoStaff"].Value = null;
-            current.Request.Cookies["IdClienteStaff"].Value = null;
+
+            if (!string.IsNullOrEmpty(current.Request.Cookies["UsuarioLogadoStaff"].Value))
+            {
+                current.Request.Cookies["UsuarioLogadoStaff"].Value = null;
+            }
+
+            if (!string.IsNullOrEmpty(current.Request.Cookies["IdClienteStaff"].Value))
+            {
+                current.Request.Cookies["IdClienteStaff"].Value = null;
+            }
         }
     }
 }
