@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<Admin.Models.ProfissionalViewModel>
 
-<div id="myModal" class="modal fade" role="dialog">
+<div id="myModal"  class="modal fade" role="dialog">
     <div class="modal-dialog  modal-lg">
-        <div class="modal-content">
+        <div class="modal-content col-md-12">
             <div class="modal-header text-center">
                 <h4 class="modal-title">
                     @ViewBag.OptNome
@@ -31,7 +31,7 @@
                                     <div class="card-header ">
                                         <h4 class="card-title"></h4>
                                     </div>
-                                    <div class="card-body table-full-width table-responsive">
+                                    <div style="overflow:auto;" class="card-body table-full-width table-responsive">
                                         <table id="tbContratar" class="table table-hover">
                                             <thead>
                                                 <tr>
@@ -86,7 +86,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="contratados" role="tabpanel" aria-labelledby="contratados-tab">
+                            <div style="overflow:auto;" class="tab-pane fade" id="contratados" role="tabpanel" aria-labelledby="contratados-tab">
                                 <div class="card stacked-form">
                                     <div class="card-header ">
                                         <h4 class="card-title"></h4>
@@ -137,18 +137,19 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="checkin" role="tabpanel" aria-labelledby="checkin-tab">
+                            <div  class="tab-pane fade" id="checkin" role="tabpanel" aria-labelledby="checkin-tab">
                                 <div class="card stacked-form">
                                     <div class="card-header ">
                                         <h4 class="card-title"></h4>
                                     </div>
                                     <div class="card-body table-full-width table-responsive">
-                                        <table id="tbCheckIn" class="table table-hover">
+                                        <table style="overflow:auto;" id="tbCheckIn" class="table table-hover">
                                             <thead>
                                                 <tr>
                                                     <th>Nome</th>
-                                                    <th>Hora do Check-In</th>
-                                                    <th>Status Pagamento</th>
+                                                    <th>Check-In</th>
+                                                    <th>Pgto</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
