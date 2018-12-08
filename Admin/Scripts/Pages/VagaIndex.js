@@ -102,7 +102,7 @@ function getVinculoProfissional() {
 }
 
 function getModalMatch(idOpt) {
-
+    Loading('body');
     var Url = "vaga/ModalMatch?optId=" + idOpt;
     var settings = {
         "async": true,
@@ -181,10 +181,13 @@ function getModalMatch(idOpt) {
                 "sSearch": "Pesquisar:",
             },
         });
+
+        LoadingStop('body');
     });
 }
 
 function aprovarProfissional(userXOpt, optId, userId) {
+    Loading('body');
     var obj = {
         ID: userXOpt,
         UserId: userId,
@@ -201,28 +204,32 @@ function aprovarProfissional(userXOpt, optId, userId) {
     };
 
     $.ajax(settings).done(function (response) {
-            var p = JSON.parse(response);
+        var p = JSON.parse(response);
 
-            if (p.Id == undefined) {
-                alert(response);
-            }
-            else {
-                let table = $('#tbContratar').DataTable();
-                table.row("#" + userId).remove().draw();
-                var contratados = $('#tbContratados').DataTable();
-                var row = contratados.row.add([
-                    p.Id,
-                    p.Nome,
-                    p.Especialidade,
-                    p.Endereco.Local,
-                    p.Valor,
-                    'Avaliação'
-                ]).draw(false);
-            }
+        if (p.Id == undefined) {
+            swal(response, "", "success");
+        }
+        else {
+            let table = $('#tbContratar').DataTable();
+            table.row("#" + userId).remove().draw();
+            var contratados = $('#tbContratados').DataTable();
+            var row = contratados.row.add([
+                p.Id,
+                p.Nome,
+                p.Especialidade,
+                p.Endereco.Local,
+                p.Valor,
+                'Avaliação'
+            ]).draw(false);
+        }
+
+        LoadingStop('body');
     });
 }
 
 function reprovarProfissional(userXOpt, optId, userId) {
+    Loading('body');
+
     var obj = {
         ID: userXOpt,
         UserId: userId,
@@ -239,19 +246,23 @@ function reprovarProfissional(userXOpt, optId, userId) {
     };
 
     $.ajax(settings).done(function (response) {
-            var p = JSON.parse(response);
+        var p = JSON.parse(response);
 
-            if (p.Id == undefined) {
-                alert(response);
-            }
-            else {
-                let table = $('#tbContratar').DataTable();
-                table.row("#" + userId).remove().draw();
-            }
+        if (p.Id == undefined) {
+            alert(response);
+        }
+        else {
+            let table = $('#tbContratar').DataTable();
+            table.row("#" + userId).remove().draw();
+        }
+
+        LoadingStop('body');
     });
 }
 
 function getProfissional(id) {
+    Loading('body');
+
     var Url = "/Vaga/ModalProfissional?pId=" + id;
     var settings = {
         "async": true,
@@ -263,6 +274,8 @@ function getProfissional(id) {
     $.ajax(settings).done(function (response) {
         $('#modalProfissional').html(response);
         $('#profissionalModal').modal('show');
+
+        LoadingStop('body');
     });
 }
 
@@ -284,6 +297,8 @@ function guardaCache(optId, profissionalId) {
 }
 
 function liberarPagamentos() {
+    Loading('body');
+
     let settings = {
         "async": true,
         "crossDomain": true,
@@ -293,11 +308,15 @@ function liberarPagamentos() {
     };
 
     $.ajax(settings).done(function (response) {
+
+        LoadingStop('body');
         alert(response);
     });
 }
 
 function getModalCheckIn(profissionalId) {
+    Loading('body');
+
     var Url = "/Vaga/ModalCheckIn?pId=" + profissionalId;
     var settings = {
         "async": true,
@@ -309,5 +328,7 @@ function getModalCheckIn(profissionalId) {
     $.ajax(settings).done(function (response) {
         $('#modalCheckIn').html(response);
         $('#checkinModal').modal('show');
+
+        LoadingStop('body');
     });
 }
