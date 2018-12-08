@@ -28,7 +28,7 @@ namespace Admin.Controllers
             var result = GetTicket(id);
             var ticket = JsonConvert.DeserializeObject<Ticket>(result);
 
-            var model = new AtendimentoViewModel(ticket.Email, ticket.Origem, ticket.Tipo.Nome, ticket.Numero, ticket.Descricao, ticket.ID);
+            var model = new AtendimentoViewModel(ticket.Email, ticket.Origem, ticket.Tipo.Nome, ticket.Numero, ticket.Descricao, ticket.ID, ticket.TicketStatusID);
             return View(model);
         }
 

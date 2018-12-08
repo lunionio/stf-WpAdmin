@@ -7,7 +7,7 @@ namespace Admin.Models
 {
     public class AtendimentoViewModel : Base
     {
-        public AtendimentoViewModel(string email, string origem, string categoria, string numero, string descricao, int ticketId)
+        public AtendimentoViewModel(string email, string origem, string categoria, string numero, string descricao, int ticketId, int ticketStatusId)
         {
             Email = email;
             Origem = origem;
@@ -15,6 +15,7 @@ namespace Admin.Models
             Numero = numero;
             Descricao = descricao;
             TicketId = ticketId;
+            TicketStatusId = ticketStatusId;
         }
 
         public AtendimentoViewModel()
@@ -28,5 +29,6 @@ namespace Admin.Models
         public string Categoria { get; set; }
         public string Numero { get; set; }
         public int TicketId { get; set; }
+        public int TicketStatusId { get; set; }
     }
 }

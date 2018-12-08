@@ -16,6 +16,7 @@
 
                     <div class="form-group">
                         <input id="atdId" type="hidden" value="@Model.ID" />
+                        <input id="statusId" type="hidden" value="@Model.TicketStatusId" />
                         <input id="tId" type="hidden" value="@Model.TicketId" />
                         <label class=" control-label"><strong>E-mail</strong></label>
                         <input type="text" id="email" name="email" value="@Model.Email" disabled="disabled" class="form-control col-md-12">
@@ -40,7 +41,7 @@
                         <textarea id="mensagem" class="form-group col-md-12" rows="8" disabled="disabled">@Model.Descricao</textarea>
                         <p><h4><strong>RESPONDER</strong></h4></p>
                         <div class="form-group">
-                            <textarea id="respostaTicket" class="form-group col-md-12" rows="5"></textarea>
+                            <textarea id="respostaTicket" class="form-group col-md-12" rows="5">@Model.Resposta</textarea>
                         </div>
                         <input id="btnEncerrar" type="button" class="btn btn-default" value="Encerrar" />
                     </div>

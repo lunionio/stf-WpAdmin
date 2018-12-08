@@ -92,7 +92,7 @@ namespace Admin.Controllers
                 ViewBag.Empresas = new SelectList(empresas.Select(e => e.Nome));
 
                 if (!string.IsNullOrEmpty(creditoViewModel.Empresa) 
-                    && !string.IsNullOrEmpty(creditoViewModel.Natureza) && creditoViewModel.Valor > 0)
+                    && !string.IsNullOrEmpty(creditoViewModel.Natureza))
                 {
                     creditoViewModel.EmpresaId = empresas.FirstOrDefault(e => e.Nome.Equals(creditoViewModel.Empresa))?.Id;
                     creditoViewModel.NaturezaId = naturezas.FirstOrDefault(e => e.Nome.Equals(creditoViewModel.Natureza))?.ID;

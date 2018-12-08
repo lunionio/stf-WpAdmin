@@ -1,4 +1,12 @@
-﻿$('#btnEncerrar').on('click', function () {
+﻿$(document).ready(function () {
+    var status = $('#statusId').val();
+    if (status == 3) { //Fechado
+        $('#respostaTicket').prop('disabled', true);
+        $('#btnEncerrar').prop('disabled', true);
+    }
+});
+
+$('#btnEncerrar').on('click', function () {
     encerrar();
 });
 
