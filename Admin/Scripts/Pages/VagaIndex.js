@@ -246,14 +246,20 @@ function reprovarProfissional(userXOpt, optId, userId) {
     };
 
     $.ajax(settings).done(function (response) {
-        var p = JSON.parse(response);
 
-        if (p.Id == undefined) {
-            alert(response);
+        var p = $.parseJSON(response);
+
+        if (typeof p == 'object') {
+            if (p.Id == undefined) {
+                alert(response);
+            }
+            else {
+                let table = $('#tbContratar').DataTable();
+                table.row("#" + userId).remove().draw();
+            }
         }
         else {
-            let table = $('#tbContratar').DataTable();
-            table.row("#" + userId).remove().draw();
+            alert(response);
         }
 
         LoadingStop('body');
