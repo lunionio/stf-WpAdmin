@@ -130,7 +130,7 @@ function getModalMatch(idOpt) {
                 ">" + '<"clear">',
             "oLanguage": {
                 "sLengthMenu": "_MENU_",
-                "sZeroRecords": "Nada encontrado",
+                "sZeroRecords": "Nenhuma candidatura registrada.",
                 "sInfo": "Mostrando oágina _PAGE_ de _PAGES_",
                 "sInfoEmpty": "Nenhum dado para mostrar",
                 "sInfoFiltered": "(Filtrado de _MAX_ registros)",
@@ -152,7 +152,7 @@ function getModalMatch(idOpt) {
                 ">" + '<"clear">',
             "oLanguage": {
                 "sLengthMenu": "_MENU_",
-                "sZeroRecords": "Nada encontrado",
+                "sZeroRecords": "Nenhum profissional contratado.",
                 "sInfo": "Mostrando oágina _PAGE_ de _PAGES_",
                 "sInfoEmpty": "Nenhum dado para mostrar",
                 "sInfoFiltered": "(Filtrado de _MAX_ registros)",
@@ -174,7 +174,7 @@ function getModalMatch(idOpt) {
                 ">" + '<"clear">',
             "oLanguage": {
                 "sLengthMenu": "_MENU_",
-                "sZeroRecords": "Nada encontrado",
+                "sZeroRecords": "Nenhum check-in registrado.",
                 "sInfo": "Mostrando oágina _PAGE_ de _PAGES_",
                 "sInfoEmpty": "Nenhum dado para mostrar",
                 "sInfoFiltered": "(Filtrado de _MAX_ registros)",
