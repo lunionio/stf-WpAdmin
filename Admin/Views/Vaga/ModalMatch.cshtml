@@ -12,8 +12,6 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-
-
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a class="nav-link active" id="contratar-tab" href="#">Contratar</a>
@@ -66,7 +64,13 @@
                                                                 @item.Valor
                                                             </td>
                                                             <td>
-                                                                Avaliação
+                                                                <select id="@item.Avaliacao" disabled>
+                                                                    <option @(Convert.ToInt32(item.Avaliacao).Equals(1) ? "selected" : "") value="1">1</option>
+                                                                    <option @(Convert.ToInt32(item.Avaliacao).Equals(2) ? "selected" : "") value="2">2</option>
+                                                                    <option @(Convert.ToInt32(item.Avaliacao).Equals(3) ? "selected" : "") value="3">3</option>
+                                                                    <option @(Convert.ToInt32(item.Avaliacao).Equals(4) ? "selected" : "") value="4">4</option>
+                                                                    <option @(Convert.ToInt32(item.Avaliacao).Equals(5) ? "selected" : "") value="5">5</option>
+                                                                </select>
                                                             </td>
                                                             <td>
                                                                 <a class="btn btn-link btn-success table-action view" onclick="aprovarProfissional(@item.UserXOportunidadeId, @item.OportunidadeId, @item.Id)">
@@ -125,7 +129,13 @@
                                                                 @item.Valor
                                                             </td>
                                                             <td>
-                                                                Avaliação
+                                                                <select id="@item.Avaliacao" disabled>
+                                                                    <option @(Convert.ToInt32(item.Avaliacao).Equals(1) ? "selected" : "") value="1">1</option>
+                                                                    <option @(Convert.ToInt32(item.Avaliacao).Equals(2) ? "selected" : "") value="2">2</option>
+                                                                    <option @(Convert.ToInt32(item.Avaliacao).Equals(3) ? "selected" : "") value="3">3</option>
+                                                                    <option @(Convert.ToInt32(item.Avaliacao).Equals(4) ? "selected" : "") value="4">4</option>
+                                                                    <option @(Convert.ToInt32(item.Avaliacao).Equals(5) ? "selected" : "") value="5">5</option>
+                                                                </select>
                                                             </td>
                                                         </tr>
                                                     }

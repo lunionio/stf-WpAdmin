@@ -47,6 +47,8 @@ namespace Admin.Models
         public string Banco { get; set; }
         public string Agencia { get; set; }
         public string Conta { get; set; }
+        public decimal Avaliacao { get; set; }
+        public int JobQuantidade { get; set; }
 
         public int OportunidadeId { get; set; }
         public int? UserXOportunidadeId { get; set; }

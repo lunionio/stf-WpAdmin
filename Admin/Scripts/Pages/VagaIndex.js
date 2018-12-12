@@ -112,6 +112,7 @@ function getModalMatch(idOpt) {
     };
 
     $.ajax(settings).done(function (response) {
+        LoadingStop('body');
 
         $('#modal').html(response);
         $('#myModal').modal('show');
@@ -181,8 +182,6 @@ function getModalMatch(idOpt) {
                 "sSearch": "Pesquisar:",
             },
         });
-
-        LoadingStop('body');
     });
 }
 
@@ -204,27 +203,35 @@ function aprovarProfissional(userXOpt, optId, userId) {
     };
 
     $.ajax(settings).done(function (response) {
-        var p = $.parseJSON(response);
+        try {
+            var p = $.parseJSON(response);
+            console.log(p);
 
-        if (typeof p == 'object') {
-            if (p.Id == undefined) {
-                swal(response, "", "success");
+            if (typeof p == 'object') {
+                if (p.Id == undefined) {
+                    swal(response, "", "success");
+                }
+                else {
+                    let table = $('#tbContratar').DataTable();
+                    table.row("#" + userId).remove().draw();
+                    var contratados = $('#tbContratados').DataTable();
+                    var row = contratados.row.add([
+                        p.Id,
+                        p.Nome,
+                        p.Especialidade,
+                        p.Endereco.Local,
+                        p.Valor,
+                        '<select id="' + p.Avaliacao + '" disabled>' +
+                        '<option value = "' + Math.floor(p.Avaliacao) + '" >' + p.Avaliacao + '</option > ' +
+                        '</select>'
+                    ]).draw(false);
+                }
             }
             else {
-                let table = $('#tbContratar').DataTable();
-                table.row("#" + userId).remove().draw();
-                var contratados = $('#tbContratados').DataTable();
-                var row = contratados.row.add([
-                    p.Id,
-                    p.Nome,
-                    p.Especialidade,
-                    p.Endereco.Local,
-                    p.Valor,
-                    'Avaliação'
-                ]).draw(false);
+                alert(response);
             }
         }
-        else {
+        catch (e) {
             alert(response);
         }
         LoadingStop('body');

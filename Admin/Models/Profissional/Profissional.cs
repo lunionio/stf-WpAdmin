@@ -13,6 +13,7 @@ namespace Admin.Models
         public IList<ProfissionalFormacao> Formacoes { get; set; }
         public int IdUsuario { get; set; }
         public DateTime DataNascimento { get; set; }
+        public decimal Avaliacao { get; set; }
 
         public Profissional()
         { }

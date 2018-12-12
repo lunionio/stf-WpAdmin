@@ -54,10 +54,11 @@ namespace Admin.Controllers
             var helper = new ServiceHelper();
             var response = helper.Post<ProfissionalServico>(url, envio);
             var user = GetUsuario(response.Profissional.IdUsuario);
+            var jobs = GetJobQuantidade(response.Profissional.ID);
 
             var ret = new ProfissionalViewModel(response.Profissional.ID, user.Nome, response.Nome, response.Profissional.Telefone.Numero, response.Profissional.Telefone.ID, 
                 response.Profissional.DataNascimento.ToString(), response.Profissional.Email,
-                response.Profissional.IdUsuario, response.Profissional.Endereco){ DataCriacao = response.Profissional.DataCriacao };
+                response.Profissional.IdUsuario, response.Profissional.Endereco){ DataCriacao = response.Profissional.DataCriacao, JobQuantidade = jobs };
 
             var docs = GetDocumentos(ret.Id);
 
@@ -249,6 +250,24 @@ namespace Admin.Controllers
             var servico = helper.Post<IEnumerable<Servico>>(url, envio);
 
             return servico;
+        }
+
+        private int GetJobQuantidade(int iD)
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/WpCheckIn/GetQuantidadeJobs/" + usuario.idCliente + "/" + usuario.IdUsuario;
+
+            var envio = new
+            {
+                usuario.idCliente,
+                profissionalId = iD,
+            };
+
+            var helper = new ServiceHelper();
+            var r = helper.Post<object>(url, envio);
+
+            return Convert.ToInt32(r);
         }
     }
 }

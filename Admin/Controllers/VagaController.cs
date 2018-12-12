@@ -342,6 +342,7 @@ namespace Admin.Controllers
                     UserXOportunidadeId = userXOportunidades.FirstOrDefault(x => x.UserId.Equals(item.Profissional.ID))?.ID,
                     OportunidadeId = op.Id,
                     Valor = op.Valor,
+                    Avaliacao = item.Profissional.Avaliacao,
                 };
 
                 models.Add(model);
@@ -450,6 +451,7 @@ namespace Admin.Controllers
                     pServico.Profissional.Telefone.ID, pServico.Profissional.DataNascimento.ToShortDateString(), pServico.Profissional.Email, pServico.Profissional.IdUsuario, pServico.Profissional.Endereco)
                 {
                     Valor = op.Valor,
+                    Avaliacao = pServico.Profissional.Avaliacao,
                 });
             }
             catch (Exception e)
@@ -493,7 +495,8 @@ namespace Admin.Controllers
         {
             var p = GetProfissional(pId);
             p.Profissional.Formacoes = GetFormacoes(p.Profissional.ID);
-            var u = GetUsuario(p.Profissional.IdUsuario);            
+            var u = GetUsuario(p.Profissional.IdUsuario);
+            var jobQuantidade = GetJobQuantidade(p.Profissional.ID);
 
             var profissional = new ProfissionalViewModel()
             {
@@ -503,9 +506,28 @@ namespace Admin.Controllers
                 Telefone = p.Profissional.Telefone.Numero,
                 Formacoes = p.Profissional.Formacoes.Select(f => f.Nome),
                 Referencia = p.Profissional.Descricao,
+                JobQuantidade = jobQuantidade,
             };
 
             return PartialView(profissional);
+        }
+
+        private int GetJobQuantidade(int iD)
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/WpCheckIn/GetQuantidadeJobs/" + usuario.idCliente + "/" + usuario.IdUsuario;
+
+            var envio = new
+            {
+                usuario.idCliente,
+                profissionalId = iD,
+            };
+
+            var helper = new ServiceHelper();
+            var r = helper.Post<object>(url, envio);
+
+            return Convert.ToInt32(r);
         }
 
         private ProfissionalServico GetProfissional(int id)
@@ -664,6 +686,7 @@ namespace Admin.Controllers
             p.Profissional.Formacoes = GetFormacoes(p.Profissional.ID);
             var u = GetUsuario(p.Profissional.IdUsuario);
             var d = GetDadosBancarios(p.Profissional.ID);
+            var jobs = GetJobQuantidade(p.Profissional.ID);
 
             var profissional = new ProfissionalViewModel()
             {
@@ -676,6 +699,7 @@ namespace Admin.Controllers
                 Agencia = d.Agencia,
                 Conta = d.Conta,
                 Banco = d.Banco,
+                JobQuantidade = jobs,
             };
 
             return PartialView(profissional);
