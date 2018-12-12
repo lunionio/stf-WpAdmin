@@ -517,6 +517,7 @@
     <Content Include="Scripts\Pages\EmpresaListar.js" />
     <Content Include="Scripts\Pages\FaleConosco.js" />
     <Content Include="Scripts\Pages\AtendimentoIndex.js" />
+    <Content Include="Scripts\Pages\HomeIndex.js" />
     <Content Include="Scripts\Pages\ProfissionaisDetalhes.js" />
     <Content Include="Scripts\Pages\ProfissionaisIndex.js" />
     <Content Include="Scripts\Pages\RelatoriosIndex.js" />
