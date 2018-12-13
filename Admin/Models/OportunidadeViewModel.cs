@@ -17,6 +17,7 @@ namespace Admin.Models
         public Endereco Endereco { get; set; }
         public int OportunidadeStatusID { get; set; }
         public int IdEmpresa { get; set; }
+        public string EmailEmpresa { get; set; }
     }
 
     public class Endereco : Base
@@ -50,6 +51,7 @@ namespace Admin.Models
         public int OportunidadeId { get; set; }
         public int ProfissionalId { get; set; }
         public string Uf { get; set; }
+        public string LocalOportunidade { get; set; }
 
     }
 

@@ -11,7 +11,7 @@ namespace Admin.Helppers
 {
     public static class FinanceiroHelper
     {
-        public static void InserirSaldo(decimal valor, string origem, string destino, int natureza, int tipo, string descricao, LoginViewModel usuario)
+        public static void InserirSaldo(decimal valor, string origem, string destino, int natureza, int tipo, string descricao, LoginViewModel usuario, string emailEmpresa)
         {
             IList<Extrato> extratos = new List<Extrato>();
 
@@ -28,6 +28,7 @@ namespace Admin.Helppers
                 UsuarioEdicao = usuario.IdUsuario,
                 TipoOrigem = 2,
                 TipoDestino = 3,
+                EmailEmpresa = emailEmpresa,
             };
 
             extratos.Add(extrato);

@@ -94,11 +94,14 @@ namespace Admin.Controllers
                 if (!string.IsNullOrEmpty(creditoViewModel.Empresa) 
                     && !string.IsNullOrEmpty(creditoViewModel.Natureza))
                 {
-                    creditoViewModel.EmpresaId = empresas.FirstOrDefault(e => e.Nome.Equals(creditoViewModel.Empresa))?.Id;
+                    var empresa = empresas.FirstOrDefault(e => e.Nome.Equals(creditoViewModel.Empresa));
+
+                    creditoViewModel.EmpresaId = empresa?.Id;
                     creditoViewModel.NaturezaId = naturezas.FirstOrDefault(e => e.Nome.Equals(creditoViewModel.Natureza))?.ID;
 
                     FinanceiroHelper.InserirSaldo(creditoViewModel.Valor, "16", 
-                        creditoViewModel.EmpresaId.ToString(), (int)creditoViewModel.NaturezaId, 1, creditoViewModel.Descricao, PixCoreValues.UsuarioLogado);
+                        creditoViewModel.EmpresaId.ToString(), (int)creditoViewModel.NaturezaId, 1, 
+                        creditoViewModel.Descricao, PixCoreValues.UsuarioLogado, empresa?.Email);
 
                     if(creditoViewModel.Taxa > 0)
                     {

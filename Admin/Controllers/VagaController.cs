@@ -120,7 +120,7 @@ namespace Admin.Controllers
                 vagas.Add(new VagaViewModel(o.ID, o.Nome, o.Endereco.CEP, o.Endereco.Local, o.Endereco.Bairro, o.Endereco.Cidade,
                     o.Endereco.Estado, o.HoraInicio, o.Valor, o.TipoProfissional, o.DescProfissional, o.Endereco.NumeroLocal,
                     (o.Valor * o.Quantidade).ToString(), o.Quantidade, o.Endereco.Complemento, o.Endereco.Complemento, 
-                    o.DataOportunidade.ToShortDateString(), o.Status, o.IdEmpresa, o.IdCliente, o.TipoServico)
+                    o.DataOportunidade.ToShortDateString(), o.Status, o.IdEmpresa, o.IdCliente, o.TipoServico, o.Endereco.LocalOportunidade)
                 {
                     EnderecoId = o.Endereco.ID,
                     EnderecoDataCriacao = o.Endereco.DataCriacao.ToShortDateString(),
@@ -252,6 +252,8 @@ namespace Admin.Controllers
                 vaga.status = 1;
 
                 var op = Oportundiade.Convert(vaga);
+                var empresa = GetEmpresa(op.IdEmpresa);
+                op.EmailEmpresa = empresa.Email;
 
                 var envio = new
                 {
@@ -425,6 +427,11 @@ namespace Admin.Controllers
                     return "Saldo insuficiente para a contratação.";
                 }
 
+                var empresa = GetEmpresa(usuario.idEmpresa);
+
+                userXOportunidade.NomeContratado = pServico.Profissional.Nome;
+                userXOportunidade.EmailContratado = pServico.Profissional.Email;
+                userXOportunidade.EmailContratante = empresa.Email;
                 var envio = new
                 {
                     userXOportunidade,
@@ -722,6 +729,48 @@ namespace Admin.Controllers
             var dados = helper.Post<DadosBancarios>(url, envio);
 
             return dados;
+        }
+
+        private EmpresaViewModel GetEmpresa(int empresaId)
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/wpEmpresas/BuscarPorId/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
+            object envio = new
+            {
+                usuario.idCliente,
+                id = empresaId,
+            };
+
+            var helper = new ServiceHelper();
+            var result = helper.Post<Empresa>(url, envio);
+
+            var empresa = new EmpresaViewModel()
+            {
+                Ativo = result.Ativo,
+                Bairro = result.Endereco.Bairro,
+                Cep = result.Endereco.CEP,
+                Cidade = result.Endereco.Cidade,
+                Cnae = result.CNAE_S,
+                Cnpj = result.CNPJ,
+                Complemento = result.Endereco.Complemento,
+                Email = result.Email,
+                EnderecoId = result.Endereco.ID,
+                Id = result.ID,
+                IdCliente = result.IdCliente,
+                Nome = result.Nome,
+                Numero = result.Endereco.NumeroLocal,
+                RazaoSocial = result.RazaoSocial,
+                Rua = result.Endereco.Local,
+                status = result.Status,
+                Telefone = result.Telefone.Numero,
+                TelefoneId = result.Telefone.ID,
+                Uf = result.Endereco.Uf,
+                UsuarioCriacao = result.UsuarioCriacao,
+                UsuarioEdicao = result.UsuarioEdicao,
+            };
+
+            return empresa;
         }
     }
 }

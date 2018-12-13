@@ -30,6 +30,7 @@ namespace Admin.Helppser
                 OportunidadeId = vaga.Id,
                 UsuarioEdicao = PixCoreValues.UsuarioLogado.idCliente,
                 Uf = vaga.Uf,
+                LocalOportunidade = vaga.LocalOportunidade,
             };
 
             return new OportunidadeViewModel

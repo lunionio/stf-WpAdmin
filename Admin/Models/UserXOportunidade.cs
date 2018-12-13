@@ -12,5 +12,10 @@ namespace Admin.Models
         public int OportunidadeId { get; set; }
         public Status Status { get; set; }
         public int StatusID { get; set; }
+
+
+        public string EmailContratante { get; set; }
+        public string EmailContratado { get; set; }
+        public string NomeContratado { get; set; }
     }
 }

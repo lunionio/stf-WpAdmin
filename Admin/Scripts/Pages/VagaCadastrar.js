@@ -105,7 +105,8 @@ function VagaViewModel() {
         EnderecoId: $('#endId').val(),
         DataCriacao: $('#vagaData').val(),
         EnderecoDataCriacao: $('#enderecoData').val(),
-        Servico: $('#atuacao option:selected').text()
+        Servico: $('#atuacao option:selected').text(),
+        LocalOportunidade: $('#localOpt').val()
     };
     return VagaViewModel;
 }

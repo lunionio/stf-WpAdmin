@@ -36,6 +36,7 @@ namespace Admin.Models
         public string DataCriacao { get; set; }
         public string EnderecoDataCriacao { get; set; }
         public string Servico { get; set; }
+        public string LocalOportunidade { get; set; }
 
         public VagaViewModel()
         {
@@ -44,7 +45,7 @@ namespace Admin.Models
 
         public VagaViewModel(int id, string nome, string cep, string rua, string bairro, 
             string cidade, string uf, string hora, decimal valor, int profissional, string profissionalNome,
-            int numero, string total, int qtd, string complemento, string referencia, string dataEvento, int status, int idEmpresa, int idCliente, int areaAtuacao)
+            int numero, string total, int qtd, string complemento, string referencia, string dataEvento, int status, int idEmpresa, int idCliente, int areaAtuacao, string localOpt)
         {
             Id = id;
             Nome = nome;
@@ -67,6 +68,7 @@ namespace Admin.Models
             IdEmpresa = idEmpresa;
             IdCliente = idCliente;
             AreaAtuacao = areaAtuacao;
+            LocalOportunidade = localOpt;
         }
     }
 }
