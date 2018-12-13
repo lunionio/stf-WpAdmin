@@ -169,7 +169,7 @@ namespace Admin.Controllers
             {
                 var usuario = PixCoreValues.UsuarioLogado;
                 var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
-                var url = keyUrl + "/Seguranca/wpProfissionais/BuscarPorIds/" + usuario.idCliente + "/" +
+                var url = keyUrl + "/Seguranca/wpProfissionais/BuscarPorUsersIds/" + usuario.idCliente + "/" +
                     PixCoreValues.UsuarioLogado.IdUsuario;
 
                 var envio = new
@@ -329,8 +329,8 @@ namespace Admin.Controllers
             var op = GetOportunidade(optId);
             ViewBag.OptNome = op.Nome;
 
-            var profissionais = GetProfissionais(userXOportunidades.Select(x => x.UserId));
-            var users = GetUsers(profissionais.Select(x => x.Profissional.IdUsuario));
+            var users = GetUsers(userXOportunidades.Select(x => x.UserId));
+            var profissionais = GetProfissionais(users.Select(x => x.ID));
 
             IList<ProfissionalViewModel> models = new List<ProfissionalViewModel>();
 
@@ -391,8 +391,7 @@ namespace Admin.Controllers
             {
                 var usuario = PixCoreValues.UsuarioLogado;
                 var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
-                var url = keyUrl + "/Seguranca/WpOportunidades/CanditarOportunidade/" + usuario.idCliente + "/" +
-                    PixCoreValues.UsuarioLogado.IdUsuario;
+                var url = keyUrl + "/Seguranca/WpOportunidades/CanditarOportunidade/" + usuario.idCliente + "/" + usuario.IdUsuario;
 
                 var pServico = GetProfissionais(new List<int>() { userXOportunidade.UserId }).SingleOrDefault();
                 var user = GetUsers(new List<int>() { pServico.Profissional.IdUsuario }).SingleOrDefault();
@@ -448,10 +447,10 @@ namespace Admin.Controllers
                 if (userXOportunidade.StatusID == 1) //Aprovado
                 {
                     FinanceiroHelper.LancaTransacoes(op.Valor * -1, "16", 3,
-                        "16", 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado, op.Id);
+                        "16", 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado, Models.Financeiro.Status.Aprovado, op.Id);
 
                     FinanceiroHelper.LancaTransacoes(op.Valor, "16", 3,
-                        pServico.Profissional.ID.ToString(), 1, 2, 1, "Pagando contratado.", PixCoreValues.UsuarioLogado, op.Id, 2);
+                        pServico.Profissional.IdUsuario.ToString(), 1, 2, 1, "Pagando contratado.", PixCoreValues.UsuarioLogado, Models.Financeiro.Status.Bloqueado, op.Id, 2);
                 }
 
                 return JsonConvert.SerializeObject(new ProfissionalViewModel(pServico.Profissional.ID, user.Nome, pServico.Servico.Nome, pServico.Profissional.Telefone.Numero,
@@ -629,6 +628,7 @@ namespace Admin.Controllers
                     Hora = ck.DataCriacao,
                     Nome = user.Nome,
                     StatusPagamento = (int)extrato.StatusId,
+                    IdUsuario = user.ID,
                 };
 
                 response.Add(checkin);
@@ -664,8 +664,7 @@ namespace Admin.Controllers
         {
             var usuario = PixCoreValues.UsuarioLogado;
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
-            var url = keyUrl + "/Seguranca/WpFinanceiro/LiberarPagto/" + usuario.idCliente + "/" +
-                PixCoreValues.UsuarioLogado.IdUsuario;
+            var url = keyUrl + "/Seguranca/WpFinanceiro/LiberarPagto/" + usuario.idCliente + "/" + usuario.IdUsuario;
 
             var result = string.Empty;
             foreach (var model in models)
@@ -674,7 +673,7 @@ namespace Admin.Controllers
                 {
                     usuario.idCliente,
                     codigoExterno = model.OportunidadeId,
-                    destino = model.Id,
+                    destino = model.IdUsuario,
                     tipoDestino = 1
                 };
 

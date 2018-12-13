@@ -47,9 +47,9 @@
                                                 {
                                                     if (item.StatusId != null && item.StatusId == 2) //Aguardando
                                                     {
-                                                        <tr id="@item.Id">
+                                                        <tr id="@item.UsuarioId">
                                                             <td>
-                                                                @item.Id
+                                                                @item.UsuarioId
                                                             </td>
                                                             <td onclick="getProfissional(@item.Id)">
                                                                 @item.Nome
@@ -73,10 +73,10 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <a class="btn btn-link btn-success table-action view" onclick="aprovarProfissional(@item.UserXOportunidadeId, @item.OportunidadeId, @item.Id)">
+                                                                <a class="btn btn-link btn-success table-action view" onclick="aprovarProfissional(@item.UserXOportunidadeId, @item.OportunidadeId, @item.UsuarioId)">
                                                                     <i class="nc-icon nc-circle-09" />
                                                                 </a>
-                                                                <a class="btn btn-link btn-danger table-action view" onclick="reprovarProfissional(@item.UserXOportunidadeId, @item.OportunidadeId, @item.Id)">
+                                                                <a class="btn btn-link btn-danger table-action view" onclick="reprovarProfissional(@item.UserXOportunidadeId, @item.OportunidadeId, @item.UsuarioId)">
                                                                     <i class="nc-icon nc-simple-remove" />
                                                                 </a>
                                                             </td>
@@ -112,9 +112,9 @@
                                                 {
                                                     if (item.StatusId != null && item.StatusId == 1) //Aprovado
                                                     {
-                                                        <tr id="@item.Id">
+                                                        <tr id="@item.UsuarioId">
                                                             <td>
-                                                                @item.Id
+                                                                @item.UsuarioId
                                                             </td>
                                                             <td>
                                                                 @item.Nome
@@ -170,10 +170,10 @@
                                                             @item.Nome
                                                         </td>
                                                         <td>
-                                                            @item.Hora.ToString()
+                                                            @item.Hora.ToShortDateString()
                                                         </td>
                                                         <td>
-                                                            <select id="@item.OportunidadeId" class="form-control" onchange="guardaCache(@item.OportunidadeId, @item.Id)">
+                                                            <select id="@item.OportunidadeId" class="form-control" onchange="guardaCache(@item.OportunidadeId, @item.IdUsuario)">
                                                                 <option @( item.StatusPagamento.Equals(1) ? "selected" : "" ) value="1">Aprovado</option>
                                                                 <option @( item.StatusPagamento.Equals(2) ? "selected" : "" ) value="2">Bloquado</option>
                                                             </select>
