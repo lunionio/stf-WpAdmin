@@ -71,6 +71,7 @@ namespace Admin.Controllers
                 {
                     empresa = new
                     {
+                        tipoEmpresaId = 2,
                         model.Id,
                         CNAE_S = model.Cnae,
                         model.RazaoSocial,

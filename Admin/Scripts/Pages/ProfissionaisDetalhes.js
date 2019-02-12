@@ -1,5 +1,16 @@
 ﻿let documentos = [];
 
+function Loading(elemento) {
+    $(elemento).loading({
+        theme: 'dark',
+        message: 'Aguarde...'
+    });
+}
+
+function LoadingStop(elemento) {
+    $(elemento).loading('stop');
+}
+
 function guardaOpcao(dId) {
     documentos.forEach(function (item, index, array) {
         if (item.Id === dId) {
@@ -20,7 +31,7 @@ $('#btnAtualizar').on('click', function () {
 });
 
 function atualizar() {
-
+    Loading('body');
     documentos.forEach(function (item, index, array) {
         item.Observacoes = $('#observacoes').val();
     });
@@ -48,6 +59,8 @@ function atualizar() {
         else {
             alert(response);
         }
+
+        LoadingStop('body');
     });
 }
 

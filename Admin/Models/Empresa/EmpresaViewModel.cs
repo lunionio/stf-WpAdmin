@@ -31,6 +31,7 @@ namespace Admin.Models
         public string Email { get; set; }
         public int TelefoneId { get; set; }
         public int EnderecoId { get; set; }
+        public int TipoEmpresaId { get; set; }
 
         public EmpresaViewModel()
         {

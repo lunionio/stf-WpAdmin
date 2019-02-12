@@ -182,6 +182,11 @@ function getModalMatch(idOpt) {
                 "sSearch": "Pesquisar:",
             },
         });
+
+        $('.stars').barrating({
+            theme: 'fontawesome-stars-o',
+            readonly: true
+        });
     });
 }
 
@@ -216,12 +221,12 @@ function aprovarProfissional(userXOpt, optId, userId) {
                     table.row("#" + userId).remove().draw();
                     var contratados = $('#tbContratados').DataTable();
                     var row = contratados.row.add([
-                        p.Id,
+                        p.UsuarioId,
                         p.Nome,
                         p.Especialidade,
                         p.Endereco.Local,
                         p.Valor,
-                        '<select id="' + p.Avaliacao + '" disabled>' +
+                        '<select class="stars" id="' + p.Avaliacao + '" disabled>' +
                         '<option value = "' + Math.floor(p.Avaliacao) + '" >' + p.Avaliacao + '</option > ' +
                         '</select>'
                     ]).draw(false);
@@ -298,13 +303,13 @@ function getProfissional(id) {
 
 function guardaCache(optId, profissionalId) {
     pagamentosParaLiberar.forEach(function (item, index, array) {
-        if (item.Id === profissionalId) {
+        if (item.IdUsuario === profissionalId) {
             array.splice(index, 1);
         }
     });
 
     let pagamento = {
-        Id: profissionalId,
+        IdUsuario: profissionalId,
         OportunidadeId: optId,
         Status: $('#' + optId + ' option:selected').text(),
         StatusPagamento: $('#' + optId + ' option:selected').val()

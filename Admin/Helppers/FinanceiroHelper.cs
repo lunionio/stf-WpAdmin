@@ -91,7 +91,7 @@ namespace Admin.Helppers
                 var valor2 = vaga.Valor;
 
                 var extrato2 = new Extrato(valor2, 2, 1, usuario.idEmpresa.ToString(),
-                    "16", vaga.ID, Status.Bloqueado)
+                    "50", vaga.ID, Status.Bloqueado)
                 {
                     Ativo = true,
                     DataCriacao = DateTime.UtcNow,

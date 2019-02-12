@@ -340,8 +340,8 @@ namespace Admin.Controllers
                 var model = new ProfissionalViewModel(item.Profissional.ID, user, item.Servico.Nome, item.Profissional.Telefone.Numero,
                     item.Profissional.Telefone.ID, item.Profissional.DataNascimento.ToShortDateString(), item.Profissional.Email, item.Profissional.IdUsuario, item.Profissional.Endereco)
                 {
-                    StatusId = userXOportunidades.FirstOrDefault(x => x.UserId.Equals(item.Profissional.ID))?.Status.ID,
-                    UserXOportunidadeId = userXOportunidades.FirstOrDefault(x => x.UserId.Equals(item.Profissional.ID))?.ID,
+                    StatusId = userXOportunidades.FirstOrDefault(x => x.UserId.Equals(item.Profissional.IdUsuario))?.Status.ID,
+                    UserXOportunidadeId = userXOportunidades.FirstOrDefault(x => x.UserId.Equals(item.Profissional.IdUsuario))?.ID,
                     OportunidadeId = op.Id,
                     Valor = op.Valor,
                     Avaliacao = item.Profissional.Avaliacao,
@@ -446,10 +446,10 @@ namespace Admin.Controllers
 
                 if (userXOportunidade.StatusID == 1) //Aprovado
                 {
-                    FinanceiroHelper.LancaTransacoes(op.Valor * -1, "16", 3,
-                        "16", 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado, Models.Financeiro.Status.Aprovado, op.Id);
+                    FinanceiroHelper.LancaTransacoes(op.Valor * -1, "50", 3,
+                        "50", 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado, Models.Financeiro.Status.Aprovado, op.Id);
 
-                    FinanceiroHelper.LancaTransacoes(op.Valor, "16", 3,
+                    FinanceiroHelper.LancaTransacoes(op.Valor, "50", 3,
                         pServico.Profissional.IdUsuario.ToString(), 1, 2, 1, "Pagando contratado.", PixCoreValues.UsuarioLogado, Models.Financeiro.Status.Bloqueado, op.Id, 2);
                 }
 
@@ -618,8 +618,8 @@ namespace Admin.Controllers
             foreach (var item in profissionais)
             {
                 var user = users.FirstOrDefault(u => u.ID.Equals(item.Profissional.IdUsuario));
-                var ck = result.FirstOrDefault(c => c.IdUsuario.Equals(item.Profissional.ID));
-                var extrato = extratos.FirstOrDefault(e => e.Destino.Equals(item.Profissional.ID.ToString()));
+                var ck = result.FirstOrDefault(c => c.IdUsuario.Equals(item.Profissional.IdUsuario));
+                var extrato = extratos.FirstOrDefault(e => e.Destino.Equals(item.Profissional.IdUsuario.ToString()));
 
                 var checkin = new CheckInViewModel()
                 {
