@@ -98,6 +98,25 @@
                                 </div>
                             </div>
                         </fieldset>
+
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-sm-2 control-label">Agência</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="agencia" name="agencia" value="@Model.DadosBancarios.Agencia" disabled="disabled" class="form-control">
+                                    </div>
+                                    <label class="col-sm-2 control-label">Conta</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="conta" name="conta" value="@Model.DadosBancarios.Conta" disabled="disabled" class="form-control">
+                                    </div>
+                                    <label class="col-sm-2 control-label">Banco</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="banco" name="banco" value="@Model.DadosBancarios.Banco" disabled="disabled" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
             </div>
@@ -120,6 +139,8 @@
                                 <div style="margin-left:15px">
                                     <p class="card-text">
                                         <strong>@item.Data</strong>
+                                        <br />
+                                        <strong>@item.NumeroArquivo</strong>
                                     </p>
 
                                     <select onchange="guardaOpcao(@item.Id)" id="@item.Id" data-title="Selecione" name="currency"

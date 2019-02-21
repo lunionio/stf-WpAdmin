@@ -30,8 +30,13 @@ namespace Admin.Controllers
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
             var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
+            var envio = new
+            {
+                usuario.idCliente,
+            };
+
             var helper = new ServiceHelper();
-            var empresas = helper.Get<IEnumerable<Empresa>>(url);
+            var empresas = helper.Post<IEnumerable<Empresa>>(url, envio).Where(e => e.ID != 52 && e.ID != 53);
 
             IList<EmpresaViewModel> models = new List<EmpresaViewModel>();
 
@@ -99,7 +104,7 @@ namespace Admin.Controllers
                     creditoViewModel.EmpresaId = empresa?.Id;
                     creditoViewModel.NaturezaId = naturezas.FirstOrDefault(e => e.Nome.Equals(creditoViewModel.Natureza))?.ID;
 
-                    FinanceiroHelper.InserirSaldo(creditoViewModel.Valor, "50", 
+                    FinanceiroHelper.InserirSaldo(creditoViewModel.Valor, "52", 
                         creditoViewModel.EmpresaId.ToString(), (int)creditoViewModel.NaturezaId, 1, 
                         creditoViewModel.Descricao, PixCoreValues.UsuarioLogado, empresa?.Email);
 
@@ -112,7 +117,7 @@ namespace Admin.Controllers
                             3, creditoViewModel.EmpresaId.ToString(), 3, 8, 1, "Pagamento de taxa.", PixCoreValues.UsuarioLogado);
 
                         FinanceiroHelper.LancaTransacoes(valor, creditoViewModel.EmpresaId.ToString(),
-                            3, "51", 2, 8, 1, "Pagamento de taxa.", PixCoreValues.UsuarioLogado);
+                            3, "53", 2, 8, 1, "Pagamento de taxa.", PixCoreValues.UsuarioLogado);
                     }
 
                     ModelState.Clear();

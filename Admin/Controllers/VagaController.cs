@@ -277,8 +277,13 @@ namespace Admin.Controllers
             var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
             var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
+            var envio = new
+            {
+                usuario.idCliente,
+            };
+
             var helper = new ServiceHelper();
-            var empresas = helper.Get<IList<Empresa>>(url);
+            var empresas = helper.Post<IList<Empresa>>(url, envio).Where(e => e.ID != 52 && e.ID != 53);
 
             IList<EmpresaViewModel> models = new List<EmpresaViewModel>();
 
@@ -446,10 +451,10 @@ namespace Admin.Controllers
 
                 if (userXOportunidade.StatusID == 1) //Aprovado
                 {
-                    FinanceiroHelper.LancaTransacoes(op.Valor * -1, "50", 3,
-                        "50", 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado, Models.Financeiro.Status.Aprovado, op.Id);
+                    FinanceiroHelper.LancaTransacoes(op.Valor * -1, "52", 3,
+                        "52", 3, 2, 2, "Pagando contratado.", PixCoreValues.UsuarioLogado, Models.Financeiro.Status.Aprovado, op.Id);
 
-                    FinanceiroHelper.LancaTransacoes(op.Valor, "50", 3,
+                    FinanceiroHelper.LancaTransacoes(op.Valor, "52", 3,
                         pServico.Profissional.IdUsuario.ToString(), 1, 2, 1, "Pagando contratado.", PixCoreValues.UsuarioLogado, Models.Financeiro.Status.Bloqueado, op.Id, 2);
                 }
 

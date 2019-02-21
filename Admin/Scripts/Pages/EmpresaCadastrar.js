@@ -171,7 +171,7 @@ function preencherEndereco(cep) {
     var settings = {
         "async": true,
         "crossDomain": true,
-        "url": "http://seguranca.mundowebpix.com.br:5300/api/seguranca/endereco/BuscarEnderecoPorCep/2/999",
+        "url": "/Enderecos/BuscarEnderecoPorCep",
         "method": "POST",
         "headers": {
             "Content-Type": "application/json",

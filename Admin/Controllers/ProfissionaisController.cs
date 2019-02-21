@@ -58,7 +58,7 @@ namespace Admin.Controllers
 
             var ret = new ProfissionalViewModel(response.Profissional.ID, user.Nome, response.Nome, response.Profissional.Telefone.Numero, response.Profissional.Telefone.ID, 
                 response.Profissional.DataNascimento.ToString(), response.Profissional.Email,
-                response.Profissional.IdUsuario, response.Profissional.Endereco){ DataCriacao = response.Profissional.DataCriacao, JobQuantidade = jobs };
+                response.Profissional.IdUsuario, response.Profissional.Endereco){ DataCriacao = response.Profissional.DataCriacao, JobQuantidade = jobs, UsuarioId = user.ID };
 
             var docs = GetDocumentos(ret.Id);
 
@@ -67,7 +67,7 @@ namespace Admin.Controllers
             foreach (var item in docs)
             {
                 models.Add(new DocumentoViewModel(item.ID, item.DocumentoTipo.Nome, item.Tipo,
-                    item.DocumentoStatusID, item.DocumentoStatus.Nome, item.DataCriacao.ToString(), item.Arquivo)
+                    item.DocumentoStatusID, item.DocumentoStatus.Nome, item.DataCriacao.ToString(), item.Arquivo, item.Numero)
                 { Observacoes = item.StatusObservacoes?.Observacoes });
             }
 
@@ -76,6 +76,9 @@ namespace Admin.Controllers
 
             var statuses = GetAllDocumentoStatus();
             ViewBag.Statuses = statuses;
+
+            var dados = GetDadosBancarios(response.Profissional.ID);
+            ret.DadosBancarios = dados == null ? new DadosBancarios() : dados;
 
             return View(ret);
         }
@@ -268,6 +271,50 @@ namespace Admin.Controllers
             var r = helper.Post<object>(url, envio);
 
             return Convert.ToInt32(r);
+        }
+
+        public DadosBancarios GetDadosBancarios(int idProfissional)
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/WpFinanceiro/BuscarDadosBancariosPorUsuario/" + usuario.idCliente + "/" + usuario.IdUsuario;
+                
+            var envio = new
+            {
+                usuario.idCliente,
+                codigoExterno = idProfissional,
+            };
+
+            var helper = new ServiceHelper();
+            var dados = helper.Post<DadosBancarios>(url, envio);
+
+            return dados;
+        }
+
+        [HttpGet]
+        public ActionResult BuscarServicoTipo()
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/wpProfissionais/BuscarServicoTipo/" + usuario.idCliente + "/" + usuario.IdUsuario;
+
+            var helper = new ServiceHelper();
+            var result = helper.Get<object>(url);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult BuscarServico()
+        {
+            var usuario = PixCoreValues.UsuarioLogado;
+            var keyUrl = ConfigurationManager.AppSettings["UrlAPI"].ToString();
+            var url = keyUrl + "/Seguranca/wpProfissionais/BuscarServico/" + usuario.idCliente + "/" + usuario.IdUsuario;
+
+            var helper = new ServiceHelper();
+            var result = helper.Get<object>(url);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

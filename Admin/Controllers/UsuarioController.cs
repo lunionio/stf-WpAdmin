@@ -57,7 +57,7 @@ namespace Admin.Controllers
             var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
             var helper = new ServiceHelper();
-            var empresas = helper.Get<IEnumerable<Empresa>>(url);
+            var empresas = helper.Get<IEnumerable<Empresa>>(url).Where(e => e.ID != 52 && e.ID != 53); ;
 
             IList<EmpresaViewModel> models = new List<EmpresaViewModel>();
 
@@ -164,6 +164,8 @@ namespace Admin.Controllers
 
 
             var usuarioFiltrado = GetUsuario((int)id, _idCliente);
+            usuarioFiltrado.Empresa = empresas.FirstOrDefault(e => e.Id.Equals(usuarioFiltrado.IdEmpresa))?.Nome;
+            usuarioFiltrado.Perfil = result.FirstOrDefault(p => p.ID.Equals(usuarioFiltrado.UsuarioXPerfil.IdPerfil))?.Nome;
 
             return View("Cadastro", usuarioFiltrado);
         }
@@ -428,8 +430,6 @@ namespace Admin.Controllers
                 var result = helper.Post<UsuarioViewModel>(serverUrl, envio);
 
                 result.UsuarioXPerfil = GetPerfilUsuario(result.ID);
-
-                result.Perfil = GetPerfil(result.UsuarioXPerfil.IdPerfil).Nome;
 
                 return result;
             }

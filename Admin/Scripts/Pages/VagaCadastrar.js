@@ -113,7 +113,7 @@ function VagaViewModel() {
 
 function getAreaAtuacao() {
 
-    var Url = "http://seguranca.mundowebpix.com.br:5300/api/seguranca/wpProfissionais/BuscarServicoTipo/1/999";
+    var Url = "/Profissionais/BuscarServicoTipo";
     var settings = {
         "async": true,
         "crossDomain": true,
@@ -144,7 +144,7 @@ function getCep() {
 
 function getProfissionalPorAtuacao(id) {
 
-    var Url = "http://seguranca.mundowebpix.com.br:5300/api/seguranca/wpProfissionais/BuscarServico/1/999";
+    var Url = "/Profissionais/BuscarServico";
     var settings = {
         "async": true,
         "crossDomain": true,
@@ -291,7 +291,7 @@ function preencherEndereco(cep) {
     var settings = {
         "async": true,
         "crossDomain": true,
-        "url": "http://seguranca.mundowebpix.com.br:5300/api/seguranca/endereco/BuscarEnderecoPorCep/2/999",
+        "url": "/Enderecos/BuscarEnderecoPorCep",
         "method": "POST",
         "headers": {
             "Content-Type": "application/json",

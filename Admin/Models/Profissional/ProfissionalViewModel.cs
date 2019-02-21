@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace Admin.Models
@@ -53,5 +54,8 @@ namespace Admin.Models
         public int OportunidadeId { get; set; }
         public int? UserXOportunidadeId { get; set; }
         public decimal Valor { get; set; }
+
+        [JsonIgnore]
+        public DadosBancarios DadosBancarios { get; set; }
     }
 }
