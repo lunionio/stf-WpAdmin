@@ -40,7 +40,7 @@ namespace Admin.Controllers
             }
             catch (Exception e)
             {
-                TempData["LoginMessage"] = "Usuário ou senha invalida";
+                TempData["LoginMessage"] = e.StackTrace;
                 return RedirectToAction("Index", "Login");
             }
         }
