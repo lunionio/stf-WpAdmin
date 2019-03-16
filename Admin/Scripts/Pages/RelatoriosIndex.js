@@ -75,8 +75,8 @@ $('#mostrar').click(function () {
                     "<td>" + element.Cliente + "</td>" +
                     "<td>" + element.Cnpj + "</td>" +
                     "<td>" + element.Titulo + "</td>" +
-                    "<td>" + element.CriadoEm + "</td>" +
-                    "<td>" + element.DataEvento + "</td>" +
+                    "<td>" + element.Criado + "</td>" +
+                    "<td>" + element.Data + "</td>" +
                     "<td>" + element.Endereco + "</td>" +
                     "<td>" + element.Categoria + "</td>" +
                     "<td>" + element.Profissional + "</td>" +
@@ -114,8 +114,8 @@ $('#mostrar').click(function () {
                     "<td>" + element.Valor + "</td>" +
                     "<td>" + element.NaturezaOperacao + "</td>" +
                     "<td>" + element.Usuario + "</td>" +
-                    "<td>" + element.Data + "</td>" +
-                    "<td>" + element.Hora + "</td>" +
+                    "<td>" + element.DataExtrato + "</td>" +
+                    "<td>" + element.HoraExtrato + "</td>" +
                     "<td>" + element.Status + "</td>" +
                     "</tr>");
             });
