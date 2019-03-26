@@ -57,7 +57,7 @@ namespace Admin.Controllers
             var jobs = GetJobQuantidade(response.Profissional.ID);
 
             var ret = new ProfissionalViewModel(response.Profissional.ID, user.Nome, response.Nome, response.Profissional.Telefone.Numero, response.Profissional.Telefone.ID, 
-                response.Profissional.DataNascimento.ToString(), response.Profissional.Email,
+                response.Profissional.DataNascimento.ToShortDateString(), response.Profissional.Email,
                 response.Profissional.IdUsuario, response.Profissional.Endereco){ DataCriacao = response.Profissional.DataCriacao, JobQuantidade = jobs, UsuarioId = user.ID };
 
             var docs = GetDocumentos(ret.Id);
@@ -149,19 +149,23 @@ namespace Admin.Controllers
                 foreach (var item in documentos)
                 {
                     var doc = profissional.Documentos.FirstOrDefault(d => d.Id.Equals(item.ID));
-                    var pDocStatus = doc.Status;
-                    item.DocumentoStatusID = statuses.FirstOrDefault(s => s.Nome.Equals(pDocStatus)).ID;
 
-                    item.StatusObservacoes = new DocStatusObservacoes(item.ID, doc.Observacoes);
-
-                    if (item.DocumentoStatusID == 3) //Reprovado
+                    if (doc != null)
                     {
-                        usuario.Status = (int)UserStatus.Inativo;
-                    }
+                        var pDocStatus = doc.Status;
+                        item.DocumentoStatusID = statuses.FirstOrDefault(s => s.Nome.Equals(pDocStatus)).ID;
 
-                    if (item.DocumentoStatusID == 1) //Pendente
-                    {
-                        usuario.Status = (int)UserStatus.Inativo;
+                        item.StatusObservacoes = new DocStatusObservacoes(item.ID, doc.Observacoes);
+
+                        if (item.DocumentoStatusID == 3) //Reprovado
+                        {
+                            usuario.Status = (int)UserStatus.Inativo;
+                        }
+
+                        if (item.DocumentoStatusID == 1) //Pendente
+                        {
+                            usuario.Status = (int)UserStatus.Inativo;
+                        }
                     }
                 }                
                 

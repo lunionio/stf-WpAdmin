@@ -11,7 +11,7 @@
     <div class="col-md-12">
         <div id="miolo" class="card strpied-tabled-with-hover card-wizard">
             <div class="card-header text-center">
-                <h4 class="text-center">CONTROLE DE DOCUMENTOS</h4>
+                <h4 class="text-center">Cadastro de Profissional</h4>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -49,13 +49,13 @@
                                     <div class="col-sm-2">
                                         <input type="text" id="nome" name="Nome" value="@Model.DataNascimento" class="form-control">
                                     </div>
-                                    <label class="col-sm-2 control-label">Idade</label>
+                                    <label class="col-sm-1 control-label">Idade</label>
                                     <div class="col-sm-2">
                                         <input type="text" id="nome" name="Nome" value="18" disabled="disabled" class="form-control">
                                     </div>
-                                    <label class="col-sm-2 control-label">Cadastrado em:</label>
-                                    <div class="col-sm-2">
-                                        <input type="text" id="nome" name="Nome" value="@Model.DataCriacao.ToString()" disabled="disabled" class="form-control">
+                                    <label class="col-sm-2 control-label">Cadastrado em</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="nome" name="Nome" value="@Model.DataCriacao.ToString("dd/MM/yyyy HH:mm")" disabled="disabled" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -91,7 +91,7 @@
                         <fieldset>
                             <div class="form-group">
                                 <div class="row">
-                                    <label class="col-sm-2 control-label">Quantidade de trabaçhos realizados</label>
+                                    <label class="col-sm-2 control-label">Trabalhos Realizados</label>
                                     <div class="col-sm-10">
                                         <input disabled type="text" id="jobs" name="jobs" value="@( $"{ Model.JobQuantidade }" )" class="form-control">
                                     </div>
@@ -106,12 +106,12 @@
                                     <div class="col-sm-2">
                                         <input type="text" id="agencia" name="agencia" value="@Model.DadosBancarios.Agencia" disabled="disabled" class="form-control">
                                     </div>
-                                    <label class="col-sm-2 control-label">Conta</label>
+                                    <label class="col-sm-1 control-label">Conta</label>
                                     <div class="col-sm-2">
                                         <input type="text" id="conta" name="conta" value="@Model.DadosBancarios.Conta" disabled="disabled" class="form-control">
                                     </div>
                                     <label class="col-sm-2 control-label">Banco</label>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-3">
                                         <input type="text" id="banco" name="banco" value="@Model.DadosBancarios.Banco" disabled="disabled" class="form-control">
                                     </div>
                                 </div>
@@ -127,20 +127,27 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card stacked-form">
+            <div class="card-header text-center">
+                <h4 class="text-center">Controle de Documentos</h4>
+            </div>
             <div class="card-body">
                 <div class="row">
                     @foreach (var item in Model.Documentos)
                     {
-                        <div class="col-md-3">
-                            <div class="card md-3 shadow-sm">
-                                <strong>@item.TipoNome</strong>
-                                    <img width="100%" height="auto" src="data:image/png;base64, @item.Arquivo" />
+                        <div class="col-md-6">
+                            <div class="card md-6 shadow-sm">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Tipo de Documento: @item.TipoNome</label>
+                                    </div>
+                                </div>
+                                <img onclick="zoomImg(@item.Arquivo)" style="width:100%; height:auto" src="data:image/png;base64, @item.Arquivo" />
                                 <br />
                                 <div style="margin-left:15px">
                                     <p class="card-text">
-                                        <strong>@item.Data</strong>
+                                        <label>Cadastrado em: @item.Data</label>
                                         <br />
-                                        <strong>@item.NumeroArquivo</strong>
+                                        <label>Número do Documento: @item.NumeroArquivo</label>
                                     </p>
 
                                     <select onchange="guardaOpcao(@item.Id)" id="@item.Id" data-title="Selecione" name="currency"
@@ -177,4 +184,9 @@
 @section Scripts
 {
     <script src="~/Scripts/Pages/ProfissionaisDetalhes.js"></script>
+    <script>
+        function zoomImg(arquivo) {
+            window.open('data:image/png;base64,' + arquivo)
+        }
+    </script>
 }

@@ -8,7 +8,7 @@ namespace Admin.Models.Financeiro
     public class CreditoViewModel
     {
         public string Empresa { get; set; }
-        public decimal Valor { get; set; }
+        public string Valor { get; set; }
         public string Natureza { get; set; }
         public string Descricao { get; set; }
         public decimal Taxa { get; set; }

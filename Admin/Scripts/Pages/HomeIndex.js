@@ -37,6 +37,14 @@ function GetSaldoEmpresas() {
         $.ajax(settings).done(function (response) {
             var table = "";
             table += " <table class='table'>";
+            table += " <thead>";
+            table += " <tr>";
+            table += " <th>ID</th>";
+            table += " <th>Nome</th>";
+            table += " <th>Saldo</th>";
+            table += " </tr>";
+            table += " </thead>";
+
             table += "<tbody>";
           
           

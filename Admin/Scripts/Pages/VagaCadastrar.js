@@ -71,7 +71,7 @@ function getFormData() {
 }
 
 function aplicarMascaras() {
-    $('#data').mask('00/00/0000');
+    //$('#data').mask('00/00/0000');
     $('#numero').mask('9999');
     $('#cep').mask('99999-999');
 }
@@ -304,12 +304,12 @@ function preencherEndereco(cep) {
 
     LoadingInit('body');
     $.ajax(settings).done(function (response) {
+        console.log(response);
         if (response.endereco == '' || response.endereco == null) {
             demo.showNotification('top', 'right', 'Por favor digite um CEP válido!');
             limpaEndereco();
             desbloqueiaEndereco();
             $("#cep").focus();
-            LoadingStop('body');
         }
         else {
             $('#rua').val(response.endereco);
@@ -318,9 +318,10 @@ function preencherEndereco(cep) {
             $('#uf').val(response.uf);
 
             bloqueiaEndereco();
-            LoadingStop('body');
+
         }
 
+            LoadingStop('body');
     });
 
 
@@ -406,7 +407,18 @@ function valiidarData() {
     var data = getFormData().data;
     var date = new Date();
     var hoje = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
-    if (Date.parse(data) <= Date.parse(hoje)) {
+
+
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+
+    var output = date.getFullYear() + '/' +
+        (month < 10 ? '0' : '') + month + '/' +
+        (day < 10 ? '0' : '') + day;
+
+    console.log(output);
+    console.log(Date.parse(hoje));
+    if (Date.parse(data) <= Date.parse(output)) {
         demo.showNotification('top', 'right', 'Não é possível cadastrar oportunidades retroativas!');
         $('#data').val(" ");
         $('#data').focus();

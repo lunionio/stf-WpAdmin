@@ -71,7 +71,7 @@
                                     <div class="row">
                                         <label class="col-sm-2 control-label">NÚMERO </label>
                                         <div class="col-sm-2">
-                                            <input type="text" value="@Model.Numero" id="numero" name="Numero" placeholder="EX 500" class="form-control">
+                                            <input type="text" value="@Model.NumeroString" id="numero" name="Numero" placeholder="EX 500" class="form-control">
                                         </div>
                                         <label class="col-sm-3 control-label">COMPLEMENTO</label>
                                         <div class="col-sm-5">
@@ -118,6 +118,7 @@
                                         <label class="col-sm-2 control-label">DATA</label>
                                         <div class="col-md-2">
                                             <input type="date" id="data" required name="Data" class="form-control datepicker">
+                                            @*@Html.TextBoxFor(u => u.DataEvento, "{0:yyyy-MM-dd}", new { name = "data", id = "data", type = "date", @class = "form-control" })*@
                                         </div>
                                         <label class="col-sm-3 control-label">HORA DE INÍCIO</label>
                                         <div class="col-md-2">
@@ -142,7 +143,7 @@
                                         <div class="col-md-4">
                                             <input type="hidden" id="profissionalSelected" value="@Model.Profissional" />
                                             <select id="profissional" name="Profissional" data-title="Selecione"
-                                                    name="currency" class="selectpicker pnProfissional" data-style="btn-default btn-outline"
+                                                     class="selectpicker pnProfissional" data-style="btn-default btn-outline"
                                                     data-menu-style="dropdown-blue">
                                                 <option value="0">Selecione</option>
                                             </select>
@@ -160,7 +161,7 @@
                                             <input type="text" value="@Model.Valor" id="valor" required name="Valor" class="form-control">
                                         </div>
                                         <label class="pnValores col-sm-3 control-label">QTD PROFISSIONAIS</label>
-                                        <div class="pnValore[s col-md-1">
+                                        <div class="pnValores col-md-1">
                                             <input type="number" value="@Model.Qtd" id="qtd" placeholder="1" required ame="Qtd" class="form-control">
 
                                         </div>

@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
@@ -48,14 +50,18 @@ namespace Admin.Controllers
                     if (SaveEmpresa(viewModel))
                     {
                         ModelState.Clear();
-                        return RedirectToAction("Index", "Home");
+                        TempData["ErrorMessage"] = string.Empty;
+                        return RedirectToAction("Index", "Home"); 
                     }
                 }
+
+                TempData["ErrorMessage"] = "Revise os dados informados.";
 
                 return View("Cadastrar", viewModel);
             }
             catch (Exception e)
             {
+                TempData["ErrorMessage"] = "Não foi possível completar a operação.";
                 return View("Cadastrar", viewModel);
             }
         }
@@ -173,7 +179,7 @@ namespace Admin.Controllers
             var url = keyUrl + "/Seguranca/wpEmpresas/BuscarEmpresas/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
             var helper = new ServiceHelper();
-            var empresas = helper.Get<IEnumerable<Empresa>>(url);
+            var empresas = helper.Get<IEnumerable<Empresa>>(url).Where(e => e.ID != 52 && e.ID != 53);
 
             return Json(empresas, JsonRequestBehavior.AllowGet);
         }
@@ -206,7 +212,7 @@ namespace Admin.Controllers
                 Id = result.ID,
                 IdCliente = result.IdCliente,
                 Nome = result.Nome,
-                Numero = result.Endereco.NumeroLocal,
+                Numero = Convert.ToInt32(result.Endereco.NumeroLocal),
                 RazaoSocial = result.RazaoSocial,
                 Rua = result.Endereco.Local,
                 status = result.Status,

@@ -30,7 +30,7 @@ namespace Admin.Models
             Cidade = cidade;
             Bairro = bairro;
             Local = local;
-            NumeroLocal = numeroLocal;
+            NumeroLocal = numeroLocal.ToString();
             Complemento = complemento;
             IdUsuario = idUsuario;
         }
@@ -45,7 +45,7 @@ namespace Admin.Models
         public string Cidade { get; set; }
         public string Bairro { get; set; }
         public string Local { get; set; }
-        public int NumeroLocal { get; set; }
+        public string NumeroLocal { get; set; }
         public string Complemento { get; set; }
         public int IdUsuario { get; set; }
         public int OportunidadeId { get; set; }

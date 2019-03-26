@@ -39,6 +39,7 @@ namespace Admin.Controllers
         {
             vaga.status = 1;
             vaga.DataEvento = Convert.ToDateTime(vaga.Date);
+            vaga.Numero = Convert.ToInt32(vaga.NumeroString);
 
             if (FinanceiroHelper.VerifcaSaldoCliente(vaga.Valor, PixCoreValues.UsuarioLogado.idCliente, vaga.IdEmpresa, PixCoreValues.UsuarioLogado.IdUsuario))
             {
@@ -62,6 +63,7 @@ namespace Admin.Controllers
         public ActionResult PublicarMaisTarde(VagaViewModel vaga)
         {
             vaga.status = 2;
+            vaga.Numero = Convert.ToInt32(vaga.NumeroString);
 
             if (FinanceiroHelper.VerifcaSaldoCliente(vaga.Valor, PixCoreValues.UsuarioLogado.idCliente, vaga.IdEmpresa, PixCoreValues.UsuarioLogado.IdUsuario))
             {
@@ -118,7 +120,7 @@ namespace Admin.Controllers
             foreach (var o in oportunidades)
             {
                 vagas.Add(new VagaViewModel(o.ID, o.Nome, o.Endereco.CEP, o.Endereco.Local, o.Endereco.Bairro, o.Endereco.Cidade,
-                    o.Endereco.Estado, o.HoraInicio, o.Valor, o.TipoProfissional, o.DescProfissional, o.Endereco.NumeroLocal,
+                    o.Endereco.Estado, o.HoraInicio, o.Valor, o.TipoProfissional, o.DescProfissional, Convert.ToInt32(o.Endereco.NumeroLocal),
                     (o.Valor * o.Quantidade).ToString(), o.Quantidade, o.Endereco.Complemento, o.Endereco.Complemento, 
                     o.DataOportunidade.ToShortDateString(), o.Status, o.IdEmpresa, o.IdCliente, o.TipoServico, o.Endereco.LocalOportunidade)
                 {
@@ -303,7 +305,7 @@ namespace Admin.Controllers
                     Id = item.ID,
                     IdCliente = item.IdCliente,
                     Nome = item.Nome,
-                    Numero =item.Endereco.NumeroLocal,
+                    Numero = Convert.ToInt32(item.Endereco.NumeroLocal),
                     RazaoSocial = item.RazaoSocial,
                     Rua = item.Endereco.Local,
                     status = item.Status,
@@ -763,7 +765,7 @@ namespace Admin.Controllers
                 Id = result.ID,
                 IdCliente = result.IdCliente,
                 Nome = result.Nome,
-                Numero = result.Endereco.NumeroLocal,
+                Numero = Convert.ToInt32(result.Endereco.NumeroLocal),
                 RazaoSocial = result.RazaoSocial,
                 Rua = result.Endereco.Local,
                 status = result.Status,

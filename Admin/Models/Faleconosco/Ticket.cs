@@ -15,7 +15,10 @@ namespace Admin.Models.FaleConosco
         public string Email { get; set; }
         public IList<Atendimento> Atendimentos { get; set; }
         public string Numero { get; set; }
+        public string Data
+        {
+            get => DataCriacao.ToShortDateString();
+        }
 
-   
     }
 }

@@ -15,7 +15,7 @@ namespace Admin.Helppser
                 IdCliente = PixCoreValues.UsuarioLogado.idCliente,
                 IdUsuario = PixCoreValues.UsuarioLogado.IdUsuario,
                 Local = vaga.Rua,
-                NumeroLocal = vaga.Numero,
+                NumeroLocal = vaga.Numero.ToString(),
                 Ativo = true,
                 Bairro = vaga.Bairro,
                 Complemento = vaga.Complemento,

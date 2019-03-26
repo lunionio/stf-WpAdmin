@@ -16,6 +16,28 @@ function popularTabela() {
         for (var i = 0; i < response.length; i++) {
             adicionarLinhaTabela(response[i]);
         }
+
+        $("#tbEmpresas").DataTable({
+            "pagingType": "numbers",
+            "columnDefs": [{
+                "targets": '_all',
+                "orderable": true
+            }],
+            "dom": '<"top"f>rt' + "<'bottom col-sm-12'" +
+                "<'row'" +
+                "<'col-sm-6'l>" +
+                "<'col-sm-6'p>" +
+                ">" +
+                ">" + '<"clear">',
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+                "sZeroRecords": "Nada encontrado",
+                "sInfo": "Mostrando oágina _PAGE_ de _PAGES_",
+                "sInfoEmpty": "Nenhum dado para mostrar",
+                "sInfoFiltered": "(Filtrado de _MAX_ registros)",
+                "sSearch": "Pesquisar:"
+            }
+        });
         LoadingStop('body');
     });
 
@@ -30,7 +52,7 @@ function adicionarLinhaTabela(response) {
     cols += '<td>' + response.Telefone + '</td>';
     cols += '<td>';
     cols += '<a href="/Profissionais/Detalhes/' + response.Id + '" class="btn btnAcao btn-success btn-link btn-xs" data-original-title="Editar">';
-    cols += '<i class="nc-icon nc-credit-card" ></i >';
+    cols += '<i class="nc-icon nc-credit-card icon-bold" ></i >';
     cols += '</td>';
     newRow.append(cols); $("#tbEmpresas").append(newRow);
 }

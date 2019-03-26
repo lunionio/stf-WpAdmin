@@ -88,7 +88,7 @@ namespace Admin.Controllers
             var url = keyUrl + "/Seguranca/wpAtendimento/BuscarTickets/" + usuario.idCliente + "/" + PixCoreValues.UsuarioLogado.IdUsuario;
 
             var helper = new ServiceHelper();
-            var tickets = helper.Get<IEnumerable<object>>(url);
+            var tickets = helper.Get<IEnumerable<Ticket>>(url);
 
             return Json(tickets, JsonRequestBehavior.AllowGet);
         }

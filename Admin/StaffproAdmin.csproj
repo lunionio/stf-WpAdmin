@@ -243,6 +243,7 @@
     <Content Include="Content\Custom.css" />
     <Content Include="Content\demo.css" />
     <Content Include="Content\documentation.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fontawesome-stars-o.css" />
     <Content Include="Content\fontawesome-stars.css" />
     <Content Include="Content\jquery.loading.css" />
@@ -582,8 +583,11 @@
     <Content Include="Scripts\Plugins\jquery.dataTables.min.js" />
     <Content Include="Scripts\Plugins\jquery.loading.js" />
     <Content Include="Scripts\Plugins\jquery.mask.js" />
+    <Content Include="Scripts\Plugins\jquery.maskMoney.js" />
     <Content Include="Scripts\Plugins\jquery.validate.min.js" />
     <Content Include="Content\loading.css" />
+    <Content Include="Scripts\Plugins\jquery.zoom.js" />
+    <Content Include="Scripts\Plugins\jquery.zoom.min.js" />
     <Content Include="Scripts\Plugins\karma.conf.js" />
     <Content Include="Scripts\Plugins\loading.js" />
     <Content Include="Scripts\Plugins\moment.min.js" />

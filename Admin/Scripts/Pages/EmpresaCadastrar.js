@@ -41,7 +41,7 @@ function PublicarDepois() {
 
 function getFormData() {
     return {
-        //nome: $('#nome').val(),
+        email: $('#email').val(),
         cep: $('#cep').val(),
         rua: $('#rua').val(),
         bairro: $('#bairro').val(),
@@ -245,7 +245,7 @@ function controlarPaineis() {
 
 function validarCampos() {
     var form = getFormData();
-
+    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     //if (form.nome == "" || form.nome == null) {
     //    demo.showNotification('top', 'right', 'Campo nome é obrigatório!');
     //    $('#nome').focus();
@@ -260,6 +260,11 @@ function validarCampos() {
         demo.showNotification('top', 'right', 'Digite um numero para o endereço!');
         $('#numero').focus();
 
+        return null;
+    }
+    else if (regex.test(form.email) == false) {
+        demo.showNotification('top', 'right', 'Digite um e-mail válido!');
+        $('#email').focus();
         return null;
     }
     else

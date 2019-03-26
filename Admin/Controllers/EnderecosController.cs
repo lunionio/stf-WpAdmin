@@ -18,7 +18,7 @@ namespace Admin.Controllers
             var helper = new ServiceHelper();
             var endereco = helper.Post<object>(url, data);
 
-            return Json(endereco, JsonRequestBehavior.AllowGet);
+            return Json(endereco == null ? new object() : endereco, JsonRequestBehavior.AllowGet);
         }
     }
 }

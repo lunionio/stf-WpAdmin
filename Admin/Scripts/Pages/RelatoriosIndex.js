@@ -50,11 +50,11 @@ $('#mostrar').click(function () {
 
         if (r == 1) {
             $("#tbRelatorio > thead").append("<tr>" +
-                "<th>Codigo</th>" +
+                //"<th>Codigo</th>" +
                 "<th>Cliente</th>" +
                 "<th>Cnpj</th>" +
                 "<th>Titulo</th>" +
-                "<th>Criado Em</th>" +
+                //"<th>Criado Em</th>" +
                 "<th>Data Evento</th>" +
                 "<th>Endereco</th>" +
                 "<th>Categoria</th>" +
@@ -71,18 +71,18 @@ $('#mostrar').click(function () {
             $.each(result1, function (index, element, array) {
                 console.log(element);
                 $("#tbRelatorio > tbody").append("<tr>" +
-                    "<td>" + element.Codigo + "</td>" +
+                    //"<td>" + element.Codigo + "</td>" +
                     "<td>" + element.Cliente + "</td>" +
                     "<td>" + element.Cnpj + "</td>" +
                     "<td>" + element.Titulo + "</td>" +
-                    "<td>" + element.Criado + "</td>" +
+                    //"<td>" + element.Criado + "</td>" +
                     "<td>" + element.Data + "</td>" +
                     "<td>" + element.Endereco + "</td>" +
                     "<td>" + element.Categoria + "</td>" +
                     "<td>" + element.Profissional + "</td>" +
-                    "<td>" + element.Valor + "</td>" +
+                    "<td>R$: " + element.Valor + "</td>" +
                     "<td>" + element.Quantidade + "</td>" +
-                    "<td>" + element.Total + "</td>" +
+                    "<td>R$: " + element.Total + "</td>" +
                     "<td>" + element.Candidatos + "</td>" +
                     "<td>" + element.Aprovados + "</td>" +
                     "<td>" + element.Reprovados + "</td>" +
@@ -91,7 +91,7 @@ $('#mostrar').click(function () {
         }
         else if (r == 6) {
             $("#tbRelatorio > thead").append("<tr>" +
-                "<th>Codigo</th>" +
+                //"<th>Codigo</th>" +
                 "<th>Origem</th>" +
                 "<th>Destino</th>" +
                 "<th>Descrição</th>" +
@@ -107,11 +107,11 @@ $('#mostrar').click(function () {
             $.each(result2, function (index, element, array) {
 
                 $("#tbRelatorio > tbody").append("<tr>" +
-                    "<td>" + element.Codigo + "</td>" +
+                    //"<td>" + element.Codigo + "</td>" +
                     "<td>" + element.Origem + "</td>" +
                     "<td>" + element.Destino + "</td>" +
                     "<td>" + element.Descricao + "</td>" +
-                    "<td>" + element.Valor + "</td>" +
+                    "<td>RS: " + element.Valor + "</td>" +
                     "<td>" + element.NaturezaOperacao + "</td>" +
                     "<td>" + element.Usuario + "</td>" +
                     "<td>" + element.DataExtrato + "</td>" +
@@ -125,7 +125,7 @@ $('#mostrar').click(function () {
             "pagingType": "numbers",
             "columnDefs": [{
                 "targets": '_all',
-                "orderable": false,
+                "orderable": true,
             }],
             "dom": '<"top"f>rt' + "<'bottom col-sm-12'" +
                 "<'row'" +

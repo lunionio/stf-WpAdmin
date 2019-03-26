@@ -56,7 +56,7 @@ namespace Admin.Controllers
                     Id = item.ID,
                     IdCliente = item.IdCliente,
                     Nome = item.Nome,
-                    Numero = item.Endereco.NumeroLocal,
+                    Numero = Convert.ToInt32(item.Endereco.NumeroLocal),
                     RazaoSocial = item.RazaoSocial,
                     Rua = item.Endereco.Local,
                     status = item.Status,
@@ -104,14 +104,14 @@ namespace Admin.Controllers
                     creditoViewModel.EmpresaId = empresa?.Id;
                     creditoViewModel.NaturezaId = naturezas.FirstOrDefault(e => e.Nome.Equals(creditoViewModel.Natureza))?.ID;
 
-                    FinanceiroHelper.InserirSaldo(creditoViewModel.Valor, "52", 
+                    FinanceiroHelper.InserirSaldo(Convert.ToDecimal(creditoViewModel.Valor), "52", 
                         creditoViewModel.EmpresaId.ToString(), (int)creditoViewModel.NaturezaId, 1, 
                         creditoViewModel.Descricao, PixCoreValues.UsuarioLogado, empresa?.Email);
 
                     if(creditoViewModel.Taxa > 0)
                     {
                         var taxa = creditoViewModel.Taxa / 100;
-                        var valor = creditoViewModel.Valor * taxa;
+                        var valor = Convert.ToDecimal(creditoViewModel.Valor) * taxa;
 
                         FinanceiroHelper.LancaTransacoes(valor * -1, creditoViewModel.EmpresaId.ToString(),
                             3, creditoViewModel.EmpresaId.ToString(), 3, 8, 1, "Pagamento de taxa.", PixCoreValues.UsuarioLogado);
@@ -121,15 +121,16 @@ namespace Admin.Controllers
                     }
 
                     ModelState.Clear();
+                    TempData["Message"] = "Créditos inseridos com sucesso";
                     return View("Index");
                 }
 
-                ViewBag.ErrorMessage = "Preencha todos os campos.";
+                TempData["Message"] = "Preencha todos os campos.";
                 return View("Index");
             }
             catch(Exception e)
             {
-                ViewBag.ErrorMessage = "Não foi possível lançar os créditos.";
+                TempData["Message"] = "Não foi possível lançar os créditos.";
                 return View("Index");
             }
         }

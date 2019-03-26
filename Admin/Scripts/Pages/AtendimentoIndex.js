@@ -6,7 +6,7 @@ $('#acao').on('click', function () {
 });
 
 function popularTabela() {
-    LoadingInit('.content');
+    LoadingInit('body');
     var Url = "GetAtendimentos";
     var settings = {
         "async": true,
@@ -20,21 +20,64 @@ function popularTabela() {
             adicionarLinhaTabela(response[i]);
             adicionarLinhaTabelaFechada(response[i]);
         }
-        LoadingStop('.content');
+        $("#tbAtendimentoFechado").DataTable({
+            "pagingType": "numbers",
+            "columnDefs": [{
+                "targets": '_all',
+                "orderable": true,
+            }],
+            "dom": '<"top"f>rt' + "<'bottom col-sm-12'" +
+                "<'row'" +
+                "<'col-sm-6'l>" +
+                "<'col-sm-6'p>" +
+                ">" +
+                ">" + '<"clear">',
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+                "sZeroRecords": "Nada encontrado",
+                "sInfo": "Mostrando oágina _PAGE_ de _PAGES_",
+                "sInfoEmpty": "Nenhum dado para mostrar",
+                "sInfoFiltered": "(Filtrado de _MAX_ registros)",
+                "sSearch": "Pesquisar:",
+            },
+        });
+
+        $("#tbAtendimento").DataTable({
+            "pagingType": "numbers",
+            "columnDefs": [{
+                "targets": '_all',
+                "orderable": true,
+            }],
+            "dom": '<"top"f>rt' + "<'bottom col-sm-12'" +
+                "<'row'" +
+                "<'col-sm-6'l>" +
+                "<'col-sm-6'p>" +
+                ">" +
+                ">" + '<"clear">',
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+                "sZeroRecords": "Nada encontrado",
+                "sInfo": "Mostrando oágina _PAGE_ de _PAGES_",
+                "sInfoEmpty": "Nenhum dado para mostrar",
+                "sInfoFiltered": "(Filtrado de _MAX_ registros)",
+                "sSearch": "Pesquisar:",
+            },
+        });
+        LoadingStop('body');
     });
 
 }
 
 function adicionarLinhaTabela(response) {
-    if (response.ticketStatusID == 1) {
+    if (response.TicketStatusID == 1) {
         var newRow = $("<tr>"); var cols = "";
-        cols += '<td>' + response.numero + '</td>';
-        cols += '<td>' + response.email + '</td>';
-        cols += '<td>' + response.tipo.descricao + '</td>';
-        cols += '<td>' + response.dataCriacao + '</td>';
-        cols += '<td>' + response.origem + '</td>';
+        cols += '<td>' + response.Numero + '</td>';
+        cols += '<td>' + response.Email + '</td>';
+        cols += '<td>' + response.Tipo.Nome + '</td>';
+        cols += '<td>' + response.Data + '</td>';
+        cols += '<td>' + response.Origem + '</td>';
         cols += '<td>';
-        cols += '<a href="Editar/' + response.id + '" id="acao" class="btn btnAcao btn-success btn-link btn-xs" data-original-title="Editar">';
+        cols += '<a href="Editar/' + response.ID + '" id="acao" class="btn btnAcao btn-success btn-link btn-xs" data-original-title="Editar">';
         cols += '<i class="nc-icon nc-credit-card" ></i >';
         cols += '</td>';
         newRow.append(cols); $("#tbAtendimento").append(newRow);
@@ -42,15 +85,15 @@ function adicionarLinhaTabela(response) {
 }
 
 function adicionarLinhaTabelaFechada(response) {
-    if (response.ticketStatusID == 3) {
+    if (response.TicketStatusID == 3) {
         var newRow = $("<tr>"); var cols = "";
-        cols += '<td>' + response.numero + '</td>';
-        cols += '<td>' + response.email + '</td>';
-        cols += '<td>' + response.tipo.descricao + '</td>';
-        cols += '<td>' + response.dataCriacao + '</td>';
-        cols += '<td>' + response.origem + '</td>';
+        cols += '<td>' + response.Numero + '</td>';
+        cols += '<td>' + response.Email + '</td>';
+        cols += '<td>' + response.Tipo.Nome + '</td>';
+        cols += '<td>' + response.Data + '</td>';
+        cols += '<td>' + response.Origem + '</td>';
         cols += '<td>';
-        cols += '<a href="Editar/' + response.id + '" class="btn btnAcao btn-success btn-link btn-xs" data-original-title="Editar">';
+        cols += '<a href="Editar/' + response.ID + '" class="btn btnAcao btn-success btn-link btn-xs" data-original-title="Editar">';
         cols += '<i class="nc-icon nc-credit-card" ></i >';
         cols += '</td>';
         newRow.append(cols); $("#tbAtendimentoFechado").append(newRow);

@@ -77,7 +77,7 @@ namespace Admin.Controllers
                     Id = result.ID,
                     IdCliente = result.IdCliente,
                     Nome = result.Nome,
-                    Numero = result.Endereco.NumeroLocal,
+                    Numero = Convert.ToInt32(result.Endereco.NumeroLocal),
                     RazaoSocial = result.RazaoSocial,
                     Rua = result.Endereco.Local,
                     status = result.Status,

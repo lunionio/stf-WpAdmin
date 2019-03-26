@@ -27,10 +27,32 @@ function popularTabela() {
             cols += '<i class="nc-icon nc-credit-card" ></i >';
 
             cols += '<a href="Excluir/' + response.ID + '" rel="tooltip" title="Excluir" class="btn btnAcao btn-danger btn-link btn-xs" data-original-title="Remover">';
-            cols += '<i class="nc-icon nc-simple-remove" ></i></a>';
+            cols += '<i class="nc-icon nc-simple-remove icon-bold" ></i></a>';
             cols += '</td>';
             newRow.append(cols); $("#tbEmpresas").append(newRow);
         }
+
+        $("#tbEmpresas").DataTable({
+            "pagingType": "numbers",
+            "columnDefs": [{
+                "targets": '_all',
+                "orderable": true,
+            }],
+            "dom": '<"top"f>rt' + "<'bottom col-sm-12'" +
+                "<'row'" +
+                "<'col-sm-6'l>" +
+                "<'col-sm-6'p>" +
+                ">" +
+                ">" + '<"clear">',
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+                "sZeroRecords": "Nada encontrado",
+                "sInfo": "Mostrando oágina _PAGE_ de _PAGES_",
+                "sInfoEmpty": "Nenhum dado para mostrar",
+                "sInfoFiltered": "(Filtrado de _MAX_ registros)",
+                "sSearch": "Pesquisar:",
+            },
+        });
         LoadingStop('body');
     });
 
