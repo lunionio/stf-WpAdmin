@@ -90,6 +90,8 @@ namespace Admin.Controllers
         {
             try
             {
+                creditoViewModel.Taxa = Convert.ToDecimal(creditoViewModel.TaxaString);
+
                 var naturezas = GetNaturezas();
                 var empresas = GetEmpresas();
 

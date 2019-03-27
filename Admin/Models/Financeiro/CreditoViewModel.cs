@@ -12,6 +12,7 @@ namespace Admin.Models.Financeiro
         public string Natureza { get; set; }
         public string Descricao { get; set; }
         public decimal Taxa { get; set; }
+        public string TaxaString { get; set; }
 
         public int? EmpresaId { get; set; }
         public int? NaturezaId { get; set; }
