@@ -5,6 +5,7 @@ using Admin.Models.Financeiro;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -90,7 +91,7 @@ namespace Admin.Controllers
         {
             try
             {
-                creditoViewModel.Taxa = Convert.ToDecimal(creditoViewModel.TaxaString);
+                creditoViewModel.Taxa = decimal.Parse(creditoViewModel.TaxaString, CultureInfo.GetCultureInfo("pt-BR"));
 
                 var naturezas = GetNaturezas();
                 var empresas = GetEmpresas();
@@ -106,14 +107,14 @@ namespace Admin.Controllers
                     creditoViewModel.EmpresaId = empresa?.Id;
                     creditoViewModel.NaturezaId = naturezas.FirstOrDefault(e => e.Nome.Equals(creditoViewModel.Natureza))?.ID;
 
-                    FinanceiroHelper.InserirSaldo(Convert.ToDecimal(creditoViewModel.Valor), "52", 
+                    FinanceiroHelper.InserirSaldo(decimal.Parse(creditoViewModel.Valor, CultureInfo.GetCultureInfo("pt-BR")), "52", 
                         creditoViewModel.EmpresaId.ToString(), (int)creditoViewModel.NaturezaId, 1, 
                         creditoViewModel.Descricao, PixCoreValues.UsuarioLogado, empresa?.Email);
 
                     if(creditoViewModel.Taxa > 0)
                     {
                         var taxa = creditoViewModel.Taxa / 100;
-                        var valor = Convert.ToDecimal(creditoViewModel.Valor) * taxa;
+                        var valor = decimal.Parse(creditoViewModel.Valor, CultureInfo.GetCultureInfo("pt-BR")) * taxa;
 
                         FinanceiroHelper.LancaTransacoes(valor * -1, creditoViewModel.EmpresaId.ToString(),
                             3, creditoViewModel.EmpresaId.ToString(), 3, 8, 1, "Pagamento de taxa.", PixCoreValues.UsuarioLogado);
