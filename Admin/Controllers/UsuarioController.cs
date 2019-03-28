@@ -243,7 +243,7 @@ namespace Admin.Controllers
                     }
                 }
 
-                return result.Where(u => u.Ativo && u.Status != 9);   
+                return result.Where(u => u.Ativo && u.Status != 9 && u.IdEmpresa > 0);   
             }
             catch (Exception e)
             {
