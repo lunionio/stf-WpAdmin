@@ -406,8 +406,7 @@ function getData() {
 function valiidarData() {
     var data = getFormData().data;
     var date = new Date();
-    var hoje = date.getFullYear() + "/" + date.getMonth() + "/" + date.getDay();
-
+    var hoje = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
 
     var month = date.getMonth() + 1;
     var day = date.getDate();
@@ -416,9 +415,9 @@ function valiidarData() {
         (month < 10 ? '0' : '') + month + '/' +
         (day < 10 ? '0' : '') + day;
 
-    console.log(new Date(data));
-    console.log(new Date(output));
-    if (new Date(data) < new Date(output)) {
+    console.log(output);
+    console.log(Date.parse(hoje));
+    if (Date.parse(data) <= Date.parse(output)) {
         demo.showNotification('top', 'right', 'Não é possível cadastrar oportunidades retroativas!');
         $('#data').val(" ");
         $('#data').focus();

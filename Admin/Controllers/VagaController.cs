@@ -264,6 +264,8 @@ namespace Admin.Controllers
                 }
 
                 var op = Oportundiade.Convert(vaga);
+                op.DataOportunidade = DateTime.Now;
+
                 var empresa = GetEmpresa(op.IdEmpresa);
                 op.EmailEmpresa = empresa.Email;
 
