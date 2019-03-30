@@ -17,5 +17,6 @@ namespace Admin.Models
         public string EmailContratante { get; set; }
         public string EmailContratado { get; set; }
         public string NomeContratado { get; set; }
+        public string IdEmpresa { get; set; }
     }
 }

@@ -38,7 +38,7 @@ namespace Admin.Helppser
                 ID = vaga.Id,
                 Ativo = true,
                 DataCriacao = System.Convert.ToDateTime(vaga.DataCriacao),
-                DataOportunidade = vaga.DataEvento,
+                DataOportunidade = System.Convert.ToDateTime(vaga.Date),
                 DescProfissional = vaga.ProfissionalNome,
                 Nome = vaga.Nome,
                 Quantidade = vaga.Qtd,

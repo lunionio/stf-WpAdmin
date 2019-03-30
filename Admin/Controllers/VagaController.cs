@@ -253,6 +253,16 @@ namespace Admin.Controllers
 
                 vaga.status = 1;
 
+                if (string.IsNullOrEmpty(vaga.DataCriacao))
+                {
+                    vaga.DataCriacao = DateTime.Now.ToShortDateString();
+                }
+
+                if (string.IsNullOrEmpty(vaga.EnderecoDataCriacao))
+                {
+                    vaga.EnderecoDataCriacao = DateTime.Now.ToShortDateString();
+                }
+
                 var op = Oportundiade.Convert(vaga);
                 var empresa = GetEmpresa(op.IdEmpresa);
                 op.EmailEmpresa = empresa.Email;
@@ -335,6 +345,7 @@ namespace Admin.Controllers
 
             var op = GetOportunidade(optId);
             ViewBag.OptNome = op.Nome;
+            ViewBag.IdEmpresa = op.IdEmpresa;
 
             var users = GetUsers(userXOportunidades.Select(x => x.UserId));
             var profissionais = GetProfissionais(users.Select(x => x.ID));
@@ -433,7 +444,8 @@ namespace Admin.Controllers
                     return "Saldo insuficiente para a contratação.";
                 }
 
-                var empresa = GetEmpresa(usuario.idEmpresa);
+                //var empresa = GetEmpresa(usuario.idEmpresa);
+                var empresa = GetEmpresa(Convert.ToInt32(userXOportunidade.IdEmpresa));
 
                 userXOportunidade.NomeContratado = pServico.Profissional.Nome;
                 userXOportunidade.EmailContratado = pServico.Profissional.Email;

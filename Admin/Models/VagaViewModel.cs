@@ -42,8 +42,7 @@ namespace Admin.Models
         public int Qtd { get; set; }
         public string Complemento { get; set; }
         public string Referencia { get; set; }
-        private DateTime _dataEvento;
-        public DateTime DataEvento { get => Convert.ToDateTime(_dataEvento.ToString("dd/MM/yyyy")); set => _dataEvento = value; }
+        public DateTime DataEvento { get; set; }
         public int status { get; set; }
         public int IdEmpresa { get; set; }
         public int IdCliente { get; set; }

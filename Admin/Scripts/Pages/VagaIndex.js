@@ -196,7 +196,8 @@ function aprovarProfissional(userXOpt, optId, userId) {
         ID: userXOpt,
         UserId: userId,
         OportunidadeId: optId,
-        StatusId: 1 //Aprovado
+        StatusId: 1, //Aprovado
+        IdEmpresa: $("#idEmpresa").val(),
     };
 
     var settings = {
@@ -204,8 +205,11 @@ function aprovarProfissional(userXOpt, optId, userId) {
         "crossDomain": true,
         "url": "/Vaga/Match",
         "method": "POST",
-        "data": obj
+        "contentType": "application/json",
+        "data": JSON.stringify(obj)
     };
+
+    console.log(obj);
 
     $.ajax(settings).done(function (response) {
         try {
@@ -250,7 +254,8 @@ function reprovarProfissional(userXOpt, optId, userId) {
         ID: userXOpt,
         UserId: userId,
         OportunidadeId: optId,
-        StatusId: 3 //Reprovado
+        StatusId: 3, //Reprovado
+        IdEmpresa: $("#idEmpresa").val(),
     };
 
     var settings = {
