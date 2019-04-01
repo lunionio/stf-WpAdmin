@@ -37,6 +37,7 @@ namespace Admin.Helppers
         public T Post<T>(string url, object envio)
         {
             var jss = new JavaScriptSerializer();
+            jss.MaxJsonLength = int.MaxValue;
             var data = jss.Serialize(envio);
 
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
